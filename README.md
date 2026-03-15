@@ -1,5 +1,3 @@
-# Paw-trails
-Hazard reporting dog walking app
 <!DOCTYPE html>
 <html lang="en">
 <head>
