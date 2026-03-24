@@ -18,7 +18,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;font-family:var(--fb);background:#1a1a1a;color:var(--earth);}
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;position:relative;}
 
 /* ── HEADER ── */
 #hdr{background:var(--earth);height:var(--hh);display:flex;align-items:center;padding:0 16px;gap:10px;z-index:200;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.35);}
@@ -33,10 +33,8 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:#1a1a1a;c
 .av-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--terra));border:2px solid var(--amber-l);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;}
 
 /* ── MAP ── */
-#map-wrap{flex:1;position:relative;overflow:hidden;}
+#map-wrap{flex:1;position:relative;}
 #map{width:100%;height:100%;}
-#backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:140;display:none;}
-#backdrop.on{display:block;}
 
 /* ── TABS ── */
 #tabs{height:var(--th);background:var(--earth);display:flex;align-items:stretch;z-index:200;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.3);}
@@ -47,8 +45,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:#1a1a1a;c
 .ti-lbl{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;}
 
 /* ── PANELS ── */
-.panel{position:absolute;bottom:0;left:0;right:0;background:var(--warm);border-radius:22px 22px 0 0;z-index:150;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 -6px 32px rgba(0,0,0,.28);}
+.panel{position:fixed;bottom:var(--th);left:0;right:0;background:var(--warm);border-radius:22px 22px 0 0;z-index:150;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -6px 32px rgba(0,0,0,.28);}
 .panel.open{transform:translateY(0);}
+#detail{position:fixed;bottom:0;left:0;right:0;background:var(--warm);border-radius:22px 22px 0 0;z-index:160;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 -6px 32px rgba(0,0,0,.3);}
+#detail.open{transform:translateY(0);}
+#backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:140;display:none;}
+#backdrop.on{display:block;}
 .drag{width:38px;height:4px;background:rgba(45,74,34,.18);border-radius:2px;margin:10px auto 0;flex-shrink:0;}
 .pscroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;padding-bottom:24px;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(45,74,34,.15);border-radius:2px;}
@@ -226,8 +228,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:#1a1a1a;c
 .pr-meta{display:flex;gap:12px;font-size:12px;color:var(--moss);margin-bottom:12px;}
 
 /* ── ROUTE DETAIL ── */
-#detail{position:absolute;bottom:0;left:0;right:0;background:var(--warm);border-radius:22px 22px 0 0;z-index:160;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 -6px 32px rgba(0,0,0,.3);}
-#detail.open{transform:translateY(0);}
+/* detail defined above */
 .det-photo{height:210px;position:relative;overflow:hidden;flex-shrink:0;}
 .det-photo img{width:100%;height:100%;object-fit:cover;}
 .det-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05) 0%,rgba(0,0,0,.65) 100%);}
@@ -638,7 +639,10 @@ window.onload=async()=>{
   map=L.map('map',{zoomControl:false,layers:[OSM]}).setView([53.620,-2.160],13);
   map.on('click',onMapClick);
   map.on('locationfound',e=>{if(navOn)checkNav(e.latlng);});
-  initOb();renderHazCats();
+  initOb();
+  renderHazCats();
+  renderMedals();
+  renderLB();
   await loadAll();
   setTimeout(()=>openPanel('walk'),500);
 };
