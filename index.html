@@ -326,7 +326,14 @@ html, body { height:100%; overflow:hidden; font-family:var(--fb); background:var
 .toast.show { transform:translateX(-50%) translateY(0); }
 
 /* ── MISC ── */
-.spin { display:inline-block; width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--green); border-radius:50%; animation:sp .7s linear infinite; }
+.field-status { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:4px 9px; border-radius:8px; margin-top:6px; }
+.fs-clear { background:#D1FAE5; color:#065F46; }
+.fs-cattle { background:#FEF3C7; color:#92400E; }
+.fs-hazard { background:#FEE2E2; color:#991B1B; }
+.fs-unknown { background:#F3F4F6; color:#6B7280; }
+.nearby-badge { background:#EEF2FF; color:#3730A3; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; }
+.dog-match-score { display:flex; gap:2px; margin-top:4px; }
+.dm-star { font-size:12px; }
 @keyframes sp { to{transform:rotate(360deg)} }
 .empty { text-align:center; padding:48px 24px; color:var(--text-2); }
 .empty-i { font-size:52px; margin-bottom:14px; }
@@ -394,11 +401,13 @@ html, body { height:100%; overflow:hidden; font-family:var(--fb); background:var
         </div>
         <div class="filter-row" id="filterRow">
           <div class="chip on" onclick="setFilter(this,'all')">All</div>
+          <div class="chip" onclick="setFilter(this,'nearby')">📍 Near Me</div>
           <div class="chip" onclick="setFilter(this,'easy')">🟢 Easy</div>
           <div class="chip" onclick="setFilter(this,'moderate')">🟡 Moderate</div>
           <div class="chip" onclick="setFilter(this,'hard')">🔴 Hard</div>
           <div class="chip" onclick="setFilter(this,'offLead')">🐕 Off-lead</div>
-          <div class="chip" onclick="setFilter(this,'water')">💧 Water</div>
+          <div class="chip" onclick="setFilter(this,'dogMatch')">🎯 My Dog</div>
+          <div class="chip" onclick="setFilter(this,'clear')">✅ Clear Fields</div>
         </div>
       </div>
 
@@ -579,6 +588,8 @@ html, body { height:100%; overflow:hidden; font-family:var(--fb); background:var
   <div class="det-body">
     <div class="det-stats" id="detStats"></div>
     <div class="det-tags" id="detTags"></div>
+    <div id="detFieldStatus" style="margin-bottom:14px"></div>
+    <div id="detDogScore"></div>
     <p class="det-desc" id="detDesc"></p>
     <div class="det-section">Your Rating</div>
     <div class="hc-stars" id="detStars" style="margin-bottom:20px"></div>
@@ -639,11 +650,14 @@ function getPhoto(r){
 
 // ── DATA ──────────────────────────────────────────────────────────────────
 const SEED=[
-  {name:"Hollingworth Lake Loop",description:"Gorgeous lakeside circuit, mostly flat. Dogs love the water access points — bring a towel!",difficulty:"easy",distance_km:4.2,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",path:[[53.644,-2.118],[53.641,-2.125],[53.635,-2.122],[53.630,-2.115],[53.632,-2.105],[53.638,-2.098],[53.645,-2.103],[53.644,-2.118]]},
-  {name:"Healey Dell Nature Reserve",description:"Stunning wooded gorge with viaduct views. Slippery in wet weather — keep dogs on lead near the drops.",difficulty:"moderate",distance_km:2.8,duration_mins:40,off_lead:false,has_water:true,created_by:"PawTrails Team",path:[[53.648,-2.186],[53.651,-2.190],[53.649,-2.196],[53.645,-2.193],[53.642,-2.188],[53.644,-2.182],[53.648,-2.186]]},
-  {name:"Tandle Hill Country Park",description:"Panoramic views across Greater Manchester. Exposed at the top on windy days — dogs love the open space.",difficulty:"moderate",distance_km:5.1,duration_mins:70,off_lead:true,has_water:false,created_by:"PawTrails Team",path:[[53.570,-2.138],[53.574,-2.145],[53.571,-2.152],[53.565,-2.148],[53.560,-2.140],[53.562,-2.132],[53.568,-2.130],[53.570,-2.138]]},
-  {name:"Ashworth Valley Trail",description:"Challenging moorland with reservoir views. Cattle in season — keep dogs close through the valley sections.",difficulty:"hard",distance_km:6.8,duration_mins:90,off_lead:true,has_water:true,created_by:"PawTrails Team",path:[[53.650,-2.226],[53.654,-2.234],[53.658,-2.240],[53.655,-2.248],[53.649,-2.245],[53.644,-2.238],[53.647,-2.228],[53.650,-2.226]]},
-  {name:"Roch Valley Way",description:"Riverside path through the heart of Rochdale. Mostly paved so great for all weather and all dogs.",difficulty:"easy",distance_km:3.4,duration_mins:45,off_lead:false,has_water:true,created_by:"PawTrails Team",path:[[53.614,-2.158],[53.611,-2.165],[53.607,-2.162],[53.604,-2.155],[53.607,-2.148],[53.612,-2.150],[53.614,-2.158]]},
+  {name:"Chew Magna Village Circular",description:"Lovely loop from The Pelican pub car park along the River Chew and back through fields. Several kissing gates — some tight for larger dogs. Cattle possible in fields — keep on lead through. Finish with fish & chips at Salt & Malt or a pint at The Pelican.",difficulty:"easy",distance_km:4.0,duration_mins:60,off_lead:false,has_water:true,created_by:"PawTrails Team",dog_notes:"Cattle in fields — leads essential. Tight kissing gates for large breeds.",field_status:"clear",path:[[51.3642,-2.6201],[51.3658,-2.6189],[51.3671,-2.6172],[51.3679,-2.6158],[51.3668,-2.6143],[51.3651,-2.6137],[51.3638,-2.6152],[51.3629,-2.6171],[51.3635,-2.6192],[51.3642,-2.6201]]},
+  {name:"Chew Valley Lake Perimeter",description:"Stunning lakeside walk but dogs MUST be on lead at all times — Bristol Water rule strictly enforced. Watch out for blue-green algae warnings in summer. Salt & Malt fish & chip restaurant on site is exceptional. Bring water as dogs can't swim in the lake.",difficulty:"moderate",distance_km:5.6,duration_mins:90,off_lead:false,has_water:false,created_by:"PawTrails Team",dog_notes:"Dogs on lead at ALL times. No swimming. Blue-green algae risk in summer.",field_status:"clear",path:[[51.3445,-2.6285],[51.3428,-2.6301],[51.3412,-2.6318],[51.3398,-2.6334],[51.3385,-2.6312],[51.3378,-2.6289],[51.3391,-2.6267],[51.3412,-2.6254],[51.3431,-2.6261],[51.3445,-2.6285]]},
+  {name:"Knowle Hill & River Chew",description:"A favourite local route — climb to Knowle Hill for panoramic views over Chew Valley, then drop back down through fields to the river. Some exposed sections at the top on windy days. Cattle occasionally in the lower fields — check field status before heading out.",difficulty:"moderate",distance_km:3.8,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Off-lead on hill top. Leads for lower fields — cattle common April-October.",field_status:"clear",path:[[51.3642,-2.6201],[51.3628,-2.6178],[51.3615,-2.6154],[51.3601,-2.6138],[51.3589,-2.6151],[51.3598,-2.6172],[51.3612,-2.6191],[51.3628,-2.6205],[51.3642,-2.6201]]},
+  {name:"Maes Knoll Iron Age Fort",description:"Superb hill walk to one of the best viewpoints in Somerset — a real Iron Age hillfort with earthworks. 360-degree views on a clear day. Mostly off-lead across open grassland. Steep in places — not ideal for elderly or very small dogs. Worth every step.",difficulty:"hard",distance_km:5.2,duration_mins:80,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Mostly off-lead. Steep ascent — tough for small or elderly dogs. Exposed on top.",field_status:"clear",path:[[51.3812,-2.5891],[51.3798,-2.5872],[51.3785,-2.5851],[51.3771,-2.5838],[51.3758,-2.5852],[51.3769,-2.5874],[51.3782,-2.5895],[51.3798,-2.5908],[51.3812,-2.5891]]},
+  {name:"Stanton Drew Stone Circle",description:"Flat, easy walk along the River Chew to England's second largest stone circle — a magical and eerie spot. Almost entirely off-lead through meadows. Great for all dogs. Check for cattle in the lower meadows near the river in spring.",difficulty:"easy",distance_km:3.0,duration_mins:45,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Mostly off-lead. Occasional cattle in riverside meadows in spring.",field_status:"clear",path:[[51.3638,-2.5982],[51.3651,-2.5968],[51.3665,-2.5951],[51.3679,-2.5938],[51.3692,-2.5952],[51.3681,-2.5971],[51.3668,-2.5985],[51.3651,-2.5995],[51.3638,-2.5982]]},
+  {name:"Lords Wood Circular",description:"Beautiful ancient woodland walk — perfect for dogs who love sniffing through the undergrowth. Roe and fallow deer resident so recall needs to be solid. Entirely off-lead, well-marked paths, never gets very muddy. A hidden gem and rarely busy.",difficulty:"easy",distance_km:2.5,duration_mins:40,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Fully off-lead but deer present — solid recall essential. Watch for deer at dawn/dusk.",field_status:"clear",path:[[51.3521,-2.6412],[51.3508,-2.6398],[51.3495,-2.6381],[51.3482,-2.6368],[51.3495,-2.6352],[51.3511,-2.6365],[51.3524,-2.6381],[51.3535,-2.6398],[51.3521,-2.6412]]},
+  {name:"Pensford Viaduct Trail",description:"Lovely varied walk taking in the dramatic Pensford railway viaduct — great for photos. Mix of riverside, field and village paths. Some cattle in summer fields — check status before going. The pub in Pensford village is dog-friendly with a garden.",difficulty:"moderate",distance_km:5.0,duration_mins:75,off_lead:false,has_water:true,created_by:"PawTrails Team",dog_notes:"Mixed on/off-lead. Leads essential near road crossings and cattle fields.",field_status:"clear",path:[[51.3701,-2.5862],[51.3715,-2.5845],[51.3728,-2.5828],[51.3741,-2.5812],[51.3755,-2.5825],[51.3742,-2.5845],[51.3728,-2.5861],[51.3715,-2.5878],[51.3701,-2.5862]]},
+  {name:"Litton Reservoir & Village Loop",description:"Two pretty lakes, quiet footpaths and one of the finest village pubs in Somerset — The Ring O' Bells in Litton dates to the 16th century and is fully dog-friendly inside. Easy, flat walking. Ideal for a relaxed Sunday stroll with any size or age of dog.",difficulty:"easy",distance_km:4.0,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Largely off-lead. Well-behaved dogs welcome inside The Ring O' Bells pub.",field_status:"clear",path:[[51.3125,-2.6218],[51.3112,-2.6201],[51.3098,-2.6185],[51.3085,-2.6171],[51.3098,-2.6155],[51.3115,-2.6168],[51.3128,-2.6185],[51.3141,-2.6201],[51.3125,-2.6218]]},
 ];
 
 const RANKS=[
@@ -695,7 +709,7 @@ function initMap(){
   if(mapInit)return;
   mapInit=true;
   setTimeout(()=>{
-    map=L.map('nav-map',{zoomControl:false,layers:[OSM]}).setView([53.620,-2.160],13);
+    map=L.map('nav-map',{zoomControl:false,layers:[OSM]}).setView([51.364,-2.620],13);
     map.on('click',onMapClick);
     map.on('locationfound',e=>{if(navOn)checkNav(e.latlng);});
     drawRoutes();
@@ -784,6 +798,7 @@ function mkHeroCard(r){
       <span class="swipe-hint hint-like">SAVE ❤️</span>
     </div>
     <div class="hc-body">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">${nearbyBadge(r)}${dogs[0]?`<div class="dog-match-score" title="Match for your dog">${[1,2,3,4,5].map(i=>`<span class="dm-star">${i<=dogMatchScore(r)?'⭐':'☆'}</span>`).join('')}</div>`:''}</div>
       <div class="hc-name">${r.name}</div>
       <div class="hc-meta">
         <span>📏 ${r.distance_km||'?'} km</span>
@@ -791,8 +806,10 @@ function mkHeroCard(r){
         <span>${r.off_lead?'🟢 Off-lead':'🔴 On-lead'}</span>
         ${r.has_water?'<span>💧 Water</span>':''}
       </div>
+      ${fieldStatusHtml(r)}
+      ${r.dog_notes?`<div style="font-size:11px;color:#92400E;background:#FEF3C7;padding:5px 8px;border-radius:7px;margin-top:6px;line-height:1.5">🐕 ${r.dog_notes}</div>`:''}
       <div class="hc-stars">${[1,2,3,4,5].map(i=>`<span class="star" onclick="rateCard(event,'${r.id}',${i})">${i<=myR?'⭐':'☆'}</span>`).join('')}</div>
-      ${r.description?`<div class="hc-desc">${r.description.slice(0,100)}…</div>`:''}
+      ${r.description?`<div class="hc-desc">${r.description.slice(0,90)}…</div>`:''}
     </div>`;
   card.onclick=(e)=>{if(!e.target.classList.contains('star'))openDetail(r);};
   return card;
@@ -862,9 +879,57 @@ function walkTopCard(){
   if(r)startFollow(r.id);
 }
 
-// ── ROUTE FILTERING ───────────────────────────────────────────────────────
+let userLat=51.364, userLon=-2.620; // Default Chew Magna, updated on location
+
+// Get user location quietly in background
+navigator.geolocation?.getCurrentPosition(p=>{userLat=p.coords.latitude;userLon=p.coords.longitude;if(activeFilter==='nearby')renderList();},{},{ timeout:8000 });
+
+function distKm(lat1,lon1,lat2,lon2){
+  const R=6371,dL=(lat2-lat1)*Math.PI/180,dl=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dl/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function routeDist(r){
+  const path=typeof r.path==='string'?JSON.parse(r.path):r.path;
+  if(!path?.length)return 999;
+  return distKm(userLat,userLon,path[0][0],path[0][1]);
+}
+
+function dogMatchScore(r){
+  // Score route 1-5 based on dog profile
+  if(!dogs[0])return 5;
+  const dog=dogs[0];
+  let score=5;
+  const breed=(dog.breed||'').toLowerCase();
+  const isSmall=['chihuahua','yorkie','shih tzu','maltese','pomeranian','dachshund'].some(b=>breed.includes(b));
+  const isLarge=['labrador','retriever','german shepherd','husky','malamute','great dane'].some(b=>breed.includes(b));
+  if(isSmall&&r.difficulty==='hard')score-=2;
+  if(isSmall&&r.distance_km>5)score-=1;
+  if(r.field_status==='cattle'&&!r.off_lead)score-=1;
+  if(isLarge&&r.off_lead)score+=0; // Already good
+  if(r.has_water&&isLarge)score=Math.min(5,score+1);
+  return Math.max(1,Math.min(5,score));
+}
+
+function fieldStatusHtml(r){
+  const status=r.field_status||'unknown';
+  const age=r.field_status_age||null;
+  const ageStr=age?` · ${age}h ago`:'';
+  if(status==='clear')return`<div class="field-status fs-clear">✅ Fields clear${ageStr}</div>`;
+  if(status==='cattle')return`<div class="field-status fs-cattle">🐄 Cattle reported${ageStr}</div>`;
+  if(status==='hazard')return`<div class="field-status fs-hazard">⚠️ Hazard reported${ageStr}</div>`;
+  return`<div class="field-status fs-unknown">❓ Not yet checked</div>`;
+}
+
+function nearbyBadge(r){
+  const d=routeDist(r);
+  if(d<2)return`<span class="nearby-badge">📍 ${d.toFixed(1)}km away</span>`;
+  if(d<5)return`<span class="nearby-badge" style="background:#F0FDF4;color:#166534">🚗 ${d.toFixed(1)}km away</span>`;
+  return'';
+}
 function filterRoutes(){
-  return allRoutes.filter(r=>{
+  let routes=allRoutes.filter(r=>{
     const t=!searchQ||r.name.toLowerCase().includes(searchQ.toLowerCase());
     let c=true;
     if(activeFilter==='easy')c=r.difficulty==='easy';
@@ -872,8 +937,14 @@ function filterRoutes(){
     else if(activeFilter==='hard')c=r.difficulty==='hard';
     else if(activeFilter==='offLead')c=r.off_lead;
     else if(activeFilter==='water')c=r.has_water;
+    else if(activeFilter==='nearby')c=routeDist(r)<=5;
+    else if(activeFilter==='clear')c=(r.field_status||'clear')==='clear';
+    else if(activeFilter==='dogMatch')c=dogMatchScore(r)>=4;
     return t&&c;
   });
+  if(activeFilter==='nearby')routes.sort((a,b)=>routeDist(a)-routeDist(b));
+  if(activeFilter==='dogMatch')routes.sort((a,b)=>dogMatchScore(b)-dogMatchScore(a));
+  return routes;
 }
 
 function onSearch(v){searchQ=v;renderList();buildDeck();}
@@ -893,7 +964,8 @@ function renderList(){
       <div class="rc-thumb"><img src="${getPhoto(r)}" loading="lazy" alt=""></div>
       <div class="rc-info">
         <div class="rc-name">${r.name}</div>
-        <div class="rc-meta-s"><span>📏${r.distance_km||'?'}km</span><span>⏱${r.duration_mins||'?'}min</span><span>${r.difficulty}</span></div>
+        <div class="rc-meta-s"><span>📏${r.distance_km||'?'}km</span><span>⏱${r.duration_mins||'?'}min</span><span>${r.difficulty}</span>${nearbyBadge(r)}</div>
+        ${fieldStatusHtml(r)}
         <div class="rc-actions-s">
           <button class="rc-btn primary" onclick="event.stopPropagation();startFollow('${r.id}')">🐾 Walk</button>
           <button class="rc-btn${rx.heart?' on':''}" onclick="event.stopPropagation();heartRoute('${r.id}',this)">❤️</button>
@@ -979,6 +1051,11 @@ function openDetail(r){
     r.has_water?'<span class="det-tag">💧 Water</span>':'',
     `<span class="det-tag">👤 ${r.created_by||'Community'}</span>`,
   ].join('');
+  // Field status
+  const fsWrap=document.getElementById('detFieldStatus');
+  if(fsWrap)fsWrap.innerHTML=fieldStatusHtml(r)+(r.dog_notes?`<div style="font-size:12px;color:#92400E;background:#FEF3C7;padding:8px 10px;border-radius:9px;margin-top:8px;line-height:1.5">🐕 ${r.dog_notes}</div>`:'');
+  // Dog match
+  if(dogs[0]){const dm=document.getElementById('detDogScore');if(dm){const score=dogMatchScore(r);dm.innerHTML=`<div class="det-section" style="margin-bottom:6px">Match for ${dogs[0].name}</div><div style="display:flex;gap:3px;margin-bottom:16px">${[1,2,3,4,5].map(i=>`<span style="font-size:20px">${i<=score?'⭐':'☆'}</span>`).join('')}</div>`;}}
   const w=Math.floor(Math.random()*8)+1;
   document.getElementById('detStats').innerHTML=`
     <div class="det-stat"><div class="det-stat-n">${r.distance_km||'?'}</div><div class="det-stat-l">km</div></div>
@@ -1064,7 +1141,7 @@ function stopNav(){
   if(followL){map.removeLayer(followL);followL=null;}
   mLayers.forEach(l=>map?.removeLayer(l));mLayers=[];
   speechSynthesis?.cancel();
-  map?.setView([53.620,-2.160],13);
+  map?.setView([51.364,-2.620],13);
   toast('Navigation stopped','⏹');
 }
 
