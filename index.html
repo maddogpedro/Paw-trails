@@ -397,7 +397,7 @@ var navOn=false,navMuted=false,navWPs=[],navIdx=0;
 var isRec=false,recPath=[],sat=false;
 var obStep=0,selAv='🦊',dogN=0,geoTO=null;
 var userLat=51.364,userLon=-2.620;
-if(navigator.geolocation)navigator.geolocation.getCurrentPosition(function(p){userLat=p.coords.latitude;userLon=p.coords.longitude;if(activeFilter==='nearby')renderList();},{},{ timeout:8000 });
+if(navigator.geolocation)navigator.geolocation.getCurrentPosition(function(p){userLat=p.coords.latitude;userLon=p.coords.longitude;if(activeFilter==='nearby')renderList();},function(){},{timeout:8000});
 window.onload=function(){
   var s=localStorage.getItem('pt_profile');
   if(s){profile=JSON.parse(s);dogs=JSON.parse(localStorage.getItem('pt_dogs')||'[]');reactions=JSON.parse(localStorage.getItem('pt_reactions')||'{}');completions=new Set(JSON.parse(localStorage.getItem('pt_completions')||'[]'));ratings=JSON.parse(localStorage.getItem('pt_ratings')||'{}');totalWalks=parseInt(localStorage.getItem('pt_walks')||'0');totalReports=parseInt(localStorage.getItem('pt_reports')||'0');totalDist=parseFloat(localStorage.getItem('pt_dist')||'0');xp=parseInt(localStorage.getItem('pt_xp')||'0');document.getElementById('obOv').classList.add('gone');applyProfile();}
@@ -407,13 +407,20 @@ window.onload=function(){
   loadFromDB();
 };
 function loadFromDB(){
-  sbG('routes','order=created_at.desc&limit=50').then(function(routes){
-    var hasChew=routes.some(function(r){return r.name&&(r.name.includes('Chew')||r.name.includes('Knowle')||r.name.includes('Litton')||r.name.includes('Maes')||r.name.includes('Stanton')||r.name.includes('Lords')||r.name.includes('Pensford'));});
-    if(!routes.length||!hasChew){
-      var dbR=SEED.map(function(r){return{name:r.name,description:r.description,difficulty:r.difficulty,distance_km:r.distance_km,duration_mins:r.duration_mins,off_lead:r.off_lead,has_water:r.has_water,created_by:r.created_by,path:r.path};});
-      return sbI('routes',dbR).then(function(){return sbG('routes','order=created_at.desc&limit=50');}).then(function(fresh){allRoutes=fresh.map(function(r){var s=SEED.find(function(x){return x.name===r.name;});return s?Object.assign({},r,{dog_notes:s.dog_notes,field_status:s.field_status}):r;});renderList();});
-    }else{allRoutes=routes.map(function(r){var s=SEED.find(function(x){return x.name===r.name;});return s?Object.assign({},r,{dog_notes:s.dog_notes,field_status:s.field_status}):r;});renderList();}
-  }).catch(function(e){console.warn('DB unavailable',e);});
+  try{
+    sbG('routes','order=created_at.desc&limit=50').then(function(routes){
+      try{
+        var hasChew=routes.some(function(r){return r.name&&(r.name.includes('Chew')||r.name.includes('Knowle')||r.name.includes('Litton')||r.name.includes('Maes')||r.name.includes('Stanton')||r.name.includes('Lords')||r.name.includes('Pensford'));});
+        if(!routes.length||!hasChew){
+          var dbR=SEED.map(function(r){return{name:r.name,description:r.description,difficulty:r.difficulty,distance_km:r.distance_km,duration_mins:r.duration_mins,off_lead:r.off_lead,has_water:r.has_water,created_by:r.created_by,path:r.path};});
+          sbI('routes',dbR).then(function(){return sbG('routes','order=created_at.desc&limit=50');}).then(function(fresh){allRoutes=fresh.map(function(r){var s=SEED.find(function(x){return x.name===r.name;});return s?Object.assign({},r,{dog_notes:s.dog_notes,field_status:s.field_status}):r;});renderList();}).catch(function(){});
+        }else{
+          allRoutes=routes.map(function(r){var s=SEED.find(function(x){return x.name===r.name;});return s?Object.assign({},r,{dog_notes:s.dog_notes,field_status:s.field_status}):r;});
+          renderList();
+        }
+      }catch(e){console.warn('DB process error:',e);}
+    }).catch(function(e){console.warn('DB unavailable, using local data');});
+  }catch(e){console.warn('DB call error:',e);}
 }
 function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});var pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');var m={explore:'tEx',saved:'tSv',navigate:'tNv',activity:'tAc',profile:'tPr'};var tb=document.getElementById(m[id]);if(tb)tb.classList.add('on');}
 function distKm(a,b,c,d){var R=6371,dL=(c-a)*Math.PI/180,dl=(d-b)*Math.PI/180,x=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dl/2)*Math.sin(dl/2);return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
@@ -507,12 +514,23 @@ function updateSavedStats(){document.getElementById('ssH').textContent=Object.va
 var OSMt=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
 var SATt=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
 function initMap(){
-  if(mapInited)return;mapInited=true;
+  if(mapInited)return;
+  var el=document.getElementById('nmap');
+  if(!el)return;
+  mapInited=true;
   setTimeout(function(){
-    map=L.map('nmap',{zoomControl:false,layers:[OSMt]}).setView([51.364,-2.620],13);
-    map.on('click',onMapClick);map.on('locationfound',function(e){if(navOn)checkNav(e.latlng);});
-    allRoutes.forEach(function(r){var p=typeof r.path==='string'?JSON.parse(r.path):r.path;if(!p||p.length<2)return;var c={easy:'#22C55E',moderate:'#F59E0B',hard:'#EF4444'};L.polyline(p,{color:c[r.difficulty]||'#22C55E',weight:3,opacity:.35}).addTo(map).on('click',function(){openDetail(r);});});
-  },100);
+    try{
+      map=L.map('nmap',{zoomControl:false,layers:[OSMt]}).setView([51.364,-2.620],13);
+      map.on('click',onMapClick);
+      map.on('locationfound',function(e){if(navOn)checkNav(e.latlng);});
+      allRoutes.forEach(function(r){
+        var p=typeof r.path==='string'?JSON.parse(r.path):r.path;
+        if(!p||p.length<2)return;
+        var c={easy:'#22C55E',moderate:'#F59E0B',hard:'#EF4444'};
+        L.polyline(p,{color:c[r.difficulty]||'#22C55E',weight:3,opacity:.35}).addTo(map).on('click',function(){openDetail(r);});
+      });
+    }catch(e){console.warn('Map init error:',e);mapInited=false;}
+  },200);
 }
 function startFollow(id){
   var r=allRoutes.find(function(x){return String(x.id)===String(id);});if(!r)return;
