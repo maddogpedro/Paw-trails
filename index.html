@@ -739,12 +739,27 @@ async function loadAll(){
     // Check if DB has Chew Magna routes (not old Rochdale ones)
     const hasChew=routes.some(r=>r.name&&(r.name.includes('Chew')||r.name.includes('Knowle')||r.name.includes('Litton')||r.name.includes('Maes')||r.name.includes('Stanton')||r.name.includes('Lords')||r.name.includes('Pensford')));
     if(!routes.length||!hasChew){
-      // Clear old routes and insert new Chew Magna ones
-      await sbI('routes',SEED.map(r=>({...r,field_status:'clear',field_status_age:null})));
-      allRoutes=await sbG('routes','order=created_at.desc&limit=50');
+      // Insert only columns that exist in DB schema
+      const dbSeed=SEED.map(r=>({
+        name:r.name,description:r.description,difficulty:r.difficulty,
+        distance_km:r.distance_km,duration_mins:r.duration_mins,
+        off_lead:r.off_lead,has_water:r.has_water,
+        created_by:r.created_by,path:r.path
+      }));
+      await sbI('routes',dbSeed);
+      const fetched=await sbG('routes','order=created_at.desc&limit=50');
+      // Merge local dog_notes and field_status back in
+      allRoutes=fetched.map(r=>{
+        const seed=SEED.find(s=>s.name===r.name);
+        return seed?{...r,dog_notes:seed.dog_notes,field_status:seed.field_status}:r;
+      });
       toast('Chew Magna routes loaded! 🐾','🎉');
     }else{
-      allRoutes=routes;
+      // Merge local dog_notes and field_status into fetched routes
+      allRoutes=routes.map(r=>{
+        const seed=SEED.find(s=>s.name===r.name);
+        return seed?{...r,dog_notes:seed.dog_notes,field_status:seed.field_status}:r;
+      });
     }
     allMarkers=markers;
     renderList();buildDeck();
@@ -961,29 +976,36 @@ function setFilter(el,f){document.querySelectorAll('.chip').forEach(c=>c.classLi
 
 // ── ROUTE LIST ────────────────────────────────────────────────────────────
 function renderList(){
-  const el=document.getElementById('routeList');
-  const routes=filterRoutes();
-  if(!routes.length){el.innerHTML=`<div class="empty"><div class="empty-i">🐕</div><p>No routes found.</p></div>`;return;}
-  el.innerHTML='';
-  routes.forEach(r=>{
-    const rx=reactions[r.id]||{};
-    const done=completions.has(String(r.id));
-    const card=document.createElement('div');card.className='rc';
-    card.innerHTML=`
-      <div class="rc-thumb"><img src="${getPhoto(r)}" loading="lazy" alt=""></div>
-      <div class="rc-info">
-        <div class="rc-name">${r.name}</div>
-        <div class="rc-meta-s"><span>📏${r.distance_km||'?'}km</span><span>⏱${r.duration_mins||'?'}min</span><span>${r.difficulty}</span>${nearbyBadge(r)}</div>
-        ${fieldStatusHtml(r)}
-        <div class="rc-actions-s">
-          <button class="rc-btn primary" onclick="event.stopPropagation();startFollow('${r.id}')">🐾 Walk</button>
-          <button class="rc-btn${rx.heart?' on':''}" onclick="event.stopPropagation();heartRoute('${r.id}',this)">❤️</button>
-          <button class="rc-btn${done?' on':''}" id="rd-${r.id}" onclick="event.stopPropagation();markDone('${r.id}',this)">✅</button>
-        </div>
-      </div>`;
-    card.onclick=()=>openDetail(r);
-    el.appendChild(card);
-  });
+  try{
+    const el=document.getElementById('routeList');
+    if(!el)return;
+    const routes=filterRoutes();
+    if(!routes.length){el.innerHTML=`<div class="empty"><div class="empty-i">🐕</div><p>No routes found.</p></div>`;return;}
+    el.innerHTML='';
+    routes.forEach(r=>{
+      try{
+        const rx=reactions[r.id]||{};
+        const done=completions.has(String(r.id));
+        const card=document.createElement('div');card.className='rc';
+        const fs=fieldStatusHtml(r);
+        const nb=nearbyBadge(r);
+        card.innerHTML=`
+          <div class="rc-thumb"><img src="${getPhoto(r)}" loading="lazy" alt=""></div>
+          <div class="rc-info">
+            <div class="rc-name">${r.name||'Unnamed route'}</div>
+            <div class="rc-meta-s"><span>📏${r.distance_km||'?'}km</span><span>⏱${r.duration_mins||'?'}min</span><span>${r.difficulty||'easy'}</span>${nb}</div>
+            ${fs}
+            <div class="rc-actions-s">
+              <button class="rc-btn primary" onclick="event.stopPropagation();startFollow('${r.id}')">🐾 Walk</button>
+              <button class="rc-btn${rx.heart?' on':''}" onclick="event.stopPropagation();heartRoute('${r.id}',this)">❤️</button>
+              <button class="rc-btn${done?' on':''}" id="rd-${r.id}" onclick="event.stopPropagation();markDone('${r.id}',this)">✅</button>
+            </div>
+          </div>`;
+        card.onclick=()=>openDetail(r);
+        el.appendChild(card);
+      }catch(cardErr){console.warn('Card render error',cardErr,r);}
+    });
+  }catch(e){console.error('renderList failed',e);}
 }
 
 // ── SAVED PAGE ────────────────────────────────────────────────────────────
@@ -1401,7 +1423,14 @@ let _tt;
 function toast(msg,ico='🎉'){const t=document.getElementById('toast');document.getElementById('tMsg').textContent=msg;document.getElementById('tIco').textContent=ico;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3500);}
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-window.onload=()=>{initOb();loadAll();};
+window.onload=()=>{
+  try{initOb();}catch(e){console.error('initOb failed',e);}
+  try{loadAll();}catch(e){
+    console.error('loadAll failed',e);
+    allRoutes=SEED.map((r,i)=>({...r,id:`local-${i}`}));
+    try{renderList();buildDeck();}catch(e2){console.error('render failed',e2);}
+  }
+};
 </script>
 </body>
 </html>
