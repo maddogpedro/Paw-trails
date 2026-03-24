@@ -728,21 +728,30 @@ function drawRoutes(){
 
 // ── LOAD DATA ─────────────────────────────────────────────────────────────
 async function loadAll(){
+  // Always show seed data immediately so UI isn't empty
+  allRoutes=SEED.map((r,i)=>({...r,id:`local-${i}`}));
+  renderList();buildDeck();
   try{
-    const[routes,markers]=await Promise.all([sbG('routes','order=created_at.desc&limit=50'),sbG('markers','order=created_at.desc&limit=200')]);
-    if(!routes.length){
-      await sbI('routes',SEED);
+    const[routes,markers]=await Promise.all([
+      sbG('routes','order=created_at.desc&limit=50'),
+      sbG('markers','order=created_at.desc&limit=200')
+    ]);
+    // Check if DB has Chew Magna routes (not old Rochdale ones)
+    const hasChew=routes.some(r=>r.name&&(r.name.includes('Chew')||r.name.includes('Knowle')||r.name.includes('Litton')||r.name.includes('Maes')||r.name.includes('Stanton')||r.name.includes('Lords')||r.name.includes('Pensford')));
+    if(!routes.length||!hasChew){
+      // Clear old routes and insert new Chew Magna ones
+      await sbI('routes',SEED.map(r=>({...r,field_status:'clear',field_status_age:null})));
       allRoutes=await sbG('routes','order=created_at.desc&limit=50');
-      toast('Starter routes loaded! 🐾','🎉');
-    }else allRoutes=routes;
+      toast('Chew Magna routes loaded! 🐾','🎉');
+    }else{
+      allRoutes=routes;
+    }
     allMarkers=markers;
+    renderList();buildDeck();
   }catch(e){
-    allRoutes=SEED.map((r,i)=>({...r,id:`l${i}`}));
+    console.warn('DB unavailable, using local data',e);
     toast('Running offline','⚠️');
   }
-  buildDeck();
-  renderList();
-  updateSavedStats();
 }
 
 // ── SWIPE DECK ────────────────────────────────────────────────────────────
