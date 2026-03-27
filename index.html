@@ -162,9 +162,25 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .rms-walkies{flex:2;padding:12px;background:var(--g);color:#fff;border:none;border-radius:13px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .rms-detail{flex:1;padding:12px;background:var(--bg);border:1.5px solid var(--bd);border-radius:13px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2);}
 
-/* REPORT BUTTON - always visible on navigate */
-.report-fab{position:absolute;right:12px;top:80px;width:52px;height:52px;background:var(--rd);color:#fff;border:none;border-radius:16px;font-size:22px;cursor:pointer;z-index:20;box-shadow:0 4px 16px rgba(239,68,68,.45);display:flex;align-items:center;justify-content:center;}
-.report-fab:active{transform:scale(.92);}
+/* REPORT FAB - draggable */
+.report-fab{position:absolute;right:12px;top:80px;width:52px;height:52px;background:var(--rd);color:#fff;border:none;border-radius:16px;font-size:22px;cursor:grab;z-index:20;box-shadow:0 4px 16px rgba(239,68,68,.45);display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;transition:transform .15s,box-shadow .15s;}
+.report-fab.dragging{cursor:grabbing;transform:scale(1.15);box-shadow:0 8px 28px rgba(239,68,68,.65);opacity:.9;}
+.rep-hint{position:absolute;right:70px;top:89px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;z-index:20;white-space:nowrap;pointer-events:none;transition:opacity .3s;}
+.drop-ring{position:absolute;width:56px;height:56px;border-radius:50%;border:3px solid var(--rd);background:rgba(239,68,68,.2);transform:translate(-50%,-50%);z-index:18;pointer-events:none;display:none;}
+.drop-ring.on{display:block;animation:dropPulse .7s ease forwards;}
+@keyframes dropPulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
+/* Dog marker */
+.dog-loc{width:40px;height:40px;border-radius:50%;background:#fff;border:3px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 14px rgba(0,0,0,.35);}
+.dog-loc-pulse{width:40px;height:40px;border-radius:50%;background:rgba(27,67,50,.2);animation:locPulse 2s infinite;}
+@keyframes locPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.6);opacity:0}}
+/* Accordion */
+.acc-section{border-bottom:1px solid var(--bd);}
+.acc-head{display:flex;align-items:center;padding:14px 0;cursor:pointer;gap:8px;}
+.acc-head-lbl{font-size:15px;font-weight:700;flex:1;}
+.acc-arrow{font-size:11px;color:var(--t2);transition:transform .2s;}
+.acc-head.open .acc-arrow{transform:rotate(180deg);}
+.acc-body{display:none;padding-bottom:14px;}
+.acc-body.open{display:block;}
 
 /* REPORT SHEET */
 .rep-sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:none;align-items:flex-end;}
@@ -386,8 +402,10 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
               </div>
             </div>
           </div>
-          <!-- Report FAB -->
-          <button class="report-fab" onclick="openRepSheet()" title="Report a hazard or feature">⚠️</button>
+          <!-- Report FAB - drag to location -->
+          <div class="rep-hint" id="repHint">Drag to report</div>
+          <button class="report-fab" id="reportFab">⚠️</button>
+          <div class="drop-ring" id="dropRing"></div>
           <!-- Map controls -->
           <div class="mcs">
             <button class="mc" onclick="locateMe()">📍</button>
@@ -512,68 +530,96 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
   </div>
 </div>
 
-<!-- HAZARD WHEEL -->
-<div class="hwheel-bg" id="hwBg" onclick="closeHazWheel()"></div>
-<div class="hwheel" id="hazWheel"><div class="hwheel-inner" id="hwInner"><div class="hw-center">📍</div></div></div>
-
 <!-- REPORT SHEET -->
 <div class="rep-sheet" id="repSheet">
   <div class="rep-inner">
     <div class="rep-drag"></div>
-    <div class="rep-title">📍 Report something</div>
-    <div class="rep-sub">Tap to drop a pin at your current location</div>
+    <div class="rep-title" id="repTitle">📍 Report something</div>
+    <div class="rep-sub" id="repSub" style="font-size:13px;color:var(--t2);margin-bottom:16px;">Dropped at your location — tap a category</div>
 
-    <div class="rep-cat">
-      <div class="rep-cat-title">🏛️ Permanent features</div>
-      <div class="rep-grid">
-        <div class="rep-item perm" onclick="reportItem({type:'poobin',icon:'🗑️',label:'Poo bin',perm:true,pts:20})"><div class="rep-item-ico">🗑️</div><div class="rep-item-lbl">Poo bin</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'parking',icon:'🅿️',label:'Parking',perm:true,pts:20})"><div class="rep-item-ico">🅿️</div><div class="rep-item-lbl">Parking</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'water',icon:'💧',label:'Water tap',perm:true,pts:20})"><div class="rep-item-ico">💧</div><div class="rep-item-lbl">Water tap</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'bench',icon:'🪑',label:'Bench',perm:true,pts:20})"><div class="rep-item-ico">🪑</div><div class="rep-item-lbl">Bench</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'cafe',icon:'☕',label:'Café',perm:true,pts:20})"><div class="rep-item-ico">☕</div><div class="rep-item-lbl">Café</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'pub',icon:'🍺',label:'Dog-friendly pub',perm:true,pts:20})"><div class="rep-item-ico">🍺</div><div class="rep-item-lbl">Dog pub</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'swim',icon:'🏊',label:'Dog swimming spot',perm:true,pts:25})"><div class="rep-item-ico">🏊</div><div class="rep-item-lbl">Dog swim</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'view',icon:'🌄',label:'Great view',perm:true,pts:15})"><div class="rep-item-ico">🌄</div><div class="rep-item-lbl">Great view</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item perm" onclick="reportItem({type:'ruins',icon:'🏰',label:'Ancient ruins',perm:true,pts:15})"><div class="rep-item-ico">🏰</div><div class="rep-item-lbl">Ruins</div><div class="rep-pts">+15 pts</div></div>
+    <!-- ACCORDION CATEGORIES -->
+    <div class="acc-section">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span class="acc-head-ico">🏛️</span><span class="acc-head-lbl">Facilities & highlights</span><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="rep-grid">
+          <div class="rep-item perm" onclick="reportItem({type:'poobin',icon:'🗑️',label:'Poo bin',perm:true,pts:20})"><div class="rep-item-ico">🗑️</div><div class="rep-item-lbl">Poo bin</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'parking',icon:'🅿️',label:'Parking',perm:true,pts:20})"><div class="rep-item-ico">🅿️</div><div class="rep-item-lbl">Parking</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'water',icon:'💧',label:'Water tap',perm:true,pts:20})"><div class="rep-item-ico">💧</div><div class="rep-item-lbl">Water tap</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'bench',icon:'🪑',label:'Bench',perm:true,pts:20})"><div class="rep-item-ico">🪑</div><div class="rep-item-lbl">Bench</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'toilets',icon:'🚻',label:'Toilets',perm:true,pts:20})"><div class="rep-item-ico">🚻</div><div class="rep-item-lbl">Toilets</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'view',icon:'🌄',label:'Great view',perm:true,pts:15})"><div class="rep-item-ico">🌄</div><div class="rep-item-lbl">Great view</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'swim',icon:'🏊',label:'Dog swim spot',perm:true,pts:25})"><div class="rep-item-ico">🏊</div><div class="rep-item-lbl">Dog swim</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'ruins',icon:'🏰',label:'Ancient ruins',perm:true,pts:15})"><div class="rep-item-ico">🏰</div><div class="rep-item-lbl">Ruins</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'waterfall',icon:'💦',label:'Waterfall',perm:true,pts:15})"><div class="rep-item-ico">💦</div><div class="rep-item-lbl">Waterfall</div><div class="rep-pts">+15 pts</div></div>
+        </div>
       </div>
     </div>
 
-    <div class="rep-cat">
-      <div class="rep-cat-title">⏰ Animals — countdown timer</div>
-      <div class="rep-grid">
-        <div class="rep-item time" onclick="reportItem({type:'cattle',icon:'🐄',label:'Cattle',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐄</div><div class="rep-item-lbl">Cattle</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'sheep',icon:'🐑',label:'Sheep',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐑</div><div class="rep-item-lbl">Sheep</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'horses',icon:'🐎',label:'Horses',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐎</div><div class="rep-item-lbl">Horses</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'pigs',icon:'🐷',label:'Pigs',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐷</div><div class="rep-item-lbl">Pigs</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'geese',icon:'🦢',label:'Geese / ducks',perm:false,days:30,pts:25})"><div class="rep-item-ico">🦢</div><div class="rep-item-lbl">Geese</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'dogs',icon:'🐕',label:'Dogs off lead',perm:false,days:7,pts:15})"><div class="rep-item-ico">🐕</div><div class="rep-item-lbl">Dogs off lead</div><div class="rep-pts">+15 pts</div></div>
+    <div class="acc-section">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span class="acc-head-ico">☕</span><span class="acc-head-lbl">Food & drink</span><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="rep-grid">
+          <div class="rep-item perm" onclick="reportItem({type:'cafe',icon:'☕',label:'Café',perm:true,pts:20})"><div class="rep-item-ico">☕</div><div class="rep-item-lbl">Café</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'pub',icon:'🍺',label:'Dog-friendly pub',perm:true,pts:20})"><div class="rep-item-ico">🍺</div><div class="rep-item-lbl">Dog pub</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'restaurant',icon:'🍽️',label:'Restaurant',perm:true,pts:20})"><div class="rep-item-ico">🍽️</div><div class="rep-item-lbl">Restaurant</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'coffeecart',icon:'🛻',label:'Coffee cart',perm:false,days:7,pts:15})"><div class="rep-item-ico">🛻</div><div class="rep-item-lbl">Coffee cart</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'icecream',icon:'🍦',label:'Ice cream',perm:false,days:7,pts:15})"><div class="rep-item-ico">🍦</div><div class="rep-item-lbl">Ice cream</div><div class="rep-pts">+15 pts</div></div>
+        </div>
       </div>
     </div>
 
-    <div class="rep-cat">
-      <div class="rep-cat-title">🟤 Trail conditions — countdown</div>
-      <div class="rep-grid">
-        <div class="rep-item time" onclick="reportItem({type:'mud',icon:'🟤',label:'Muddy / boggy',perm:false,days:14,pts:15})"><div class="rep-item-ico">🟤</div><div class="rep-item-lbl">Muddy</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'flood',icon:'🌊',label:'Flooding / wading',perm:false,days:7,pts:15})"><div class="rep-item-ico">🌊</div><div class="rep-item-lbl">Flooding</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'tree',icon:'🌲',label:'Fallen tree',perm:false,days:14,pts:15})"><div class="rep-item-ico">🌲</div><div class="rep-item-lbl">Fallen tree</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'ice',icon:'🧊',label:'Icy path',perm:false,days:3,pts:15})"><div class="rep-item-ico">🧊</div><div class="rep-item-lbl">Icy path</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'stile',icon:'🚧',label:'Stile issue',perm:false,days:30,pts:15})"><div class="rep-item-ico">🚧</div><div class="rep-item-lbl">Stile issue</div><div class="rep-pts">+15 pts</div></div>
-        <div class="rep-item time" onclick="reportItem({type:'waterfall',icon:'💦',label:'Waterfall',perm:true,days:null,pts:15})"><div class="rep-item-ico">💦</div><div class="rep-item-lbl">Waterfall</div><div class="rep-pts">+15 pts</div></div>
+    <div class="acc-section">
+      <div class="acc-head open" onclick="toggleAcc(this)">
+        <span class="acc-head-ico">🐄</span><span class="acc-head-lbl">Animals</span><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body open">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;">Auto-expire after 30 days if unconfirmed</div>
+        <div class="rep-grid">
+          <div class="rep-item time" onclick="reportItem({type:'cattle',icon:'🐄',label:'Cattle',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐄</div><div class="rep-item-lbl">Cattle</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'sheep',icon:'🐑',label:'Sheep',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐑</div><div class="rep-item-lbl">Sheep</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'horses',icon:'🐎',label:'Horses',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐎</div><div class="rep-item-lbl">Horses</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'pigs',icon:'🐷',label:'Pigs',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐷</div><div class="rep-item-lbl">Pigs</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'geese',icon:'🦢',label:'Geese / ducks',perm:false,days:30,pts:25})"><div class="rep-item-ico">🦢</div><div class="rep-item-lbl">Geese</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'dogs',icon:'🐕',label:'Dogs off lead',perm:false,days:7,pts:15})"><div class="rep-item-ico">🐕</div><div class="rep-item-lbl">Dogs off lead</div><div class="rep-pts">+15 pts</div></div>
+        </div>
       </div>
     </div>
 
-    <div class="rep-cat">
-      <div class="rep-cat-title">🔴 Safety — permanent until removed</div>
-      <div class="rep-grid">
-        <div class="rep-item safe" onclick="reportItem({type:'cliff',icon:'⛰️',label:'Cliff / steep drop',perm:true,pts:20})"><div class="rep-item-ico">⛰️</div><div class="rep-item-lbl">Cliff / steep</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item safe" onclick="reportItem({type:'road',icon:'🚗',label:'Dangerous road',perm:true,pts:20})"><div class="rep-item-ico">🚗</div><div class="rep-item-lbl">Danger road</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item safe" onclick="reportItem({type:'nodogs',icon:'🚫',label:'No dogs zone',perm:true,pts:20})"><div class="rep-item-ico">🚫</div><div class="rep-item-lbl">No dogs</div><div class="rep-pts">+20 pts</div></div>
-        <div class="rep-item safe" onclick="reportItem({type:'algae',icon:'☠️',label:'Blue-green algae',perm:true,pts:25})"><div class="rep-item-ico">☠️</div><div class="rep-item-lbl">Algae risk</div><div class="rep-pts">+25 pts</div></div>
-        <div class="rep-item safe" onclick="reportItem({type:'aggdog',icon:'🐕',label:'Aggressive dog',perm:false,days:7,pts:20})"><div class="rep-item-ico">⚡🐕</div><div class="rep-item-lbl">Aggr. dog</div><div class="rep-pts">+20 pts</div></div>
+    <div class="acc-section">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span class="acc-head-ico">🟤</span><span class="acc-head-lbl">Trail conditions</span><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="rep-grid">
+          <div class="rep-item time" onclick="reportItem({type:'mud',icon:'🟤',label:'Muddy / boggy',perm:false,days:14,pts:15})"><div class="rep-item-ico">🟤</div><div class="rep-item-lbl">Muddy</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'flood',icon:'🌊',label:'Flooding',perm:false,days:7,pts:15})"><div class="rep-item-ico">🌊</div><div class="rep-item-lbl">Flooding</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'tree',icon:'🌲',label:'Fallen tree',perm:false,days:14,pts:15})"><div class="rep-item-ico">🌲</div><div class="rep-item-lbl">Fallen tree</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'ice',icon:'🧊',label:'Icy path',perm:false,days:3,pts:15})"><div class="rep-item-ico">🧊</div><div class="rep-item-lbl">Icy path</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'stile',icon:'🚧',label:'Stile issue',perm:false,days:30,pts:15})"><div class="rep-item-ico">🚧</div><div class="rep-item-lbl">Stile issue</div><div class="rep-pts">+15 pts</div></div>
+        </div>
       </div>
     </div>
 
-    <button style="width:100%;padding:13px;background:transparent;border:none;font-family:inherit;font-size:13px;color:var(--t2);cursor:pointer;margin-top:4px;" onclick="closeRepSheet()">Cancel</button>
+    <div class="acc-section" style="border-bottom:none;">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span class="acc-head-ico">🔴</span><span class="acc-head-lbl">Safety</span><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="rep-grid">
+          <div class="rep-item safe" onclick="reportItem({type:'cliff',icon:'⛰️',label:'Cliff / steep drop',perm:true,pts:20})"><div class="rep-item-ico">⛰️</div><div class="rep-item-lbl">Cliff</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item safe" onclick="reportItem({type:'road',icon:'🚗',label:'Dangerous road',perm:true,pts:20})"><div class="rep-item-ico">🚗</div><div class="rep-item-lbl">Danger road</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item safe" onclick="reportItem({type:'nodogs',icon:'🚫',label:'No dogs zone',perm:true,pts:20})"><div class="rep-item-ico">🚫</div><div class="rep-item-lbl">No dogs</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item safe" onclick="reportItem({type:'algae',icon:'☠️',label:'Blue-green algae',perm:true,pts:25})"><div class="rep-item-ico">☠️</div><div class="rep-item-lbl">Algae risk</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item safe" onclick="reportItem({type:'aggdog',icon:'⚡',label:'Aggressive dog',perm:false,days:7,pts:20})"><div class="rep-item-ico">⚡🐕</div><div class="rep-item-lbl">Aggr. dog</div><div class="rep-pts">+20 pts</div></div>
+        </div>
+      </div>
+    </div>
+
+    <button style="width:100%;padding:13px;background:transparent;border:none;font-family:inherit;font-size:13px;color:var(--t2);cursor:pointer;margin-top:8px;" onclick="closeRepSheet()">Cancel</button>
   </div>
 </div>
 
@@ -906,6 +952,8 @@ function updateSavedStats(){
 // ── MAP ───────────────────────────────────────────────────────────────
 var OSMt=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
 var SATt=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+var dogLocMarker=null;
+var dropLatLng=null;
 
 function initMap(){
   if(mapInited)return;
@@ -914,23 +962,89 @@ function initMap(){
   setTimeout(function(){
     try{
       map=L.map('nmap',{zoomControl:false,layers:[OSMt]}).setView([51.364,-2.620],13);
-      map.on('locationfound',function(e){if(navOn)checkNav(e.latlng);if(walkiesOn)onWalkiesLoc(e);});
-      // Long press for quick hazard wheel
-      var pressTimer=null,pressLatLng=null;
-      map.getContainer().addEventListener('touchstart',function(e){
-        pressTimer=setTimeout(function(){
-          pressLatLng=map.containerPointToLatLng(L.point(e.touches[0].clientX-map.getContainer().getBoundingClientRect().left,e.touches[0].clientY-map.getContainer().getBoundingClientRect().top));
-          showHazWheel(e.touches[0].clientX,e.touches[0].clientY,pressLatLng);
-        },600);
+      map.on('locationfound',function(e){
+        if(navOn)checkNav(e.latlng);
+        if(walkiesOn)onWalkiesLoc(e);
+        updateDogMarker(e.latlng);
       });
-      map.getContainer().addEventListener('touchend',function(){clearTimeout(pressTimer);});
-      map.getContainer().addEventListener('touchmove',function(){clearTimeout(pressTimer);});
-      // Route markers + lines
       addRouteMarkersToMap();
-      // Existing markers from DB
       if(allMarkers.length)renderMarkersOnMap();
+      setupDragDrop();
     }catch(e){console.warn('Map init error:',e);mapInited=false;}
   },200);
+}
+
+function updateDogMarker(latlng){
+  var ico=profile?profile.avatar:'🐕';
+  var el=document.createElement('div');
+  el.className='dog-loc';
+  el.textContent=ico;
+  var dogIco=L.divIcon({className:'',html:el.outerHTML,iconSize:[40,40],iconAnchor:[20,20]});
+  if(dogLocMarker){map.removeLayer(dogLocMarker);}
+  dogLocMarker=L.marker(latlng,{icon:dogIco,zIndexOffset:1000}).addTo(map);
+}
+
+function setupDragDrop(){
+  var fab=document.getElementById('reportFab');
+  var hint=document.getElementById('repHint');
+  var mapEl=document.getElementById('nmap');
+  if(!fab||!mapEl)return;
+  var isDragging=false,startX,startY,origX,origY,fabRect,mapRect;
+
+  // Show hint briefly on load
+  setTimeout(function(){if(hint)hint.style.opacity='0';},3000);
+
+  function onStart(x,y){
+    isDragging=true;
+    fab.classList.add('dragging');
+    fabRect=fab.getBoundingClientRect();
+    mapRect=mapEl.getBoundingClientRect();
+    startX=x;startY=y;
+    origX=fabRect.left;origY=fabRect.top;
+    fab.style.position='fixed';
+    fab.style.left=fabRect.left+'px';
+    fab.style.top=fabRect.top+'px';
+    fab.style.right='auto';
+  }
+  function onMove(x,y){
+    if(!isDragging)return;
+    fab.style.left=(origX+(x-startX))+'px';
+    fab.style.top=(origY+(y-startY))+'px';
+  }
+  function onEnd(x,y){
+    if(!isDragging)return;
+    isDragging=false;fab.classList.remove('dragging');
+    // Reset FAB position
+    fab.style.position='absolute';fab.style.left='';fab.style.top='80px';fab.style.right='12px';
+    // Check if dropped on map
+    var inMap=x>mapRect.left&&x<mapRect.right&&y>mapRect.top&&y<mapRect.bottom;
+    if(inMap){
+      var pt=map.containerPointToLatLng(L.point(x-mapRect.left,y-mapRect.top));
+      dropLatLng={lat:pt.lat,lng:pt.lng};
+      // Flash drop ring
+      var ring=document.getElementById('dropRing');
+      ring.style.left=x+'px';ring.style.top=y+'px';
+      ring.classList.add('on');
+      setTimeout(function(){ring.classList.remove('on');},700);
+      // Open report sheet
+      document.getElementById('repSub').textContent='📍 Pin dropped — tap what you found';
+      openRepSheet();
+    }else{
+      dropLatLng=null;
+    }
+  }
+  // Touch
+  fab.addEventListener('touchstart',function(e){var t=e.touches[0];onStart(t.clientX,t.clientY);e.preventDefault();},{passive:false});
+  fab.addEventListener('touchmove',function(e){var t=e.touches[0];onMove(t.clientX,t.clientY);e.preventDefault();},{passive:false});
+  fab.addEventListener('touchend',function(e){var t=e.changedTouches[0];onEnd(t.clientX,t.clientY);});
+  // Mouse (desktop)
+  fab.addEventListener('mousedown',function(e){onStart(e.clientX,e.clientY);});
+  document.addEventListener('mousemove',function(e){if(isDragging)onMove(e.clientX,e.clientY);});
+  document.addEventListener('mouseup',function(e){if(isDragging)onEnd(e.clientX,e.clientY);});
+  // Tap (no drag) = use current location
+  fab.addEventListener('click',function(e){
+    if(!isDragging){dropLatLng=userLat?{lat:userLat,lng:userLon}:null;document.getElementById('repSub').textContent=dropLatLng?'📍 Pinned at your location — tap what you found':'📍 Tap what you found';openRepSheet();}
+  });
 }
 
 function addRouteMarkersToMap(){
@@ -947,83 +1061,81 @@ function addRouteMarkersToMap(){
 
 function renderMarkersOnMap(){
   if(!map)return;
-  markerLayers.forEach(function(l){map.removeLayer(l);});markerLayers=[];
-  var now=new Date();
-  allMarkers.forEach(function(m){
-    if(m.expires_at&&new Date(m.expires_at)<now)return;
-    var ico=L.divIcon({className:'',html:'<div style="background:#fff;border:2px solid #ccc;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);"><span style="transform:rotate(45deg);font-size:13px;">'+m.icon+'</span></div>',iconSize:[30,30],iconAnchor:[15,30]});
-    var ml=L.marker([m.lat,m.lng],{icon:ico}).addTo(map);
-    var popup='<b>'+m.icon+' '+m.label+'</b>';
-    if(m.created_at)popup+='<br><small>'+timeAgo(m.created_at)+'</small>';
-    if(!m.is_permanent&&m.expires_at){var d=Math.ceil((new Date(m.expires_at)-now)/86400000);popup+='<br><small>Expires in '+d+' day'+(d!==1?'s':'')+'</small>';}
-    ml.bindPopup(popup);
-    markerLayers.push(ml);
-    // 50m circle for time-sensitive
-    if(!m.is_permanent){
-      var circ=L.circle([m.lat,m.lng],{radius:50,color:'#F59E0B',fillColor:'#F59E0B',fillOpacity:.1,weight:1.5,dashArray:'6,4'}).addTo(map);
-      markerLayers.push(circ);
-    }
-  });
+  markerLayers.forEach(function(l){try{map.removeLayer(l);}catch(e){}});markerLayers=[];
+  allMarkers.forEach(function(m){addMarkerToMap(m,false);});
 }
 
-// ── HAZARD QUICK WHEEL ────────────────────────────────────────────────
-var QUICK_HAZ=[{id:'cattle',icon:'🐄',label:'Cattle',perm:false,days:30,pts:25},{id:'sheep',icon:'🐑',label:'Sheep',perm:false,days:30,pts:25},{id:'mud',icon:'🟤',label:'Muddy',perm:false,days:14,pts:15},{id:'flood',icon:'🌊',label:'Flood',perm:false,days:7,pts:15},{id:'poobin',icon:'🗑️',label:'Poo bin',perm:true,pts:20},{id:'view',icon:'🌄',label:'Great view',perm:true,pts:15}];
-var hwLatLng=null;
-
-function showHazWheel(x,y,latlng){
-  hwLatLng=latlng;
-  var wheel=document.getElementById('hazWheel');
-  var inner=document.getElementById('hwInner');
-  var bg=document.getElementById('hwBg');
-  wheel.style.left=x+'px';wheel.style.top=y+'px';
-  inner.innerHTML='<div class="hw-center">📍</div>';
-  QUICK_HAZ.forEach(function(h,i){
-    var angle=(i/QUICK_HAZ.length)*2*Math.PI-Math.PI/2;
-    var rad=75,hx=Math.cos(angle)*rad,hy=Math.sin(angle)*rad;
-    var item=document.createElement('div');item.className='hw-item';
-    item.style.left=(hx-26)+'px';item.style.top=(hy-26)+'px';
-    item.innerHTML='<div class="hw-ico">'+h.icon+'</div><div class="hw-lbl">'+h.label+'</div>';
-    item.onclick=function(){reportItem(Object.assign({type:h.id},h),hwLatLng);closeHazWheel();};
-    inner.appendChild(item);
-  });
-  wheel.classList.add('on');bg.style.display='block';
+// ── ACCORDION ─────────────────────────────────────────────────────────
+function toggleAcc(head){
+  head.classList.toggle('open');
+  var body=head.nextElementSibling;
+  if(body)body.classList.toggle('open');
 }
-function closeHazWheel(){document.getElementById('hazWheel').classList.remove('on');document.getElementById('hwBg').style.display='none';}
 
 // ── REPORT SHEET ──────────────────────────────────────────────────────
 function openRepSheet(){document.getElementById('repSheet').classList.add('on');}
 function closeRepSheet(){document.getElementById('repSheet').classList.remove('on');}
 
-function reportItem(h,latlng){
+function reportItem(h){
   closeRepSheet();
-  // Use provided latlng or user location
-  var ll=latlng||{lat:userLat,lng:userLon};
+  var ll=dropLatLng||{lat:userLat,lng:userLon};
+  dropLatLng=null;
   // Expiry
   var expiresAt=null;
   if(!h.perm){
     var days=h.days||(EXPIRY[h.type]||30);
-    var exp=new Date();exp.setDate(exp.getDate()+days);
-    expiresAt=exp.toISOString();
+    var exp=new Date();exp.setDate(exp.getDate()+days);expiresAt=exp.toISOString();
   }
-  // Add to map immediately
-  if(map){
-    var ico=L.divIcon({className:'',html:'<div style="background:#fff;border:2px solid #ccc;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);"><span style="transform:rotate(45deg);font-size:13px;">'+h.icon+'</span></div>',iconSize:[30,30],iconAnchor:[15,30]});
-    var ml=L.marker([ll.lat,ll.lng],{icon:ico}).addTo(map).bindPopup('<b>'+h.icon+' '+h.label+'</b><br><small>Just reported</small>');
-    markerLayers.push(ml);
-    if(!h.perm){var circ=L.circle([ll.lat,ll.lng],{radius:50,color:'#F59E0B',fillColor:'#F59E0B',fillOpacity:.1,weight:1.5,dashArray:'6,4'}).addTo(map);markerLayers.push(circ);}
-    map.setView([ll.lat,ll.lng],16);
-  }
+  var md={type:h.type,icon:h.icon,label:h.label,lat:ll.lat,lng:ll.lng,reported_by:profile?profile.username:'Anonymous',is_permanent:h.perm||false,expires_at:expiresAt,created_at:new Date().toISOString()};
+  // Add to local array and map
+  var localId='local-'+Date.now();
+  var localMd=Object.assign({id:localId},md);
+  allMarkers.unshift(localMd);
+  addMarkerToMap(localMd,true);
+  if(map)map.setView([ll.lat,ll.lng],16);
   // Save to DB
-  var md={type:h.type,icon:h.icon,label:h.label,lat:ll.lat,lng:ll.lng,reported_by:profile?profile.username:'Anonymous',is_permanent:h.perm||false,expires_at:expiresAt};
   sbI('markers',[md]).then(function(res){
-    if(res&&res[0])allMarkers.unshift(res[0]);
-    renderList();// refresh field status
-  }).catch(function(){allMarkers.unshift(Object.assign({id:'local-'+Date.now(),created_at:new Date().toISOString()},md));renderList();});
-  // Points + rank
+    if(res&&res[0]){
+      // Replace local marker with DB version
+      var idx=allMarkers.findIndex(function(m){return m.id===localId;});
+      if(idx>-1)allMarkers[idx]=res[0];
+    }
+    renderList();
+  }).catch(function(){renderList();});
   totalReports++;localStorage.setItem('pt_reports',totalReports);
-  addXP(h.pts||15);
-  updateRank();
+  addXP(h.pts||15);updateRank();
   toast(h.icon+' '+h.label+' reported! +'+h.pts+' pts','✅');
+}
+
+function addMarkerToMap(m,draggable){
+  if(!map)return;
+  var now=new Date();
+  if(m.expires_at&&new Date(m.expires_at)<now)return;
+  var ico=L.divIcon({className:'',html:'<div style="background:#fff;border:2px solid #ccc;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);"><span style="transform:rotate(45deg);font-size:13px;">'+m.icon+'</span></div>',iconSize:[30,30],iconAnchor:[15,30]});
+  var ml=L.marker([m.lat,m.lng],{icon:ico,draggable:draggable||false}).addTo(map);
+  var popupContent='<div style="min-width:140px"><b>'+m.icon+' '+m.label+'</b><br>'+(m.created_at?'<small style="color:#666">'+timeAgo(m.created_at)+'</small>':'')+'<br><div style="display:flex;gap:6px;margin-top:8px;"><button onclick="deleteMarker(\''+m.id+'\')" style="flex:1;padding:5px;background:#FEE2E2;color:#991B1B;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🗑 Delete</button></div></div>';
+  ml.bindPopup(popupContent);
+  if(draggable){
+    ml.on('dragend',function(e){
+      var newll=e.target.getLatLng();
+      var idx=allMarkers.findIndex(function(x){return x.id===m.id;});
+      if(idx>-1){allMarkers[idx].lat=newll.lat;allMarkers[idx].lng=newll.lng;}
+      toast('Marker moved','📍');
+    });
+  }
+  markerLayers.push(ml);
+  if(!m.is_permanent){
+    var circ=L.circle([m.lat,m.lng],{radius:50,color:'#F59E0B',fillColor:'#F59E0B',fillOpacity:.1,weight:1.5,dashArray:'6,4'}).addTo(map);
+    markerLayers.push(circ);
+  }
+}
+
+function deleteMarker(id){
+  map.closePopup();
+  allMarkers=allMarkers.filter(function(m){return m.id!==id;});
+  renderMarkersOnMap();
+  renderList();
+  toast('Marker removed','🗑️');
 }
 
 // ── NAVIGATE ──────────────────────────────────────────────────────────
@@ -1151,22 +1263,24 @@ function updateWalkiesTimer(){
 }
 
 function stopWalkies(){
-  walkiesOn=false;clearInterval(walkiesTimer);
-  if(map)map.stopLocate();
+  walkiesOn=false;
+  clearInterval(walkiesTimer);walkiesTimer=null;
+  // Only stop locate if nav isn't also using it
+  if(map&&!navOn)map.stopLocate();
   document.getElementById('walkiesActive').classList.remove('on');
   document.getElementById('navBottom').style.display='';
-  totalDist+=walkiesDist;
-  localStorage.setItem('pt_dist',totalDist);
+  if(walkiesDist>0){totalDist+=walkiesDist;localStorage.setItem('pt_dist',totalDist);}
   if(walkiesPath.length>1){
     document.getElementById('rName').value='My walk '+(new Date().toLocaleDateString('en-GB'));
     document.getElementById('rDist').value=walkiesDist.toFixed(2);
-    recPath=walkiesPath;
+    recPath=walkiesPath.slice();
     document.getElementById('saveSheet').classList.add('on');
     toast('Great walk! '+walkiesDist.toFixed(2)+' km — save it?','🏁');
   }else{
-    if(walkiesLine){map.removeLayer(walkiesLine);walkiesLine=null;}
-    toast('Walk cancelled','⏹');
+    if(walkiesLine&&map){map.removeLayer(walkiesLine);walkiesLine=null;}
+    toast('Walk ended','⏹');
   }
+  walkiesPath=[];walkiesDist=0;
 }
 
 // ── PLAN ROUTE ────────────────────────────────────────────────────────
@@ -1290,22 +1404,46 @@ function renderMedals(){
 }
 
 // ── XP ────────────────────────────────────────────────────────────────
+var _xpT;
 function addXP(n){
   xp+=n;localStorage.setItem('pt_xp',xp);
   var el=document.getElementById('profXP');if(el)el.textContent=xp+' XP';
   var fill=document.getElementById('profXPF');if(fill)fill.style.width=Math.min((xp/5000)*100,100)+'%';
   var fl=document.getElementById('xpFlash');
-  if(fl){fl.textContent='+'+n+' XP';fl.classList.add('show');setTimeout(function(){fl.classList.remove('show');},2000);}
+  if(fl){
+    fl.textContent='+'+n+' XP';
+    fl.classList.add('show');
+    clearTimeout(_xpT);
+    _xpT=setTimeout(function(){fl.classList.remove('show');},2000);
+  }
 }
 
 // ── ONBOARDING ────────────────────────────────────────────────────────
 function initOb(){
   var g=document.getElementById('avGrid');
-  ['🦊','🐺','🦁','🐻','🦅','🦌','🦔','🦝','🐗','🦜','🌲','⛰️'].forEach(function(a,i){
-    var d=document.createElement('div');d.className='avo'+(i===0?' sel':'');d.textContent=a;
-    d.onclick=function(){document.querySelectorAll('.avo').forEach(function(x){x.classList.remove('sel');});d.classList.add('sel');selAv=a;};
-    g.appendChild(d);
+  var DOGS=[
+    {ico:'🐕',lbl:'Labrador'},
+    {ico:'🦮',lbl:'Golden'},
+    {ico:'🐩',lbl:'Poodle'},
+    {ico:'🐕‍🦺',lbl:'Working'},
+    {ico:'🐾',lbl:'Spaniel'},
+    {ico:'🦴',lbl:'Terrier'},
+    {ico:'🐶',lbl:'Puppy'},
+    {ico:'🐺',lbl:'Husky'},
+    {ico:'🦊',lbl:'Fox Red'},
+    {ico:'🐻',lbl:'Choc Lab'},
+    {ico:'🐗',lbl:'Staffie'},
+    {ico:'🦝',lbl:'Schnauzer'},
+  ];
+  DOGS.forEach(function(d,i){
+    var el=document.createElement('div');
+    el.className='avo'+(i===0?' sel':'');
+    el.style.flexDirection='column';el.style.gap='2px';
+    el.innerHTML='<span style="font-size:20px;">'+d.ico+'</span><span style="font-size:8px;color:var(--t2);font-weight:600;">'+d.lbl+'</span>';
+    el.onclick=function(){document.querySelectorAll('.avo').forEach(function(x){x.classList.remove('sel');});el.classList.add('sel');selAv=d.ico;};
+    g.appendChild(el);
   });
+  selAv='🐕';
   obAddDog();
 }
 function obAddDog(){
