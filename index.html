@@ -213,7 +213,37 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .rdynm{font-size:24px;font-weight:700;}
 .rdyds{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px;}
 .dp{background:var(--m);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--g);font-weight:600;}
-/* toast */
+/* hazard wheel */
+.hwheel{position:fixed;z-index:500;display:none;pointer-events:none;}
+.hwheel.on{display:block;pointer-events:all;}
+.hwheel-bg{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);}
+.hwheel-bg.on{display:block;}
+.hwheel-inner{position:absolute;transform:translate(-50%,-50%);}
+.hw-center{width:52px;height:52px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;border:3px solid var(--m);box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.hw-item{position:absolute;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25);border:2px solid var(--bd);transition:transform .15s;}
+.hw-item:active{transform:scale(.9)!important;}
+.hw-ico{font-size:20px;}
+.hw-lbl{font-size:9px;font-weight:700;color:var(--t2);margin-top:1px;}
+/* route mini sheet */
+.rms{position:fixed;bottom:80px;left:12px;right:12px;background:#fff;border-radius:18px;z-index:400;display:none;box-shadow:0 8px 32px rgba(0,0,0,.25);overflow:hidden;}
+.rms.on{display:block;animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.rms-photo{height:110px;position:relative;overflow:hidden;}
+.rms-photo img{width:100%;height:100%;object-fit:cover;}
+.rms-photo-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.6));}
+.rms-name{position:absolute;bottom:8px;left:12px;right:12px;color:#fff;font-size:15px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.5);}
+.rms-body{padding:10px 12px 12px;}
+.rms-meta{display:flex;gap:8px;font-size:11px;color:var(--t2);margin-bottom:10px;flex-wrap:wrap;}
+.rms-btns{display:flex;gap:8px;}
+.rms-walkies{flex:2;padding:12px;background:var(--g);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.rms-detail{flex:1;padding:12px;background:var(--bg);border:1.5px solid var(--bd);border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2);}
+.rms-close{position:absolute;top:8px;right:8px;width:28px;height:28px;background:rgba(0,0,0,.35);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+/* nav pitch view */
+.nav-pitch-indicator{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(27,67,50,.9);color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;z-index:100;display:none;align-items:center;gap:5px;}
+.nav-pitch-indicator.on{display:flex;}
+/* walkies button everywhere */
+.bw{background:var(--g);color:#fff;border:none;border-radius:11px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:10px;}
+.walkies-btn{background:var(--g);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(27,67,50,.35);}
 .toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--g);color:#fff;padding:11px 18px;border-radius:14px;font-size:13px;font-weight:600;z-index:9999;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90vw;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .empty{text-align:center;padding:40px 20px;color:var(--t2);}
@@ -298,7 +328,11 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
             <div class="ncard" id="navCard"><div class="ndir" id="navDir">🧭 Follow the route</div><div class="nsub" id="navSub">Stay on the path</div><div class="npb"><div class="npf" id="navProg" style="width:0%"></div></div><div class="nbtns"><button class="nb nbm" id="muteBtn" onclick="toggleMute()">🔊 Voice</button><button class="nb nbs" onclick="stopNav()">⏹ Stop</button></div></div>
           </div>
           <div class="mbar" id="modeBar"><span id="modeIco">📍</span><span id="modeTxt">Tap map</span><button onclick="cancelMode()" style="background:rgba(255,255,255,.2);border:none;border-radius:6px;color:#fff;padding:2px 8px;cursor:pointer;font-size:11px;margin-left:4px">✕</button></div>
-          <div class="mcs"><button class="mc" onclick="locateMe()">📍</button><button class="mc" onclick="toggleSat()">🛰️</button></div>
+          <div class="mcs">
+            <button class="mc" onclick="locateMe()" title="Find me">📍</button>
+            <button class="mc" id="satBtn" onclick="toggleSat()" title="Satellite">🛰️</button>
+            <button class="mc" onclick="toggleRec()" id="recMc" title="Record">⏺️</button>
+          </div>
           <button class="recb" id="recBtn" onclick="toggleRec()"><span id="recIco">⏺️</span><span id="recTxt">Record Route</span></button>
         </div>
       </div>
@@ -352,12 +386,38 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div style="display:flex;gap:3px;margin-bottom:20px" id="detStars"></div>
   </div>
   <div class="det-ft">
-    <button class="dfw" onclick="walkFromDetail()">🐾 Walk this Route</button>
+    <button class="dfw" onclick="walkFromDetail()">🚶🐕 Walkies!</button>
     <button class="dfh" id="detHB" onclick="heartFromDetail()">❤️</button>
     <button class="dfd" id="detDB" onclick="doneFromDetail()">✅</button>
   </div>
 </div>
-<div class="ssheet" id="saveSheet">
+<!-- Hazard wheel backdrop -->
+<div class="hwheel-bg" id="hwBg" style="display:none" onclick="closeHazWheel()"></div>
+<!-- Hazard wheel -->
+<div class="hwheel" id="hazWheel">
+  <div class="hwheel-inner" id="hwInner">
+    <div class="hw-center">⚠️</div>
+  </div>
+</div>
+<!-- Route mini sheet (shown when tapping route marker on map) -->
+<div class="rms" id="routeMiniSheet">
+  <div class="rms-photo">
+    <img id="rmsImg" src="" alt="">
+    <div class="rms-photo-ov"></div>
+    <div class="rms-name" id="rmsName">Route</div>
+    <button class="rms-close" onclick="closeRms()">✕</button>
+  </div>
+  <div class="rms-body">
+    <div class="rms-meta" id="rmsMeta"></div>
+    <div id="rmsFS" style="margin-bottom:8px"></div>
+    <div class="rms-btns">
+      <button class="rms-walkies" onclick="walkiesFromRms()">🚶🐕 Walkies!</button>
+      <button class="rms-detail" onclick="detailFromRms()">Details</button>
+    </div>
+  </div>
+</div>
+<!-- Nav pitch indicator -->
+<div class="nav-pitch-indicator" id="pitchInd">📍 Navigation view</div>
   <div class="ssi">
     <div class="sdrag"></div><div class="stit">💾 Save Your Route</div>
     <div class="ff"><label class="fl">Name *</label><input class="fi" id="rName" placeholder="e.g. Chew Magna Loop" maxlength="60"></div>
@@ -458,7 +518,7 @@ function renderList(){
     var card=document.createElement('div');card.className='rc';
     card.innerHTML='<div class="rc-p"><img src="'+getPhoto(r)+'" loading="lazy" alt=""><div class="rc-ov"></div><div class="rc-bot"><span class="diff '+(dc[r.difficulty]||'de')+'">'+r.difficulty+'</span><span class="rc-w">👣 '+w+' today</span></div></div>'
       +'<div class="rc-bd"><div class="rc-n">'+r.name+'</div><div class="rc-m"><span>📏 '+r.distance_km+'km</span><span>⏱ '+r.duration_mins+'min</span><span>'+(r.off_lead?'🟢 Off-lead':'🔴 On-lead')+'</span>'+(r.has_water?'<span>💧</span>':'')+'</div>'+fsHtml(r)+(r.dog_notes?'<div class="dn">🐕 '+r.dog_notes+'</div>':'')+'</div>'
-      +'<div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🐾 Walk</button><button class="brx'+(rx.heart?' on':'')+'" id="h-'+r.id+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button><button class="bdn'+(done?' on':'')+'" id="d-'+r.id+'" onclick="event.stopPropagation();markDone(\''+r.id+'\',this)">✅</button></div>';
+      +'<div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🚶🐕 Walkies!</button><button class="brx'+(rx.heart?' on':'')+'" id="h-'+r.id+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button><button class="bdn'+(done?' on':'')+'" id="d-'+r.id+'" onclick="event.stopPropagation();markDone(\''+r.id+'\',this)">✅</button></div>';
     card.onclick=function(){openDetail(r);};el.appendChild(card);
   });
 }
@@ -506,13 +566,22 @@ function renderSaved(tab){
   el.innerHTML='';
   routes.forEach(function(r){
     var card=document.createElement('div');card.className='rc';var rx=reactions[r.id]||{};
-    card.innerHTML='<div class="rc-p" style="height:100px"><img src="'+getPhoto(r)+'" loading="lazy" alt=""><div class="rc-ov"></div></div><div class="rc-bd"><div class="rc-n">'+r.name+'</div><div class="rc-m"><span>📏'+r.distance_km+'km</span><span>'+r.difficulty+'</span></div>'+fsHtml(r)+'</div><div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🐾 Walk</button><button class="brx'+(rx.heart?' on':'')+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button></div>';
+    card.innerHTML='<div class="rc-p" style="height:100px"><img src="'+getPhoto(r)+'" loading="lazy" alt=""><div class="rc-ov"></div></div><div class="rc-bd"><div class="rc-n">'+r.name+'</div><div class="rc-m"><span>📏'+r.distance_km+'km</span><span>'+r.difficulty+'</span></div>'+fsHtml(r)+'</div><div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🚶🐕 Walkies!</button><button class="brx'+(rx.heart?' on':'')+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button></div>';
     card.onclick=function(){openDetail(r);};el.appendChild(card);
   });
 }
 function updateSavedStats(){document.getElementById('ssH').textContent=Object.values(reactions).filter(function(r){return r.heart;}).length;document.getElementById('ssD').textContent=completions.size;document.getElementById('ssC').textContent=allRoutes.filter(function(r){return r.created_by===profile?.username;}).length;if(profile)document.getElementById('svhT').textContent=profile.username+"'s Trails";}
 var OSMt=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
 var SATt=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+var QUICK_HAZARDS=[
+  {id:'cattle',icon:'🐄',label:'Cattle',color:'#8B4513'},
+  {id:'sheep',icon:'🐑',label:'Sheep',color:'#7f8c8d'},
+  {id:'mud',icon:'🟤',label:'Muddy',color:'#8B6914'},
+  {id:'hazard',icon:'⚠️',label:'Hazard',color:'#c0392b'},
+  {id:'cafe',icon:'☕',label:'Café',color:'#8B6914'},
+  {id:'poobin',icon:'🗑️',label:'Poo bin',color:'#555'},
+];
+var rmsRoute=null;
 function initMap(){
   if(mapInited)return;
   var el=document.getElementById('nmap');
@@ -523,42 +592,147 @@ function initMap(){
       map=L.map('nmap',{zoomControl:false,layers:[OSMt]}).setView([51.364,-2.620],13);
       map.on('click',onMapClick);
       map.on('locationfound',function(e){if(navOn)checkNav(e.latlng);});
-      allRoutes.forEach(function(r){
-        var p=typeof r.path==='string'?JSON.parse(r.path):r.path;
-        if(!p||p.length<2)return;
-        var c={easy:'#22C55E',moderate:'#F59E0B',hard:'#EF4444'};
-        L.polyline(p,{color:c[r.difficulty]||'#22C55E',weight:3,opacity:.35}).addTo(map).on('click',function(){openDetail(r);});
+      // Long press for hazard wheel
+      var pressTimer=null;
+      map.on('mousedown touchstart',function(e){
+        pressTimer=setTimeout(function(){
+          var latlng=e.latlng||map.mouseEventToLatLng(e.originalEvent);
+          showHazWheel(latlng,e.originalEvent);
+        },600);
       });
+      map.on('mouseup touchend mousemove',function(){clearTimeout(pressTimer);});
+      // Draw routes with paw markers
+      addRouteMarkersToMap();
     }catch(e){console.warn('Map init error:',e);mapInited=false;}
   },200);
 }
+function addRouteMarkersToMap(){
+  if(!map)return;
+  allRoutes.forEach(function(r){
+    var path=typeof r.path==='string'?JSON.parse(r.path):r.path;
+    if(!path||path.length<2)return;
+    var col={easy:'#22C55E',moderate:'#F59E0B',hard:'#EF4444'};
+    // Draw route line
+    L.polyline(path,{color:col[r.difficulty]||'#22C55E',weight:4,opacity:.5,lineCap:'round'}).addTo(map);
+    // Paw print marker at start
+    var pawIco=L.divIcon({className:'',html:'<div style="width:36px;height:36px;background:#1B4332;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid #B7E4C7;box-shadow:0 3px 12px rgba(0,0,0,.3);cursor:pointer">🐾</div>',iconSize:[36,36],iconAnchor:[18,18]});
+    L.marker([path[0][0],path[0][1]],{icon:pawIco}).addTo(map).on('click',function(){openRms(r);});
+  });
+}
+// ── HAZARD WHEEL ────────────────────────────────────────────────────────
+var hazWheelLatLng=null;
+function showHazWheel(latlng,evt){
+  hazWheelLatLng=latlng;
+  var wheel=document.getElementById('hazWheel');
+  var inner=document.getElementById('hwInner');
+  var bg=document.getElementById('hwBg');
+  // Position wheel at tap point
+  var x=evt.touches?evt.touches[0].clientX:evt.clientX;
+  var y=evt.touches?evt.touches[0].clientY:evt.clientY;
+  wheel.style.left=x+'px';wheel.style.top=y+'px';
+  // Build wheel items
+  inner.innerHTML='<div class="hw-center">⚠️</div>';
+  QUICK_HAZARDS.forEach(function(h,i){
+    var angle=(i/QUICK_HAZARDS.length)*2*Math.PI-Math.PI/2;
+    var r=72;
+    var hx=Math.cos(angle)*r;var hy=Math.sin(angle)*r;
+    var item=document.createElement('div');item.className='hw-item';
+    item.style.left=(hx-26)+'px';item.style.top=(hy-26)+'px';
+    item.innerHTML='<div class="hw-ico">'+h.icon+'</div><div class="hw-lbl">'+h.label+'</div>';
+    item.onclick=function(){placeHazard(h);closeHazWheel();};
+    inner.appendChild(item);
+  });
+  wheel.classList.add('on');bg.style.display='block';
+  // Prevent map click
+  setTimeout(function(){map.once('click',function(e){e.originalEvent.stopPropagation();});},50);
+}
+function closeHazWheel(){
+  document.getElementById('hazWheel').classList.remove('on');
+  document.getElementById('hwBg').style.display='none';
+}
+function placeHazard(h){
+  if(!hazWheelLatLng||!map)return;
+  var ll=hazWheelLatLng;
+  // Drop pin with 50m radius circle
+  var ico=L.divIcon({className:'',html:'<div style="background:'+h.color+';width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.3)"><span style="transform:rotate(45deg);font-size:14px">'+h.icon+'</span></div>',iconSize:[32,32],iconAnchor:[16,32]});
+  L.marker(ll,{icon:ico}).addTo(map).bindPopup('<b>'+h.icon+' '+h.label+'</b><br><small>Reported by '+(profile?profile.username:'you')+'</small>');
+  // 50m radius circle
+  L.circle(ll,{radius:50,color:h.color,fillColor:h.color,fillOpacity:.15,weight:2}).addTo(map);
+  // Save to Supabase
+  var md={type:h.id,icon:h.icon,label:h.label,lat:ll.lat,lng:ll.lng,reported_by:profile?profile.username:'Anonymous',is_permanent:false};
+  sbI('markers',[md]).catch(function(){});
+  totalReports++;localStorage.setItem('pt_reports',totalReports);
+  updateRank();
+  toast(h.icon+' '+h.label+' reported! 🐾','✅');
+}
+// ── ROUTE MINI SHEET ────────────────────────────────────────────────────
+function openRms(r){
+  rmsRoute=r;
+  document.getElementById('rmsImg').src=getPhoto(r);
+  document.getElementById('rmsName').textContent=r.name;
+  document.getElementById('rmsMeta').innerHTML='<span>📏 '+r.distance_km+'km</span><span>⏱ '+r.duration_mins+'min</span><span>'+(r.off_lead?'🟢 Off-lead':'🔴 On-lead')+'</span>';
+  document.getElementById('rmsFS').innerHTML=fsHtml(r);
+  document.getElementById('routeMiniSheet').classList.add('on');
+}
+function closeRms(){document.getElementById('routeMiniSheet').classList.remove('on');rmsRoute=null;}
+function walkiesFromRms(){var r=rmsRoute;closeRms();if(r)startFollow(r.id);}
+function detailFromRms(){var r=rmsRoute;closeRms();if(r)openDetail(r);}
 function startFollow(id){
   var r=allRoutes.find(function(x){return String(x.id)===String(id);});if(!r)return;
   var path=typeof r.path==='string'?JSON.parse(r.path):r.path;if(!path||path.length<2){toast('No path data','⚠️');return;}
   showPage('navigate');initMap();
   setTimeout(function(){
     if(navOn)stopNav();
+    // Fly to start then pitch into nav view
     map.flyTo([path[0][0],path[0][1]],17,{animate:true,duration:1});
     if(followL)map.removeLayer(followL);
-    followL=L.polyline(path,{color:'#1B4332',weight:9,opacity:1,lineCap:'round'}).addTo(map);
+    followL=L.polyline(path,{color:'#1B4332',weight:10,opacity:1,lineCap:'round'}).addTo(map);
     L.circleMarker(path[0],{radius:10,color:'#1B4332',fillColor:'#F59E0B',fillOpacity:1,weight:3}).addTo(map);
     L.circleMarker(path[path.length-1],{radius:10,color:'#EF4444',fillColor:'#fff',fillOpacity:1,weight:3}).addTo(map);
     navOn=true;navWPs=path;navIdx=0;
-    document.getElementById('navCard').classList.add('on');document.getElementById('navProg').style.width='0%';
-    give('Starting: '+r.name,r.distance_km+' km');
-    speak('Starting route: '+r.name+'. '+r.distance_km+' kilometres.');
+    document.getElementById('navCard').classList.add('on');
+    document.getElementById('navProg').style.width='0%';
+    document.getElementById('pitchInd').classList.add('on');
+    // Lock bearing to route direction
+    if(path.length>1){
+      var b=bear(path[0],path[1]);
+      try{map.setBearing&&map.setBearing(b);}catch(e){}
+    }
+    give('Starting: '+r.name,r.distance_km+' km · follow the green path');
+    speak('Starting route: '+r.name+'. '+r.distance_km+' kilometres. Walkies!');
     map.locate({watch:true,setView:false});
-    toast('Walking '+r.name+'! 🧭','🐾');
-  },400);
+    toast('🚶🐕 Walkies! '+r.name,'🐾');
+    closeRms();
+  },500);
 }
-function checkNav(ll){if(!navOn||!navWPs.length)return;if(ll.distanceTo(L.latLng(navWPs[navIdx][0],navWPs[navIdx][1]))<40){navIdx++;document.getElementById('navProg').style.width=(navIdx/navWPs.length*100)+'%';map.setView(ll,17);if(navIdx>=navWPs.length-1){give('🏁 Arrived!','Great walk!');speak('You have arrived!');setTimeout(stopNav,4000);}else{var ins=getIns(navIdx);give(ins.t,ins.s);speak(ins.v);}}}
+function checkNav(ll){
+  if(!navOn||!navWPs.length)return;
+  // Smooth pan to user, keep at nav zoom
+  map.panTo(ll,{animate:true,duration:.5});
+  if(ll.distanceTo(L.latLng(navWPs[navIdx][0],navWPs[navIdx][1]))<40){
+    navIdx++;
+    document.getElementById('navProg').style.width=(navIdx/navWPs.length*100)+'%';
+    if(navIdx>=navWPs.length-1){
+      give('🏁 You have arrived!','Great walk! 🐾');
+      speak('You have arrived! Well done! Walkies complete!');
+      setTimeout(stopNav,4000);
+    }else{
+      var ins=getIns(navIdx);give(ins.t,ins.s);speak(ins.v);
+      // Update bearing to next waypoint
+      if(navIdx+1<navWPs.length){
+        var b=bear(navWPs[navIdx],navWPs[navIdx+1]);
+        try{map.setBearing&&map.setBearing(b);}catch(e){}
+      }
+    }
+  }
+}
 function getIns(i){var wp=navWPs[i],nx=navWPs[Math.min(i+1,navWPs.length-1)],d=bdir(bear(wp,nx));return{t:d.a+' '+d.l,s:'Waypoint '+i+'/'+navWPs.length,v:d.v};}
 function bear(a,b){var dl=(b[1]-a[1])*Math.PI/180,ar=a[0]*Math.PI/180,cr=b[0]*Math.PI/180;return(Math.atan2(Math.sin(dl)*Math.cos(cr),Math.cos(ar)*Math.sin(cr)-Math.sin(ar)*Math.cos(cr)*Math.cos(dl))*180/Math.PI+360)%360;}
 function bdir(b){if(b<22.5||b>=337.5)return{a:'⬆️',l:'Head north',v:'Continue north'};if(b<67.5)return{a:'↗️',l:'Bear right',v:'Bear right'};if(b<112.5)return{a:'➡️',l:'Turn right',v:'Turn right onto the path'};if(b<157.5)return{a:'↘️',l:'Bear right',v:'Bear right'};if(b<202.5)return{a:'⬇️',l:'Head south',v:'Continue south'};if(b<247.5)return{a:'↙️',l:'Bear left',v:'Bear left'};if(b<292.5)return{a:'⬅️',l:'Turn left',v:'Turn left onto the path'};return{a:'↖️',l:'Bear left',v:'Bear left'};}
 function give(t,s){document.getElementById('navDir').textContent=t;document.getElementById('navSub').textContent=s;}
 function speak(txt){if(navMuted||!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=.9;var vv=speechSynthesis.getVoices(),uk=vv.find(function(v){return v.lang==='en-GB';});if(uk)u.voice=uk;speechSynthesis.speak(u);}
 function toggleMute(){navMuted=!navMuted;document.getElementById('muteBtn').textContent=navMuted?'🔇 Muted':'🔊 Voice';}
-function stopNav(){navOn=false;if(map)map.stopLocate();document.getElementById('navCard').classList.remove('on');if(followL){map.removeLayer(followL);followL=null;}mLayers.forEach(function(l){map&&map.removeLayer(l);});mLayers=[];if(window.speechSynthesis)speechSynthesis.cancel();if(map)map.setView([51.364,-2.620],13);toast('Navigation stopped','⏹');}
+function stopNav(){navOn=false;if(map)map.stopLocate();document.getElementById('navCard').classList.remove('on');document.getElementById('pitchInd').classList.remove('on');if(followL){map.removeLayer(followL);followL=null;}mLayers.forEach(function(l){map&&map.removeLayer(l);});mLayers=[];if(window.speechSynthesis)speechSynthesis.cancel();if(map)map.setView([51.364,-2.620],13);toast('Walk complete! 🐾','🏁');}
 function locateMe(){if(!map)return;map.locate({setView:true,maxZoom:15});map.once('locationfound',function(){toast('Found you!','📍');});map.once('locationerror',function(){toast('Location not available','⚠️');});}
 function toggleSat(){sat=!sat;sat?(OSMt.remove(),SATt.addTo(map)):(SATt.remove(),OSMt.addTo(map));toast(sat?'Satellite':'Map view','🛰️');}
 function showMode(i,t){document.getElementById('modeBar').classList.add('on');document.getElementById('modeIco').textContent=i;document.getElementById('modeTxt').textContent=t;}
