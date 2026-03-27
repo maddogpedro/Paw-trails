@@ -9,34 +9,22 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{
-  --g:#1B4332;--gl:#52B788;--m:#B7E4C7;
-  --bg:#F8F9F4;--card:#fff;--t:#1a1a1a;--t2:#6B7280;--bd:#E8EDE6;
-  --am:#F59E0B;--rd:#EF4444;--bl:#3B82F6;
-}
+:root{--g:#1B4332;--gl:#52B788;--m:#B7E4C7;--bg:#F8F9F4;--card:#fff;--t:#1a1a1a;--t2:#6B7280;--bd:#E8EDE6;--am:#F59E0B;--rd:#EF4444;--bl:#3B82F6;}
 html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--t);}
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
-
-/* HEADER */
 #hdr{background:var(--g);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .logo{color:#fff;font-size:19px;font-weight:800;display:flex;align-items:center;gap:8px;}
 .logo-b{background:rgba(255,255,255,.15);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px;}
 .rank-ch{background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;}
 .av-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid var(--m);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;}
-
-/* PAGES */
 #pages{flex:1;overflow:hidden;position:relative;}
 .page{position:absolute;inset:0;overflow-y:auto;display:none;background:var(--bg);}
 .page.active{display:block;}
-
-/* TABS */
 #tabs{height:64px;background:var(--g);display:flex;align-items:stretch;flex-shrink:0;border-top:1px solid rgba(255,255,255,.1);}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);border-top:2px solid transparent;transition:color .2s;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);border-top:2px solid transparent;}
 .tab.on{color:#fff;border-top-color:var(--m);}
 .tab:active{opacity:.7;}
 .ti{font-size:20px;}.tl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
-
-/* EXPLORE */
 .sw{padding:14px 14px 8px;position:sticky;top:0;background:var(--bg);z-index:5;}
 .sw-inner{position:relative;}
 .sb{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--bd);border-radius:14px;font-family:inherit;font-size:15px;background:var(--card);color:var(--t);outline:none;}
@@ -47,8 +35,6 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--bd);background:var(--card);color:var(--t2);white-space:nowrap;cursor:pointer;}
 .chip.on{background:var(--g);color:#fff;border-color:var(--g);}
 .sh{font-size:16px;font-weight:700;padding:4px 14px 10px;}
-
-/* ROUTE CARDS */
 .rl{padding:0 14px 100px;display:flex;flex-direction:column;gap:10px;}
 .rc{background:var(--card);border-radius:16px;overflow:hidden;border:1.5px solid var(--bd);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);}
 .rc:active{transform:scale(.985);}
@@ -68,8 +54,6 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .brx.on{background:#FEE2E2;border-color:#FCA5A5;color:#DC2626;}
 .bdn{flex:1;padding:10px;background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:11px;font-size:13px;cursor:pointer;color:#166534;font-weight:600;}
 .bdn.on{background:#D1FAE5;border-color:#6EE7B7;}
-
-/* FIELD STATUS */
 .fs-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;margin-bottom:6px;}
 .fs-clear{background:#D1FAE5;color:#065F46;}
 .fs-warn{background:#FEF3C7;color:#92400E;}
@@ -77,18 +61,22 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .dog-note{font-size:11px;color:#92400E;background:#FEF3C7;padding:5px 8px;border-radius:7px;margin-bottom:6px;line-height:1.4;}
 .badge-v{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
 .badge-c{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
-
-/* DETAIL PAGE */
+/* photos strip */
+.photos-strip{display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;margin-top:4px;}
+.photos-strip::-webkit-scrollbar{display:none;}
+.photo-thumb{width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1.5px solid var(--bd);}
+.photo-add{width:80px;height:80px;border-radius:10px;border:2px dashed var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--t2);font-size:11px;font-weight:600;gap:4px;background:var(--bg);}
+/* DETAIL */
 #det{position:fixed;inset:0;background:var(--bg);z-index:200;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
 #det.open{transform:translateX(0);}
-.det-ph{height:260px;position:relative;flex-shrink:0;overflow:hidden;}
+.det-ph{height:240px;position:relative;flex-shrink:0;overflow:hidden;}
 .det-ph img{width:100%;height:100%;object-fit:cover;}
 .det-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25) 0%,transparent 40%,rgba(0,0,0,.6) 100%);}
 .det-bk{position:absolute;top:14px;left:14px;width:38px;height:38px;background:rgba(255,255,255,.9);border:none;border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .det-tt{position:absolute;bottom:14px;left:14px;right:14px;}
 .det-df{display:inline-block;font-size:10px;font-weight:700;padding:4px 10px;border-radius:7px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;}
-.det-nm{font-size:24px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);}
-.det-bd{flex:1;overflow-y:auto;padding:18px;}
+.det-nm{font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);}
+.det-bd{flex:1;overflow-y:auto;padding:16px;}
 .det-st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
 .dst{background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1.5px solid var(--bd);}
 .dsn{font-size:20px;font-weight:700;color:var(--g);}
@@ -98,16 +86,15 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .dfw{flex:2;padding:14px;background:var(--g);color:#fff;border:none;border-radius:13px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .dfh{flex:1;padding:14px;background:#FEE2E2;color:#DC2626;border:none;border-radius:13px;font-size:14px;cursor:pointer;}
 .dfd{flex:1;padding:14px;background:#D1FAE5;color:#166534;border:none;border-radius:13px;font-size:14px;cursor:pointer;}
-
 /* SAVED */
 .svh{background:linear-gradient(135deg,var(--g),#2D6A4F);margin:14px;border-radius:18px;padding:20px;color:#fff;}
 .svht{font-size:20px;font-weight:700;margin-bottom:4px;}
 .svhst{display:flex;gap:20px;margin-top:14px;}
 .svhsn{font-size:22px;font-weight:700;}.svhsl{font-size:11px;opacity:.75;}
-.svtabs{display:flex;border-bottom:1.5px solid var(--bd);margin:0 14px;}
-.svt{flex:1;padding:11px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t2);margin-bottom:-1.5px;}
+.svtabs{display:flex;border-bottom:1.5px solid var(--bd);margin:0 14px;overflow-x:auto;}
+.svtabs::-webkit-scrollbar{display:none;}
+.svt{flex:1;padding:11px 8px;text-align:center;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t2);margin-bottom:-1.5px;white-space:nowrap;}
 .svt.on{color:var(--g);border-bottom-color:var(--g);}
-
 /* NAVIGATE */
 .nw{height:100%;display:flex;flex-direction:column;position:relative;}
 .nmw{flex:1;position:relative;overflow:hidden;}
@@ -130,28 +117,38 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .nbm{background:rgba(255,255,255,.15);color:#fff;}.nbs{background:var(--rd);color:#fff;}
 .mcs{position:absolute;right:12px;bottom:100px;display:flex;flex-direction:column;gap:8px;z-index:20;}
 .mc{width:46px;height:46px;background:var(--card);border:none;border-radius:13px;font-size:20px;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;}
-.mc:active{transform:scale(.92);}
 .mc.on{background:var(--g);color:#fff;}
-
-/* NAV BOTTOM BAR */
+/* nav bottom */
 .nav-bottom{position:absolute;bottom:12px;left:12px;right:12px;z-index:20;display:flex;gap:10px;}
 .walkies-btn{flex:2;background:var(--g);color:#fff;border:none;border-radius:18px;padding:14px 16px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(27,67,50,.5);}
 .walkies-btn:active{transform:scale(.97);}
 .plan-btn{flex:1;background:rgba(255,255,255,.95);color:var(--g);border:none;border-radius:18px;padding:14px 12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,.18);}
-.plan-btn:active{transform:scale(.97);}
-
-/* WALKIES ACTIVE */
-.walkies-active{position:absolute;bottom:12px;left:12px;right:12px;background:var(--g);color:#fff;border-radius:18px;padding:14px 18px;z-index:20;display:none;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(27,67,50,.5);}
-.walkies-active.on{display:flex;}
+/* walkies active */
+.wa-bar{position:absolute;bottom:12px;left:12px;right:12px;background:var(--g);color:#fff;border-radius:18px;padding:14px 18px;z-index:20;display:none;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(27,67,50,.5);}
+.wa-bar.on{display:flex;}
 .wa-dist{font-size:22px;font-weight:800;}
 .wa-time{font-size:13px;opacity:.8;margin-top:2px;}
 .wa-stop{background:rgba(255,255,255,.2);border:none;border-radius:11px;color:#fff;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
-
-/* ROUTE MINI SHEET */
+/* draw mode */
+.draw-bar{position:absolute;bottom:12px;left:12px;right:12px;background:#3B82F6;color:#fff;border-radius:18px;padding:14px 18px;z-index:20;display:none;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(59,130,246,.5);}
+.draw-bar.on{display:flex;}
+.draw-dist{font-size:18px;font-weight:800;}
+.draw-info{font-size:11px;opacity:.8;margin-top:2px;}
+.draw-btns{display:flex;gap:8px;}
+.draw-btn{background:rgba(255,255,255,.2);border:none;border-radius:10px;color:#fff;padding:8px 12px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.draw-btn.save{background:#fff;color:#3B82F6;}
+/* report fab */
+.report-fab{position:absolute;right:12px;top:80px;width:52px;height:52px;background:var(--rd);color:#fff;border:none;border-radius:16px;font-size:22px;cursor:grab;z-index:20;box-shadow:0 4px 16px rgba(239,68,68,.45);display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;}
+.report-fab.dragging{transform:scale(1.15);box-shadow:0 8px 28px rgba(239,68,68,.65);}
+.rep-hint{position:absolute;right:70px;top:89px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;z-index:20;white-space:nowrap;transition:opacity .5s;}
+.drop-ring{position:fixed;width:56px;height:56px;border-radius:50%;border:3px solid var(--rd);background:rgba(239,68,68,.2);transform:translate(-50%,-50%);z-index:18;pointer-events:none;display:none;}
+.drop-ring.on{display:block;animation:dropPulse .7s ease forwards;}
+@keyframes dropPulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
+/* route mini sheet */
 .rms{position:fixed;bottom:80px;left:12px;right:12px;background:var(--card);border-radius:20px;z-index:500;display:none;box-shadow:0 8px 32px rgba(0,0,0,.28);overflow:hidden;}
 .rms.on{display:block;animation:slideUp .25s ease;}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.rms-ph{height:120px;position:relative;overflow:hidden;}
+.rms-ph{height:110px;position:relative;overflow:hidden;}
 .rms-ph img{width:100%;height:100%;object-fit:cover;}
 .rms-ph-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.65));}
 .rms-nm{position:absolute;bottom:9px;left:12px;right:36px;color:#fff;font-size:15px;font-weight:700;}
@@ -161,39 +158,25 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .rms-btns{display:flex;gap:8px;}
 .rms-walkies{flex:2;padding:12px;background:var(--g);color:#fff;border:none;border-radius:13px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .rms-detail{flex:1;padding:12px;background:var(--bg);border:1.5px solid var(--bd);border-radius:13px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2);}
-
-/* REPORT FAB - draggable */
-.report-fab{position:absolute;right:12px;top:80px;width:52px;height:52px;background:var(--rd);color:#fff;border:none;border-radius:16px;font-size:22px;cursor:grab;z-index:20;box-shadow:0 4px 16px rgba(239,68,68,.45);display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;transition:transform .15s,box-shadow .15s;}
-.report-fab.dragging{cursor:grabbing;transform:scale(1.15);box-shadow:0 8px 28px rgba(239,68,68,.65);opacity:.9;}
-.rep-hint{position:absolute;right:70px;top:89px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;z-index:20;white-space:nowrap;pointer-events:none;transition:opacity .3s;}
-.drop-ring{position:absolute;width:56px;height:56px;border-radius:50%;border:3px solid var(--rd);background:rgba(239,68,68,.2);transform:translate(-50%,-50%);z-index:18;pointer-events:none;display:none;}
-.drop-ring.on{display:block;animation:dropPulse .7s ease forwards;}
-@keyframes dropPulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
-/* Dog marker */
-.dog-loc{width:40px;height:40px;border-radius:50%;background:#fff;border:3px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 14px rgba(0,0,0,.35);}
-.dog-loc-pulse{width:40px;height:40px;border-radius:50%;background:rgba(27,67,50,.2);animation:locPulse 2s infinite;}
-@keyframes locPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.6);opacity:0}}
-/* Accordion */
-.acc-section{border-bottom:1px solid var(--bd);}
-.acc-head{display:flex;align-items:center;padding:14px 0;cursor:pointer;gap:8px;}
-.acc-head-lbl{font-size:15px;font-weight:700;flex:1;}
-.acc-arrow{font-size:11px;color:var(--t2);transition:transform .2s;}
-.acc-head.open .acc-arrow{transform:rotate(180deg);}
-.acc-body{display:none;padding-bottom:14px;}
-.acc-body.open{display:block;}
-
-/* REPORT SHEET */
+/* confirm/deny banner */
+.cdn-bar{position:fixed;bottom:80px;left:12px;right:12px;background:var(--card);border-radius:16px;z-index:490;display:none;box-shadow:0 8px 24px rgba(0,0,0,.2);border:1.5px solid var(--bd);padding:14px;}
+.cdn-bar.on{display:block;animation:slideUp .3s ease;}
+.cdn-ico{font-size:28px;margin-bottom:4px;}
+.cdn-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.cdn-sub{font-size:12px;color:var(--t2);margin-bottom:12px;}
+.cdn-btns{display:flex;gap:8px;}
+.cdn-yes{flex:1;padding:11px;background:#D1FAE5;color:#065F46;border:none;border-radius:11px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.cdn-no{flex:1;padding:11px;background:#FEE2E2;color:#991B1B;border:none;border-radius:11px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.cdn-skip{flex:1;padding:11px;background:var(--bg);color:var(--t2);border:1.5px solid var(--bd);border-radius:11px;font-family:inherit;font-size:13px;cursor:pointer;}
+/* report sheet */
 .rep-sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:none;align-items:flex-end;}
 .rep-sheet.on{display:flex;}
-.rep-inner{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:20px 16px 40px;}
+.rep-inner{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:20px 16px 40px;}
 .rep-drag{width:34px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 16px;}
 .rep-title{font-size:18px;font-weight:700;margin-bottom:4px;}
 .rep-sub{font-size:13px;color:var(--t2);margin-bottom:16px;}
-.rep-cat{margin-bottom:18px;}
-.rep-cat-title{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.rep-cat-title::after{content:'';flex:1;height:1px;background:var(--bd);}
-.rep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.rep-item{background:var(--bg);border:1.5px solid var(--bd);border-radius:13px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;}
+.rep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-bottom:4px;}
+.rep-item{background:var(--bg);border:1.5px solid var(--bd);border-radius:13px;padding:10px 8px;text-align:center;cursor:pointer;transition:transform .1s;}
 .rep-item:active{transform:scale(.94);}
 .rep-item.perm{border-color:#BBF7D0;background:#F0FDF4;}
 .rep-item.time{border-color:#FED7AA;background:#FFF7ED;}
@@ -201,19 +184,30 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .rep-item-ico{font-size:22px;margin-bottom:4px;}
 .rep-item-lbl{font-size:10px;font-weight:700;color:var(--t2);line-height:1.2;}
 .rep-pts{font-size:9px;color:var(--gl);font-weight:700;margin-top:2px;}
-
-/* HAZARD WHEEL */
-.hwheel-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.4);display:none;}
-.hwheel{position:fixed;z-index:1000;display:none;pointer-events:none;}
-.hwheel.on{display:block;pointer-events:all;}
-.hwheel-inner{position:absolute;transform:translate(-50%,-50%);}
-.hw-center{width:48px;height:48px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;border:3px solid var(--m);box-shadow:0 4px 20px rgba(0,0,0,.4);}
-.hw-item{position:absolute;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25);border:2px solid var(--bd);}
-.hw-item:active{transform:scale(.88)!important;}
-.hw-ico{font-size:19px;}
-.hw-lbl{font-size:9px;font-weight:700;color:var(--t2);margin-top:1px;}
-
-/* ACTIVITY */
+.acc-section{border-bottom:1px solid var(--bd);}
+.acc-head{display:flex;align-items:center;padding:14px 0;cursor:pointer;gap:8px;}
+.acc-head-lbl{font-size:15px;font-weight:700;flex:1;}
+.acc-arrow{font-size:11px;color:var(--t2);transition:transform .2s;}
+.acc-head.open .acc-arrow{transform:rotate(180deg);}
+.acc-body{display:none;padding-bottom:14px;}
+.acc-body.open{display:block;}
+/* save sheet */
+.ssheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:none;align-items:flex-end;}
+.ssheet.on{display:flex;}
+.ssi{background:var(--card);border-radius:22px 22px 0 0;padding:22px 18px 36px;width:100%;}
+.sdrag{width:34px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 18px;}
+.stit{font-size:18px;font-weight:700;margin-bottom:14px;}
+.ff{margin-bottom:10px;}.fl{font-size:10px;font-weight:700;color:var(--t2);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;}
+.fi,.fsel,.fta{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:11px;font-family:inherit;font-size:14px;color:var(--t);background:var(--bg);outline:none;}
+.fi:focus,.fsel:focus{border-color:var(--g);}
+.fta{height:56px;resize:none;}
+.frow{display:flex;gap:8px;}.frow .ff{flex:1;}
+.fchk{display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;margin-bottom:6px;}
+.fchk input{accent-color:var(--g);}
+.bsv{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:13px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+.bsv:disabled{opacity:.5;}
+.bcl{width:100%;padding:9px;background:transparent;border:none;font-family:inherit;font-size:13px;color:var(--t2);cursor:pointer;margin-top:5px;}
+/* activity */
 .ah{background:linear-gradient(135deg,var(--g),#2D6A4F);margin:14px;border-radius:18px;padding:20px;color:#fff;}
 .aht{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
 .ahav{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid var(--m);display:flex;align-items:center;justify-content:center;font-size:24px;}
@@ -235,8 +229,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .mi.e{background:linear-gradient(135deg,#FDE68A,#F59E0B);border-color:var(--am);}
 .mi.l{background:var(--bg);border-color:var(--bd);filter:grayscale(1) opacity(.4);}
 .mn{font-size:10px;color:var(--t2);font-weight:600;line-height:1.2;}
-
-/* PROFILE */
+/* profile */
 .prt{background:var(--card);padding:22px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--bd);}
 .prav{width:68px;height:68px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:32px;border:3px solid var(--m);flex-shrink:0;}
 .prnm{font-size:21px;font-weight:700;}
@@ -245,8 +238,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .prxpb{height:4px;background:var(--bd);border-radius:2px;width:120px;margin-top:4px;overflow:hidden;}
 .prxpf{height:100%;background:var(--gl);border-radius:2px;}
 .prbtn{display:block;width:calc(100% - 28px);margin:12px 14px 0;padding:13px;text-align:center;border:none;border-radius:13px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
-
-/* ONBOARDING */
+/* onboarding */
 .ob{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;align-items:flex-end;backdrop-filter:blur(5px);}
 .ob.gone{display:none;}
 .obs{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;}
@@ -258,9 +250,11 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .obds{display:flex;justify-content:center;gap:6px;margin-bottom:20px;}
 .obd{width:8px;height:8px;border-radius:50%;background:var(--bd);}
 .obd.on{background:var(--g);width:22px;border-radius:4px;}
-.avg{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px;}
-.avo{font-size:22px;width:44px;height:44px;border-radius:12px;border:2px solid var(--bd);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.avo.sel{border-color:var(--g);background:var(--m);transform:scale(1.1);}
+.avg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.avo{border-radius:12px;border:2px solid var(--bd);background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;gap:3px;}
+.avo.sel{border-color:var(--g);background:var(--m);}
+.avo-ico{font-size:24px;}
+.avo-lbl{font-size:9px;font-weight:700;color:var(--t2);}
 .obff{margin-bottom:12px;}
 .obfl{font-size:10px;font-weight:700;color:var(--t2);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;}
 .obfi{width:100%;padding:11px 13px;border:1.5px solid var(--bd);border-radius:12px;font-family:inherit;font-size:14px;color:var(--t);background:var(--bg);outline:none;}
@@ -269,35 +263,16 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .obsk{width:100%;padding:9px;background:transparent;border:none;font-family:inherit;font-size:12px;color:var(--t2);cursor:pointer;margin-top:7px;}
 .deob{background:var(--bg);border-radius:12px;padding:13px;margin-bottom:10px;position:relative;border:1.5px solid var(--bd);}
 .derm{position:absolute;top:9px;right:9px;background:none;border:none;cursor:pointer;font-size:15px;color:var(--t2);}
-
-/* SAVE SHEET */
-.ssheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:none;align-items:flex-end;}
-.ssheet.on{display:flex;}
-.ssi{background:var(--card);border-radius:22px 22px 0 0;padding:22px 18px 36px;width:100%;}
-.sdrag{width:34px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 18px;}
-.stit{font-size:18px;font-weight:700;margin-bottom:14px;}
-.ff{margin-bottom:10px;}.fl{font-size:10px;font-weight:700;color:var(--t2);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;}
-.fi,.fsel,.fta{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:11px;font-family:inherit;font-size:14px;color:var(--t);background:var(--bg);outline:none;}
-.fi:focus,.fsel:focus{border-color:var(--g);}
-.fta{height:56px;resize:none;}
-.frow{display:flex;gap:8px;}.frow .ff{flex:1;}
-.fchk{display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;margin-bottom:6px;}
-.fchk input{accent-color:var(--g);}
-.bsv{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:13px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
-.bsv:disabled{opacity:.5;}
-.bcl{width:100%;padding:9px;background:transparent;border:none;font-family:inherit;font-size:13px;color:var(--t2);cursor:pointer;margin-top:5px;}
-
-/* TOAST */
+/* toast */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--g);color:#fff;padding:11px 18px;border-radius:14px;font-size:13px;font-weight:600;z-index:9999;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90vw;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-
+.xp-flash{position:fixed;top:62px;right:16px;background:var(--am);color:#fff;padding:7px 13px;border-radius:11px;font-size:13px;font-weight:700;z-index:9998;opacity:0;transition:opacity .3s;pointer-events:none;}
+.xp-flash.show{opacity:1;}
 .empty{text-align:center;padding:40px 20px;color:var(--t2);}
 .ei{font-size:48px;margin-bottom:12px;}
 .empty p{font-size:14px;line-height:1.7;}
-
-/* XP FLASH */
-.xp-flash{position:fixed;top:60px;right:16px;background:var(--am);color:#fff;padding:8px 14px;border-radius:12px;font-size:13px;font-weight:700;z-index:9998;opacity:0;transition:opacity .3s;pointer-events:none;}
-.xp-flash.show{opacity:1;}
+/* plan badge */
+.plan-badge{background:#EFF6FF;color:#1D4ED8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
 </style>
 </head>
 <body>
@@ -305,19 +280,19 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 <!-- ONBOARDING -->
 <div class="ob" id="obOv">
   <div class="obs">
-    <div class="obh"><div class="obl">🐾</div><div class="obt">Paw Trails</div><div style="font-size:13px;opacity:.8;margin-top:5px;line-height:1.6;">Dog-friendly walks · Live field reports · Bristol & beyond</div></div>
+    <div class="obh"><div class="obl">🐾</div><div class="obt">Paw Trails</div><div style="font-size:13px;opacity:.8;margin-top:5px;">Dog-friendly walks · Live field reports · Bristol & beyond</div></div>
     <div class="obb">
       <div class="obds"><div class="obd on" id="od0"></div><div class="obd" id="od1"></div><div class="obd" id="od2"></div></div>
       <div class="obst on" id="os0">
         <div style="font-size:19px;font-weight:700;margin-bottom:3px;">Who's walking? 👋</div>
-        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6;">30 seconds — keeps your walks personal</div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;">30 seconds — keeps your walks personal</div>
         <div class="obff"><label class="obfl">Your name</label><input class="obfi" id="onName" placeholder="e.g. Pete" maxlength="30"></div>
-        <div class="obff"><label class="obfl">Pick your avatar</label><div class="avg" id="avGrid"></div></div>
+        <div class="obff"><label class="obfl">Your dog avatar — shown on the map</label><div class="avg" id="avGrid"></div></div>
         <button class="obbt" onclick="obNext(1)">Next →</button>
       </div>
       <div class="obst" id="os1">
         <div style="font-size:19px;font-weight:700;margin-bottom:3px;">Your dog is the hero 🐕</div>
-        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6;">Your dog earns XP and levels up as you walk</div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;">Earns XP and levels up as you walk</div>
         <div id="dogEntries"></div>
         <div style="border:2px dashed var(--bd);border-radius:11px;padding:11px;text-align:center;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;margin-bottom:12px" onclick="obAddDog()">+ Add another dog</div>
         <button class="obbt" onclick="obNext(2)">Next →</button>
@@ -325,7 +300,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
       </div>
       <div class="obst" id="os2">
         <div style="text-align:center;padding:6px 0;">
-          <div style="font-size:58px;margin-bottom:8px;" id="readyAv">🦊</div>
+          <div style="font-size:58px;margin-bottom:8px;" id="readyAv">🐕</div>
           <div style="font-size:24px;font-weight:700;" id="readyNm">Ready!</div>
           <div style="font-size:13px;color:var(--t2);margin-top:8px;line-height:1.7;">Discover walks · Report field conditions · Earn shields</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px;" id="readyDogs"></div>
@@ -336,13 +311,12 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div id="hdr">
     <div class="logo"><div class="logo-b">🐾</div>Paw Trails</div>
     <div style="display:flex;align-items:center;gap:8px;">
       <div class="rank-ch" id="rankCh">🐾 Pup</div>
-      <div class="av-btn" id="hdrAv" onclick="showPage('profile')">🦊</div>
+      <div class="av-btn" id="hdrAv" onclick="showPage('profile')">🐕</div>
     </div>
   </div>
 
@@ -369,15 +343,16 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div class="page" id="page-saved">
       <div class="svh">
         <div class="svht" id="svhT">Your Trails</div>
-        <div style="font-size:12px;opacity:.8;">Routes saved, loved and walked</div>
+        <div style="font-size:12px;opacity:.8;">Routes saved, planned and walked</div>
         <div class="svhst">
           <div><div class="svhsn" id="ssH">0</div><div class="svhsl">Hearted</div></div>
           <div><div class="svhsn" id="ssD">0</div><div class="svhsl">Completed</div></div>
-          <div><div class="svhsn" id="ssC">0</div><div class="svhsl">Created</div></div>
+          <div><div class="svhsn" id="ssP">0</div><div class="svhsl">Planned</div></div>
         </div>
       </div>
       <div class="svtabs">
         <div class="svt on" onclick="setSvTab(this,'hearted')">❤️ Hearted</div>
+        <div class="svt" onclick="setSvTab(this,'planned')">🗺️ Planned</div>
         <div class="svt" onclick="setSvTab(this,'completed')">✅ Done</div>
         <div class="svt" onclick="setSvTab(this,'created')">📝 Created</div>
       </div>
@@ -390,7 +365,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
         <div class="nmw">
           <div id="nmap"></div>
           <div class="ntop">
-            <div class="nsb"><span>🗺️</span><input type="text" id="planInput" placeholder="Plan a route — search destination…" oninput="onPlanSearch(this.value)" autocomplete="off"></div>
+            <div class="nsb"><span>🗺️</span><input type="text" id="planInput" placeholder="Search destination…" oninput="onPlanSearch(this.value)" autocomplete="off"></div>
             <div class="nsug" id="planSug"></div>
             <div class="ncard" id="navCard">
               <div class="ndir" id="navDir">🧭 Follow the route</div>
@@ -402,39 +377,39 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
               </div>
             </div>
           </div>
-          <!-- Report FAB - drag to location -->
+          <!-- Report FAB -->
           <div class="rep-hint" id="repHint">Drag to report</div>
           <button class="report-fab" id="reportFab">⚠️</button>
           <div class="drop-ring" id="dropRing"></div>
           <!-- Map controls -->
           <div class="mcs">
-            <button class="mc" onclick="locateMe()">📍</button>
-            <button class="mc" id="satBtn" onclick="toggleSat()">🛰️</button>
+            <button class="mc" onclick="locateMe()" title="Find me">📍</button>
+            <button class="mc" id="satBtn" onclick="toggleSat()" title="Satellite">🛰️</button>
+            <button class="mc" id="drawBtn" onclick="toggleDraw()" title="Draw route">✏️</button>
           </div>
           <!-- Bottom bar -->
           <div class="nav-bottom" id="navBottom">
             <button class="walkies-btn" onclick="justWalkies()">
               <span style="font-size:24px">🚶🐕</span>
-              <div style="text-align:left;">
-                <div style="font-size:15px;font-weight:800;">Just Walkies!</div>
-                <div style="font-size:10px;opacity:.75;">Zoom in and go</div>
-              </div>
+              <div style="text-align:left;"><div style="font-size:15px;font-weight:800;">Just Walkies!</div><div style="font-size:10px;opacity:.75;">Zoom in and go</div></div>
             </button>
             <button class="plan-btn" onclick="focusPlan()">
               <span style="font-size:20px">🗺️</span>
-              <div style="text-align:left;">
-                <div style="font-size:13px;font-weight:700;color:var(--g);">Plan</div>
-                <div style="font-size:10px;color:var(--t2);">Search</div>
-              </div>
+              <div style="text-align:left;"><div style="font-size:13px;font-weight:700;color:var(--g);">Plan</div><div style="font-size:10px;color:var(--t2);">Search</div></div>
             </button>
           </div>
-          <!-- Walkies active tracker -->
-          <div class="walkies-active" id="walkiesActive">
-            <div>
-              <div class="wa-dist" id="waDist">0.00 km</div>
-              <div class="wa-time" id="waTime">0:00</div>
-            </div>
+          <!-- Walkies active -->
+          <div class="wa-bar" id="waBar">
+            <div><div class="wa-dist" id="waDist">0.00 km</div><div class="wa-time" id="waTime">0:00</div></div>
             <button class="wa-stop" onclick="stopWalkies()">⏹ Finish Walk</button>
+          </div>
+          <!-- Draw mode bar -->
+          <div class="draw-bar" id="drawBar">
+            <div><div class="draw-dist" id="drawDist">0.00 km</div><div class="draw-info" id="drawInfo">Tap map to add waypoints</div></div>
+            <div class="draw-btns">
+              <button class="draw-btn" onclick="undoDrawPoint()">↩ Undo</button>
+              <button class="draw-btn save" onclick="finishDraw()">Save Route</button>
+            </div>
           </div>
         </div>
       </div>
@@ -443,7 +418,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <!-- ACTIVITY -->
     <div class="page" id="page-activity">
       <div class="ah">
-        <div class="aht"><div class="ahav" id="actAv">🦊</div><div><div class="ahnm" id="actNm">Trail Walker</div><div class="ahrnk" id="actRnk">🐾 Pup · 0 reports</div></div></div>
+        <div class="aht"><div class="ahav" id="actAv">🐕</div><div><div class="ahnm" id="actNm">Trail Walker</div><div class="ahrnk" id="actRnk">🐾 Pup · 0 reports</div></div></div>
         <div class="ahst">
           <div class="as"><div class="asn" id="asW">0</div><div class="asl">Walks</div></div>
           <div class="as"><div class="asn" id="asD">0.0</div><div class="asl">km</div></div>
@@ -457,15 +432,6 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
         </div>
         <div class="rnkpb"><div class="rnkpf" id="rnkP" style="width:0%"></div></div>
         <div style="font-size:11px;color:var(--t2);margin-top:5px;" id="rnkNt">5 reports → Hound</div>
-        <div style="display:flex;align-items:center;margin-top:12px;padding:0 4px;">
-          <div style="text-align:center;flex-shrink:0;"><div style="font-size:20px;">🐾</div><div style="font-size:9px;color:var(--t2);font-weight:600;">Pup</div></div>
-          <div style="flex:1;height:2px;background:var(--bd);margin:0 4px;margin-top:-10px;" id="rl1"></div>
-          <div style="text-align:center;flex-shrink:0;" id="rng1"><div style="font-size:20px;opacity:.3;">🐕</div><div style="font-size:9px;color:var(--t2);font-weight:600;">Hound</div></div>
-          <div style="flex:1;height:2px;background:var(--bd);margin:0 4px;margin-top:-10px;" id="rl2"></div>
-          <div style="text-align:center;flex-shrink:0;" id="rng2"><div style="font-size:20px;opacity:.3;">🦮</div><div style="font-size:9px;color:var(--t2);font-weight:600;">Trail Dog</div></div>
-          <div style="flex:1;height:2px;background:var(--bd);margin:0 4px;margin-top:-10px;" id="rl3"></div>
-          <div style="text-align:center;flex-shrink:0;" id="rng3"><div style="font-size:20px;opacity:.3;">👑</div><div style="font-size:9px;color:var(--t2);font-weight:600;">Pack Leader</div></div>
-        </div>
       </div>
       <div class="sw2" style="margin-top:14px;"><div class="sw2t">Your Pack 🐕</div><div id="dogsList"></div><div class="adg" onclick="addDogPrompt()">+ Add a dog</div></div>
       <div class="sw2"><div class="sw2t">Medals 🏅</div><div class="mg" id="medGrid"></div></div>
@@ -475,7 +441,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <!-- PROFILE -->
     <div class="page" id="page-profile">
       <div class="prt">
-        <div class="prav" id="profAv">🦊</div>
+        <div class="prav" id="profAv">🐕</div>
         <div>
           <div class="prnm" id="profNm">Trail Walker</div>
           <div class="prrp" id="profRP">🐾 Pup</div>
@@ -507,13 +473,19 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div id="detFS" style="margin-bottom:12px;"></div>
     <div id="detDS" style="margin-bottom:12px;"></div>
     <p class="det-desc" id="detDesc"></p>
-    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">Your Rating</div>
+    <!-- Route photos -->
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px;">Photos</div>
+    <div class="photos-strip" id="detPhotos">
+      <div class="photo-add" onclick="addRoutePhoto()"><span style="font-size:20px;">📸</span><span>Add photo</span></div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none" onchange="onPhotoSelected(this)">
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;margin-top:12px;text-transform:uppercase;letter-spacing:.4px;">Your Rating</div>
     <div style="display:flex;gap:3px;margin-bottom:20px;" id="detStars"></div>
   </div>
   <div class="det-ft">
     <button class="dfw" onclick="walkFromDetail()">🚶🐕 Walkies!</button>
+    <button style="flex:1;padding:14px;background:#EFF6FF;color:#1D4ED8;border:none;border-radius:13px;font-size:13px;font-weight:700;cursor:pointer;" onclick="planFromDetail()">📋 Plan</button>
     <button class="dfh" id="detHB" onclick="heartFromDetail()">❤️</button>
-    <button class="dfd" id="detDB" onclick="doneFromDetail()">✅</button>
   </div>
 </div>
 
@@ -530,95 +502,82 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
   </div>
 </div>
 
+<!-- CONFIRM / DENY BANNER -->
+<div class="cdn-bar" id="cdnBar">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+    <div class="cdn-ico" id="cdnIco">🐄</div>
+    <div><div class="cdn-title" id="cdnTitle">Cattle reported nearby</div><div class="cdn-sub" id="cdnSub">Reported 2hrs ago — still there?</div></div>
+  </div>
+  <div class="cdn-btns">
+    <button class="cdn-yes" onclick="confirmMarker(true)">✅ Still there</button>
+    <button class="cdn-no" onclick="confirmMarker(false)">❌ Not seen</button>
+    <button class="cdn-skip" onclick="dismissCdn()">Skip</button>
+  </div>
+</div>
+
 <!-- REPORT SHEET -->
 <div class="rep-sheet" id="repSheet">
   <div class="rep-inner">
     <div class="rep-drag"></div>
-    <div class="rep-title" id="repTitle">📍 Report something</div>
-    <div class="rep-sub" id="repSub" style="font-size:13px;color:var(--t2);margin-bottom:16px;">Dropped at your location — tap a category</div>
-
-    <!-- ACCORDION CATEGORIES -->
+    <div class="rep-title">📍 Report something</div>
+    <div class="rep-sub" id="repSub">Pinned at your location</div>
     <div class="acc-section">
-      <div class="acc-head" onclick="toggleAcc(this)">
-        <span class="acc-head-ico">🏛️</span><span class="acc-head-lbl">Facilities & highlights</span><span class="acc-arrow">▼</span>
+      <div class="acc-head open" onclick="toggleAcc(this)"><span style="font-size:16px;">🐄</span><span class="acc-head-lbl">Animals</span><span class="acc-arrow">▼</span></div>
+      <div class="acc-body open">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;">Auto-expire after 30 days</div>
+        <div class="rep-grid">
+          <div class="rep-item time" onclick="reportItem({type:'cattle',icon:'🐄',label:'Cattle',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐄</div><div class="rep-item-lbl">Cattle</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'sheep',icon:'🐑',label:'Sheep',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐑</div><div class="rep-item-lbl">Sheep</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'horses',icon:'🐎',label:'Horses',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐎</div><div class="rep-item-lbl">Horses</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'pigs',icon:'🐷',label:'Pigs',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐷</div><div class="rep-item-lbl">Pigs</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'geese',icon:'🦢',label:'Geese',perm:false,days:30,pts:25})"><div class="rep-item-ico">🦢</div><div class="rep-item-lbl">Geese</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'dogs',icon:'🐕',label:'Dogs off lead',perm:false,days:7,pts:15})"><div class="rep-item-ico">🐕</div><div class="rep-item-lbl">Dogs off lead</div><div class="rep-pts">+15 pts</div></div>
+        </div>
       </div>
+    </div>
+    <div class="acc-section">
+      <div class="acc-head" onclick="toggleAcc(this)"><span style="font-size:16px;">🏛️</span><span class="acc-head-lbl">Facilities & highlights</span><span class="acc-arrow">▼</span></div>
       <div class="acc-body">
         <div class="rep-grid">
           <div class="rep-item perm" onclick="reportItem({type:'poobin',icon:'🗑️',label:'Poo bin',perm:true,pts:20})"><div class="rep-item-ico">🗑️</div><div class="rep-item-lbl">Poo bin</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'parking',icon:'🅿️',label:'Parking',perm:true,pts:20})"><div class="rep-item-ico">🅿️</div><div class="rep-item-lbl">Parking</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'water',icon:'💧',label:'Water tap',perm:true,pts:20})"><div class="rep-item-ico">💧</div><div class="rep-item-lbl">Water tap</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'bench',icon:'🪑',label:'Bench',perm:true,pts:20})"><div class="rep-item-ico">🪑</div><div class="rep-item-lbl">Bench</div><div class="rep-pts">+20 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'toilets',icon:'🚻',label:'Toilets',perm:true,pts:20})"><div class="rep-item-ico">🚻</div><div class="rep-item-lbl">Toilets</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'view',icon:'🌄',label:'Great view',perm:true,pts:15})"><div class="rep-item-ico">🌄</div><div class="rep-item-lbl">Great view</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'swim',icon:'🏊',label:'Dog swim spot',perm:true,pts:25})"><div class="rep-item-ico">🏊</div><div class="rep-item-lbl">Dog swim</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'ruins',icon:'🏰',label:'Ancient ruins',perm:true,pts:15})"><div class="rep-item-ico">🏰</div><div class="rep-item-lbl">Ruins</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'swim',icon:'🏊',label:'Dog swim',perm:true,pts:25})"><div class="rep-item-ico">🏊</div><div class="rep-item-lbl">Dog swim</div><div class="rep-pts">+25 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'ruins',icon:'🏰',label:'Ruins',perm:true,pts:15})"><div class="rep-item-ico">🏰</div><div class="rep-item-lbl">Ruins</div><div class="rep-pts">+15 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'waterfall',icon:'💦',label:'Waterfall',perm:true,pts:15})"><div class="rep-item-ico">💦</div><div class="rep-item-lbl">Waterfall</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'toilets',icon:'🚻',label:'Toilets',perm:true,pts:15})"><div class="rep-item-ico">🚻</div><div class="rep-item-lbl">Toilets</div><div class="rep-pts">+15 pts</div></div>
         </div>
       </div>
     </div>
-
     <div class="acc-section">
-      <div class="acc-head" onclick="toggleAcc(this)">
-        <span class="acc-head-ico">☕</span><span class="acc-head-lbl">Food & drink</span><span class="acc-arrow">▼</span>
-      </div>
+      <div class="acc-head" onclick="toggleAcc(this)"><span style="font-size:16px;">☕</span><span class="acc-head-lbl">Food & drink</span><span class="acc-arrow">▼</span></div>
       <div class="acc-body">
         <div class="rep-grid">
           <div class="rep-item perm" onclick="reportItem({type:'cafe',icon:'☕',label:'Café',perm:true,pts:20})"><div class="rep-item-ico">☕</div><div class="rep-item-lbl">Café</div><div class="rep-pts">+20 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'pub',icon:'🍺',label:'Dog-friendly pub',perm:true,pts:20})"><div class="rep-item-ico">🍺</div><div class="rep-item-lbl">Dog pub</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item perm" onclick="reportItem({type:'pub',icon:'🍺',label:'Dog pub',perm:true,pts:20})"><div class="rep-item-ico">🍺</div><div class="rep-item-lbl">Dog pub</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item perm" onclick="reportItem({type:'restaurant',icon:'🍽️',label:'Restaurant',perm:true,pts:20})"><div class="rep-item-ico">🍽️</div><div class="rep-item-lbl">Restaurant</div><div class="rep-pts">+20 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'coffeecart',icon:'🛻',label:'Coffee cart',perm:false,days:7,pts:15})"><div class="rep-item-ico">🛻</div><div class="rep-item-lbl">Coffee cart</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item perm" onclick="reportItem({type:'icecream',icon:'🍦',label:'Ice cream',perm:false,days:7,pts:15})"><div class="rep-item-ico">🍦</div><div class="rep-item-lbl">Ice cream</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'coffeecart',icon:'🛻',label:'Coffee cart',perm:false,days:7,pts:15})"><div class="rep-item-ico">🛻</div><div class="rep-item-lbl">Coffee cart</div><div class="rep-pts">+15 pts</div></div>
         </div>
       </div>
     </div>
-
-    <div class="acc-section">
-      <div class="acc-head open" onclick="toggleAcc(this)">
-        <span class="acc-head-ico">🐄</span><span class="acc-head-lbl">Animals</span><span class="acc-arrow">▼</span>
-      </div>
-      <div class="acc-body open">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;">Auto-expire after 30 days if unconfirmed</div>
-        <div class="rep-grid">
-          <div class="rep-item time" onclick="reportItem({type:'cattle',icon:'🐄',label:'Cattle',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐄</div><div class="rep-item-lbl">Cattle</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'sheep',icon:'🐑',label:'Sheep',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐑</div><div class="rep-item-lbl">Sheep</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'horses',icon:'🐎',label:'Horses',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐎</div><div class="rep-item-lbl">Horses</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'pigs',icon:'🐷',label:'Pigs',perm:false,days:30,pts:25})"><div class="rep-item-ico">🐷</div><div class="rep-item-lbl">Pigs</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'geese',icon:'🦢',label:'Geese / ducks',perm:false,days:30,pts:25})"><div class="rep-item-ico">🦢</div><div class="rep-item-lbl">Geese</div><div class="rep-pts">+25 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'dogs',icon:'🐕',label:'Dogs off lead',perm:false,days:7,pts:15})"><div class="rep-item-ico">🐕</div><div class="rep-item-lbl">Dogs off lead</div><div class="rep-pts">+15 pts</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc-section">
-      <div class="acc-head" onclick="toggleAcc(this)">
-        <span class="acc-head-ico">🟤</span><span class="acc-head-lbl">Trail conditions</span><span class="acc-arrow">▼</span>
-      </div>
-      <div class="acc-body">
-        <div class="rep-grid">
-          <div class="rep-item time" onclick="reportItem({type:'mud',icon:'🟤',label:'Muddy / boggy',perm:false,days:14,pts:15})"><div class="rep-item-ico">🟤</div><div class="rep-item-lbl">Muddy</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'flood',icon:'🌊',label:'Flooding',perm:false,days:7,pts:15})"><div class="rep-item-ico">🌊</div><div class="rep-item-lbl">Flooding</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'tree',icon:'🌲',label:'Fallen tree',perm:false,days:14,pts:15})"><div class="rep-item-ico">🌲</div><div class="rep-item-lbl">Fallen tree</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'ice',icon:'🧊',label:'Icy path',perm:false,days:3,pts:15})"><div class="rep-item-ico">🧊</div><div class="rep-item-lbl">Icy path</div><div class="rep-pts">+15 pts</div></div>
-          <div class="rep-item time" onclick="reportItem({type:'stile',icon:'🚧',label:'Stile issue',perm:false,days:30,pts:15})"><div class="rep-item-ico">🚧</div><div class="rep-item-lbl">Stile issue</div><div class="rep-pts">+15 pts</div></div>
-        </div>
-      </div>
-    </div>
-
     <div class="acc-section" style="border-bottom:none;">
-      <div class="acc-head" onclick="toggleAcc(this)">
-        <span class="acc-head-ico">🔴</span><span class="acc-head-lbl">Safety</span><span class="acc-arrow">▼</span>
-      </div>
+      <div class="acc-head" onclick="toggleAcc(this)"><span style="font-size:16px;">🔴</span><span class="acc-head-lbl">Safety</span><span class="acc-arrow">▼</span></div>
       <div class="acc-body">
         <div class="rep-grid">
-          <div class="rep-item safe" onclick="reportItem({type:'cliff',icon:'⛰️',label:'Cliff / steep drop',perm:true,pts:20})"><div class="rep-item-ico">⛰️</div><div class="rep-item-lbl">Cliff</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item safe" onclick="reportItem({type:'cliff',icon:'⛰️',label:'Cliff / steep',perm:true,pts:20})"><div class="rep-item-ico">⛰️</div><div class="rep-item-lbl">Cliff</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item safe" onclick="reportItem({type:'road',icon:'🚗',label:'Dangerous road',perm:true,pts:20})"><div class="rep-item-ico">🚗</div><div class="rep-item-lbl">Danger road</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item safe" onclick="reportItem({type:'nodogs',icon:'🚫',label:'No dogs zone',perm:true,pts:20})"><div class="rep-item-ico">🚫</div><div class="rep-item-lbl">No dogs</div><div class="rep-pts">+20 pts</div></div>
           <div class="rep-item safe" onclick="reportItem({type:'algae',icon:'☠️',label:'Blue-green algae',perm:true,pts:25})"><div class="rep-item-ico">☠️</div><div class="rep-item-lbl">Algae risk</div><div class="rep-pts">+25 pts</div></div>
           <div class="rep-item safe" onclick="reportItem({type:'aggdog',icon:'⚡',label:'Aggressive dog',perm:false,days:7,pts:20})"><div class="rep-item-ico">⚡🐕</div><div class="rep-item-lbl">Aggr. dog</div><div class="rep-pts">+20 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'mud',icon:'🟤',label:'Muddy',perm:false,days:14,pts:15})"><div class="rep-item-ico">🟤</div><div class="rep-item-lbl">Muddy</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'flood',icon:'🌊',label:'Flooding',perm:false,days:7,pts:15})"><div class="rep-item-ico">🌊</div><div class="rep-item-lbl">Flooding</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'tree',icon:'🌲',label:'Fallen tree',perm:false,days:14,pts:15})"><div class="rep-item-ico">🌲</div><div class="rep-item-lbl">Fallen tree</div><div class="rep-pts">+15 pts</div></div>
+          <div class="rep-item time" onclick="reportItem({type:'ice',icon:'🧊',label:'Icy path',perm:false,days:3,pts:15})"><div class="rep-item-ico">🧊</div><div class="rep-item-lbl">Icy path</div><div class="rep-pts">+15 pts</div></div>
         </div>
       </div>
     </div>
-
     <button style="width:100%;padding:13px;background:transparent;border:none;font-family:inherit;font-size:13px;color:var(--t2);cursor:pointer;margin-top:8px;" onclick="closeRepSheet()">Cancel</button>
   </div>
 </div>
@@ -626,7 +585,8 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 <!-- SAVE SHEET -->
 <div class="ssheet" id="saveSheet">
   <div class="ssi">
-    <div class="sdrag"></div><div class="stit">💾 Save Your Route</div>
+    <div class="sdrag"></div>
+    <div class="stit" id="saveTit">💾 Save Your Route</div>
     <div class="ff"><label class="fl">Name *</label><input class="fi" id="rName" placeholder="e.g. Chew Magna Loop" maxlength="60"></div>
     <div class="ff"><label class="fl">Description</label><textarea class="fta" id="rDesc" placeholder="Tips for dog walkers…"></textarea></div>
     <div class="frow">
@@ -635,6 +595,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     </div>
     <label class="fchk"><input type="checkbox" id="rOff"> 🟢 Safe off-lead</label>
     <label class="fchk"><input type="checkbox" id="rWater"> 💧 Water access</label>
+    <label class="fchk"><input type="checkbox" id="rPlan"> 📋 Save as planned (walk later)</label>
     <button class="bsv" id="btnSave" onclick="saveRoute()">Save to Paw Trails 🐾</button>
     <button class="bcl" onclick="document.getElementById('saveSheet').classList.remove('on')">Cancel</button>
   </div>
@@ -650,40 +611,55 @@ var H={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/js
 function sbG(t,q){return fetch(SB+'/rest/v1/'+t+'?'+(q||''),{headers:H}).then(function(r){if(!r.ok)throw r;return r.json();});}
 function sbI(t,d){return fetch(SB+'/rest/v1/'+t,{method:'POST',headers:H,body:JSON.stringify(d)}).then(function(r){if(!r.ok)throw r;return r.json();});}
 
-// ── EXPIRY CONFIG (days) — edit these to change auto-expiry ──────────
+// ── EXPIRY CONFIG ─────────────────────────────────────────────────────
 var EXPIRY={cattle:30,sheep:30,horses:30,pigs:30,geese:30,dogs:7,mud:14,flood:7,tree:14,ice:3,stile:30,aggdog:7};
+var ANIMAL_TYPES=['cattle','sheep','horses','pigs','geese','dogs'];
+var VIBRATE_ON=true;
 
 // ── PHOTOS ────────────────────────────────────────────────────────────
 var PH={lake:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80',wood:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80',moor:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',valley:'https://images.unsplash.com/photo-1439853949212-36089f8a5831?w=600&q=80',hill:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',park:'https://images.unsplash.com/photo-1587502536900-31e4db8ee1f2?w=600&q=80'};
-function getPhoto(r){var n=(r.name||'').toLowerCase();if(n.includes('lake'))return PH.lake;if(n.includes('wood')||n.includes('lords'))return PH.wood;if(n.includes('maes')||n.includes('knoll'))return PH.hill;if(n.includes('litton')||n.includes('reservoir'))return PH.moor;if(n.includes('stanton')||n.includes('pensford')||n.includes('viaduct'))return PH.valley;return PH.park;}
+function getPhoto(r){
+  // Check local photos first
+  var lp=routePhotos[String(r.id)];
+  if(lp&&lp.length)return lp[0];
+  var n=(r.name||'').toLowerCase();
+  if(n.includes('lake'))return PH.lake;
+  if(n.includes('wood')||n.includes('lords'))return PH.wood;
+  if(n.includes('maes')||n.includes('knoll'))return PH.hill;
+  if(n.includes('litton')||n.includes('reservoir'))return PH.moor;
+  if(n.includes('stanton')||n.includes('pensford')||n.includes('viaduct'))return PH.valley;
+  return PH.park;
+}
 
-// ── SEED ROUTES ───────────────────────────────────────────────────────
+// ── SEED ──────────────────────────────────────────────────────────────
 var SEED=[
   {name:"Chew Magna Village Circular",description:"Lovely loop from The Pelican pub car park along the River Chew. Several kissing gates — some tight for larger dogs. Cattle possible in fields. Finish with fish and chips at Salt and Malt or a pint at The Pelican.",difficulty:"easy",distance_km:4.0,duration_mins:60,off_lead:false,has_water:true,created_by:"PawTrails Team",dog_notes:"Cattle in fields — leads essential. Tight kissing gates for large breeds.",path:[[51.3642,-2.6201],[51.3658,-2.6189],[51.3671,-2.6172],[51.3679,-2.6158],[51.3668,-2.6143],[51.3651,-2.6137],[51.3638,-2.6152],[51.3629,-2.6171],[51.3635,-2.6192],[51.3642,-2.6201]]},
   {name:"Chew Valley Lake Perimeter",description:"Stunning lakeside walk but dogs MUST be on lead at all times. Watch for blue-green algae warnings in summer. Salt and Malt fish and chip restaurant on site is exceptional.",difficulty:"moderate",distance_km:5.6,duration_mins:90,off_lead:false,has_water:false,created_by:"PawTrails Team",dog_notes:"Dogs on lead at ALL times. No swimming. Blue-green algae risk in summer.",path:[[51.3445,-2.6285],[51.3428,-2.6301],[51.3412,-2.6318],[51.3398,-2.6334],[51.3385,-2.6312],[51.3378,-2.6289],[51.3391,-2.6267],[51.3412,-2.6254],[51.3431,-2.6261],[51.3445,-2.6285]]},
-  {name:"Knowle Hill and River Chew",description:"Climb to Knowle Hill for panoramic views over Chew Valley, then drop back through fields to the river. Cattle occasionally in the lower fields.",difficulty:"moderate",distance_km:3.8,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Off-lead on hill top. Leads for lower fields — cattle common April to October.",path:[[51.3642,-2.6201],[51.3628,-2.6178],[51.3615,-2.6154],[51.3601,-2.6138],[51.3589,-2.6151],[51.3598,-2.6172],[51.3612,-2.6191],[51.3628,-2.6205],[51.3642,-2.6201]]},
-  {name:"Maes Knoll Iron Age Fort",description:"Superb hill walk to one of the best viewpoints in Somerset. A real Iron Age hillfort with earthworks and 360-degree views on a clear day.",difficulty:"hard",distance_km:5.2,duration_mins:80,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Mostly off-lead. Steep ascent — tough for small or elderly dogs.",path:[[51.3812,-2.5891],[51.3798,-2.5872],[51.3785,-2.5851],[51.3771,-2.5838],[51.3758,-2.5852],[51.3769,-2.5874],[51.3782,-2.5895],[51.3798,-2.5908],[51.3812,-2.5891]]},
+  {name:"Knowle Hill and River Chew",description:"Climb to Knowle Hill for panoramic views over Chew Valley, then drop back through fields to the river.",difficulty:"moderate",distance_km:3.8,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Off-lead on hill top. Leads for lower fields — cattle common April to October.",path:[[51.3642,-2.6201],[51.3628,-2.6178],[51.3615,-2.6154],[51.3601,-2.6138],[51.3589,-2.6151],[51.3598,-2.6172],[51.3612,-2.6191],[51.3628,-2.6205],[51.3642,-2.6201]]},
+  {name:"Maes Knoll Iron Age Fort",description:"Superb hill walk to one of the best viewpoints in Somerset. A real Iron Age hillfort with 360-degree views.",difficulty:"hard",distance_km:5.2,duration_mins:80,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Mostly off-lead. Steep ascent — tough for small or elderly dogs.",path:[[51.3812,-2.5891],[51.3798,-2.5872],[51.3785,-2.5851],[51.3771,-2.5838],[51.3758,-2.5852],[51.3769,-2.5874],[51.3782,-2.5895],[51.3798,-2.5908],[51.3812,-2.5891]]},
   {name:"Stanton Drew Stone Circle",description:"Flat easy walk along the River Chew to England's second largest stone circle. Almost entirely off-lead through meadows.",difficulty:"easy",distance_km:3.0,duration_mins:45,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Mostly off-lead. Occasional cattle in riverside meadows in spring.",path:[[51.3638,-2.5982],[51.3651,-2.5968],[51.3665,-2.5951],[51.3679,-2.5938],[51.3692,-2.5952],[51.3681,-2.5971],[51.3668,-2.5985],[51.3651,-2.5995],[51.3638,-2.5982]]},
-  {name:"Lords Wood Circular",description:"Beautiful ancient woodland — perfect for dogs who love sniffing through the undergrowth. Roe and fallow deer resident so recall needs to be solid.",difficulty:"easy",distance_km:2.5,duration_mins:40,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Fully off-lead but deer present — solid recall essential.",path:[[51.3521,-2.6412],[51.3508,-2.6398],[51.3495,-2.6381],[51.3482,-2.6368],[51.3495,-2.6352],[51.3511,-2.6365],[51.3524,-2.6381],[51.3535,-2.6398],[51.3521,-2.6412]]},
-  {name:"Pensford Viaduct Trail",description:"Lovely walk taking in the dramatic Pensford railway viaduct. Mix of riverside, field and village paths. Dog-friendly pub in Pensford village with garden.",difficulty:"moderate",distance_km:5.0,duration_mins:75,off_lead:false,has_water:true,created_by:"PawTrails Team",dog_notes:"Mixed on and off-lead. Leads essential near road crossings and cattle fields.",path:[[51.3701,-2.5862],[51.3715,-2.5845],[51.3728,-2.5828],[51.3741,-2.5812],[51.3755,-2.5825],[51.3742,-2.5845],[51.3728,-2.5861],[51.3715,-2.5878],[51.3701,-2.5862]]},
-  {name:"Litton Reservoir and Village Loop",description:"Two pretty lakes, quiet footpaths and The Ring O Bells in Litton — a 16th century pub that is fully dog-friendly inside.",difficulty:"easy",distance_km:4.0,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Largely off-lead. Well-behaved dogs welcome inside The Ring O Bells pub.",path:[[51.3125,-2.6218],[51.3112,-2.6201],[51.3098,-2.6185],[51.3085,-2.6171],[51.3098,-2.6155],[51.3115,-2.6168],[51.3128,-2.6185],[51.3141,-2.6201],[51.3125,-2.6218]]}
+  {name:"Lords Wood Circular",description:"Beautiful ancient woodland — perfect for dogs who love sniffing. Roe and fallow deer resident so recall needs to be solid.",difficulty:"easy",distance_km:2.5,duration_mins:40,off_lead:true,has_water:false,created_by:"PawTrails Team",dog_notes:"Fully off-lead but deer present — solid recall essential.",path:[[51.3521,-2.6412],[51.3508,-2.6398],[51.3495,-2.6381],[51.3482,-2.6368],[51.3495,-2.6352],[51.3511,-2.6365],[51.3524,-2.6381],[51.3535,-2.6398],[51.3521,-2.6412]]},
+  {name:"Pensford Viaduct Trail",description:"Lovely walk taking in the dramatic Pensford railway viaduct. Dog-friendly pub in Pensford village with garden.",difficulty:"moderate",distance_km:5.0,duration_mins:75,off_lead:false,has_water:true,created_by:"PawTrails Team",dog_notes:"Mixed on and off-lead. Leads essential near road crossings.",path:[[51.3701,-2.5862],[51.3715,-2.5845],[51.3728,-2.5828],[51.3741,-2.5812],[51.3755,-2.5825],[51.3742,-2.5845],[51.3728,-2.5861],[51.3715,-2.5878],[51.3701,-2.5862]]},
+  {name:"Litton Reservoir and Village Loop",description:"Two pretty lakes and The Ring O Bells in Litton — a 16th century pub that is fully dog-friendly inside.",difficulty:"easy",distance_km:4.0,duration_mins:55,off_lead:true,has_water:true,created_by:"PawTrails Team",dog_notes:"Largely off-lead. Well-behaved dogs welcome inside The Ring O Bells pub.",path:[[51.3125,-2.6218],[51.3112,-2.6201],[51.3098,-2.6185],[51.3085,-2.6171],[51.3098,-2.6155],[51.3115,-2.6168],[51.3128,-2.6185],[51.3141,-2.6201],[51.3125,-2.6218]]}
 ];
 
 var RANKS=[{name:'Pup',icon:'🐾',min:0,next:5},{name:'Hound',icon:'🐕',min:5,next:15},{name:'Trail Dog',icon:'🦮',min:15,next:40},{name:'Pack Leader',icon:'👑',min:40,next:null}];
 var MEDALS=[{icon:'🥾',name:'First Steps',type:'walks',n:1},{icon:'🗺️',name:'Explorer',type:'walks',n:10},{icon:'⚠️',name:'First Report',type:'reports',n:1},{icon:'🌍',name:'Local Guide',type:'reports',n:10},{icon:'👑',name:'Pack Leader',type:'reports',n:40},{icon:'✅',name:'Completionist',type:'done',n:5},{icon:'❤️',name:'Route Lover',type:'hearts',n:5},{icon:'🏔️',name:'Trailblazer',type:'walks',n:25}];
 
 // ── STATE ─────────────────────────────────────────────────────────────
-var profile=null,dogs=[],reactions={},completions=new Set(),ratings={};
+var profile=null,dogs=[],reactions={},completions=new Set(),ratings={},planned=new Set();
+var routePhotos={};// routeId -> [base64...]
 var totalWalks=0,totalReports=0,totalDist=0,xp=0;
 var allRoutes=[],allMarkers=[],activeFilter='all',searchQ='',detailRoute=null,rmsRoute=null;
-var map=null,mapInited=false,followL=null,planL=null,walkiesLine=null;
+var map=null,mapInited=false,followL=null,planL=null,walkiesLine=null,drawLine=null,dogLocMarker=null;
 var navOn=false,navMuted=false,navWPs=[],navIdx=0;
 var walkiesOn=false,walkiesPath=[],walkiesDist=0,walkiesStart=null,walkiesTimer=null;
-var sat=false,obStep=0,selAv='🦊',dogN=0,geoTO=null;
+var drawOn=false,drawPath=[],drawDist=0;
+var sat=false,obStep=0,selAv='🐕',dogN=0,geoTO=null;
 var userLat=51.364,userLon=-2.620;
-var markerLayers=[];
+var markerLayers=[],dropLatLng=null;
+var cdnMarker=null,cdnDismissed=new Set();
 
-// Geolocation
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
   function(p){userLat=p.coords.latitude;userLon=p.coords.longitude;if(activeFilter==='nearby')renderList();},
   function(){},{timeout:8000}
@@ -691,32 +667,35 @@ if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
 
 // ── INIT ──────────────────────────────────────────────────────────────
 window.onload=function(){
-  var s=localStorage.getItem('pt_profile');
-  if(s){
-    try{
+  try{
+    var s=localStorage.getItem('pt_profile');
+    if(s){
       profile=JSON.parse(s);
       dogs=JSON.parse(localStorage.getItem('pt_dogs')||'[]');
       reactions=JSON.parse(localStorage.getItem('pt_reactions')||'{}');
       completions=new Set(JSON.parse(localStorage.getItem('pt_completions')||'[]'));
+      planned=new Set(JSON.parse(localStorage.getItem('pt_planned')||'[]'));
       ratings=JSON.parse(localStorage.getItem('pt_ratings')||'{}');
+      routePhotos=JSON.parse(localStorage.getItem('pt_photos')||'{}');
       totalWalks=parseInt(localStorage.getItem('pt_walks')||'0');
       totalReports=parseInt(localStorage.getItem('pt_reports')||'0');
       totalDist=parseFloat(localStorage.getItem('pt_dist')||'0');
       xp=parseInt(localStorage.getItem('pt_xp')||'0');
+      VIBRATE_ON=localStorage.getItem('pt_vibrate')!=='false';
       document.getElementById('obOv').classList.add('gone');
       applyProfile();
-    }catch(e){initOb();}
-  }else{initOb();}
-  // Show local routes immediately
+    }else{initOb();}
+  }catch(e){initOb();}
   allRoutes=SEED.map(function(r,i){return Object.assign({},r,{id:'local-'+i});});
   renderList();updateSavedStats();renderMedals();
-  // Load from DB in background
   loadFromDB();
+  // Hide hint after 4s
+  setTimeout(function(){var h=document.getElementById('repHint');if(h)h.style.opacity='0';},4000);
 };
 
 function loadFromDB(){
   sbG('routes','order=created_at.desc&limit=100').then(function(routes){
-    var hasChew=routes.some(function(r){return r.name&&r.name.includes('Chew')||r.name&&r.name.includes('Knowle');});
+    var hasChew=routes.some(function(r){return r.name&&(r.name.includes('Chew')||r.name.includes('Knowle'));});
     if(!routes.length||!hasChew){
       var dbR=SEED.map(function(r){return{name:r.name,description:r.description,difficulty:r.difficulty,distance_km:r.distance_km,duration_mins:r.duration_mins,off_lead:r.off_lead,has_water:r.has_water,created_by:r.created_by,path:r.path};});
       sbI('routes',dbR).then(function(){return sbG('routes','order=created_at.desc&limit=100');}).then(function(fresh){
@@ -725,31 +704,24 @@ function loadFromDB(){
     }else{
       allRoutes=mergeRoutes(routes);renderList();
     }
-    // Load markers
     loadMarkers();
-  }).catch(function(e){console.warn('DB offline, using local data');});
+  }).catch(function(){console.warn('DB offline');});
 }
-
 function mergeRoutes(routes){
   return routes.map(function(r){
     var s=SEED.find(function(x){return x.name===r.name;});
     return s?Object.assign({},r,{dog_notes:s.dog_notes}):r;
   });
 }
-
 function loadMarkers(){
-  sbG('markers','order=created_at.desc&limit=200').then(function(markers){
+  sbG('markers','order=created_at.desc&limit=300').then(function(markers){
     allMarkers=markers;
     if(map)renderMarkersOnMap();
   }).catch(function(){});
 }
 
 // ── FIELD STATUS ──────────────────────────────────────────────────────
-var ANIMAL_TYPES=['cattle','sheep','horses','pigs','geese','dogs'];
-var CONDITION_TYPES=['mud','flood','tree','ice','stile'];
-
 function getRouteFieldStatus(routeId){
-  // Find most recent animal or condition report within 500m of route
   var route=allRoutes.find(function(r){return String(r.id)===String(routeId);});
   if(!route||!allMarkers.length)return null;
   var path=typeof route.path==='string'?JSON.parse(route.path):route.path;
@@ -757,40 +729,33 @@ function getRouteFieldStatus(routeId){
   var centre=path[0];
   var relevant=allMarkers.filter(function(m){
     if(m.is_permanent)return false;
-    var isAnimal=ANIMAL_TYPES.indexOf(m.type)>-1;
-    var isCond=CONDITION_TYPES.indexOf(m.type)>-1;
-    if(!isAnimal&&!isCond)return false;
-    // Check expiry
+    var isAn=ANIMAL_TYPES.indexOf(m.type)>-1;
+    var isCo=['mud','flood','tree','ice','stile'].indexOf(m.type)>-1;
+    if(!isAn&&!isCo)return false;
     if(m.expires_at&&new Date(m.expires_at)<new Date())return false;
-    // Check proximity to route (roughly 500m)
-    var d=distKm(centre[0],centre[1],m.lat,m.lng);
-    return d<0.5;
+    return distKm(centre[0],centre[1],m.lat,m.lng)<0.5;
   });
   if(!relevant.length)return null;
-  // Return most recent
   relevant.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
   return relevant[0];
 }
-
 function fieldStatusHtml(routeId){
   var m=getRouteFieldStatus(routeId);
   if(!m)return '<div class="fs-pill fs-clear">✅ Fields clear</div>';
   var ago=timeAgo(m.created_at);
-  var isAnimal=ANIMAL_TYPES.indexOf(m.type)>-1;
-  var cls=isAnimal?'fs-warn':'fs-danger';
-  return '<div class="fs-pill '+cls+'">'+m.icon+' '+m.label+' — '+ago+'</div>';
+  var isAn=ANIMAL_TYPES.indexOf(m.type)>-1;
+  return '<div class="fs-pill '+(isAn?'fs-warn':'fs-danger')+'">'+m.icon+' '+m.label+' — '+ago+'</div>';
 }
-
-function timeAgo(dateStr){
-  if(!dateStr)return 'recently';
-  var diff=Math.floor((new Date()-new Date(dateStr))/1000);
+function timeAgo(ds){
+  if(!ds)return 'recently';
+  var diff=Math.floor((new Date()-new Date(ds))/1000);
   if(diff<3600)return Math.floor(diff/60)+'min ago';
   if(diff<86400)return Math.floor(diff/3600)+'hrs ago';
   var d=Math.floor(diff/86400);
   if(d===1)return 'yesterday';
   if(d<7)return d+' days ago';
   if(d<30)return Math.floor(d/7)+' weeks ago';
-  return 'last seen '+Math.floor(d/7)+' weeks ago — still there?';
+  return Math.floor(d/7)+' weeks ago — still there?';
 }
 
 // ── PAGE NAV ──────────────────────────────────────────────────────────
@@ -808,8 +773,9 @@ function routeDistFromUser(r){var p=typeof r.path==='string'?JSON.parse(r.path):
 function dogScore(r){if(!dogs[0])return 5;var sc=5,b=(dogs[0].breed||'').toLowerCase();var isS=['chihuahua','yorkie','shih tzu','maltese','pomeranian','dachshund'].some(function(x){return b.includes(x);});if(isS&&r.difficulty==='hard')sc-=2;if(isS&&r.distance_km>5)sc-=1;if(r.has_water)sc=Math.min(5,sc+1);return Math.max(1,Math.min(5,sc));}
 function getRank(n){return RANKS.slice().reverse().find(function(x){return n>=x.min;})||RANKS[0];}
 function routeBadge(r){if(r.created_by==='PawTrails Team')return '<span class="badge-v">✅ Verified</span>';return '<span class="badge-c">🌱 Community</span>';}
+function vibrate(ms){if(VIBRATE_ON&&navigator.vibrate)navigator.vibrate(ms||100);}
 
-// ── FILTER + RENDER ───────────────────────────────────────────────────
+// ── FILTER ────────────────────────────────────────────────────────────
 function filterRoutes(){
   var f=allRoutes.filter(function(r){
     var t=!searchQ||r.name.toLowerCase().includes(searchQ.toLowerCase());
@@ -833,10 +799,10 @@ function setFilter(el,f){document.querySelectorAll('.chip').forEach(function(c){
 function renderList(){
   var el=document.getElementById('routeList');if(!el)return;
   var routes=filterRoutes();
-  if(!routes.length){el.innerHTML='<div class="empty"><div class="ei">🐕</div><p>No routes match your filter.</p></div>';return;}
+  if(!routes.length){el.innerHTML='<div class="empty"><div class="ei">🐕</div><p>No routes match.</p></div>';return;}
   el.innerHTML='';
   routes.forEach(function(r){
-    var rx=reactions[r.id]||{},done=completions.has(String(r.id));
+    var rx=reactions[r.id]||{},done=completions.has(String(r.id)),isPlan=planned.has(String(r.id));
     var dc={easy:'de',moderate:'dm',hard:'dh'},w=Math.floor(Math.random()*8)+1;
     var card=document.createElement('div');card.className='rc';
     card.innerHTML=
@@ -844,7 +810,7 @@ function renderList(){
       +'<div class="rc-bot"><span class="diff '+(dc[r.difficulty]||'de')+'">'+r.difficulty+'</span><span class="rc-w">👣 '+w+' today</span></div></div>'
       +'<div class="rc-bd">'
       +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">'
-      +'<div class="rc-n" style="margin-bottom:0">'+r.name+'</div>'+routeBadge(r)+'</div>'
+      +'<div class="rc-n" style="margin-bottom:0">'+r.name+'</div>'+routeBadge(r)+(isPlan?'<span class="plan-badge">📋 Planned</span>':'')+'</div>'
       +'<div class="rc-m"><span>📏 '+r.distance_km+'km</span><span>⏱ '+r.duration_mins+'min</span>'
       +'<span>'+(r.off_lead?'🟢 Off-lead':'🔴 On-lead')+'</span>'+(r.has_water?'<span>💧</span>':'')+'</div>'
       +fieldStatusHtml(r.id)
@@ -872,17 +838,32 @@ function markDone(id,btn){
   var was=completions.has(String(id));
   if(was){completions.delete(String(id));}
   else{
-    completions.add(String(id));totalWalks++;
+    completions.add(String(id));
+    planned.delete(String(id));// move from planned to done
+    localStorage.setItem('pt_planned',JSON.stringify([...planned]));
+    totalWalks++;
     var r=allRoutes.find(function(x){return String(x.id)===String(id);});
     totalDist+=(r?r.distance_km||0:0);
     localStorage.setItem('pt_walks',totalWalks);localStorage.setItem('pt_dist',totalDist);
     addXP(100);toast('Walk logged! +100 XP 🏁','✅');
     sbI('completions',[{route_id:String(id),user_name:profile?profile.username:'Anonymous'}]).catch(function(){});
+    // Ask confirm/deny for nearby markers at end of walk
+    checkNearbyMarkersPrompt();
   }
   localStorage.setItem('pt_completions',JSON.stringify([...completions]));
   if(btn)btn.classList.toggle('on',!was);
   var el=document.getElementById('d-'+id);if(el)el.classList.toggle('on',!was);
   updateSavedStats();
+}
+function planRoute(id){
+  if(!planned.has(String(id))){
+    planned.add(String(id));
+    localStorage.setItem('pt_planned',JSON.stringify([...planned]));
+    addXP(5);toast('📋 Added to your planned walks!','🗺️');
+    updateSavedStats();renderList();
+  }else{
+    toast('Already planned!','📋');
+  }
 }
 
 // ── DETAIL ────────────────────────────────────────────────────────────
@@ -899,20 +880,21 @@ function openDetail(r){
     +'<div class="dst"><div class="dsn">'+r.duration_mins+'</div><div class="dsl">mins</div></div>'
     +'<div class="dst"><div class="dsn">'+(Math.floor(Math.random()*8)+1)+'</div><div class="dsl">today</div></div>';
   document.getElementById('detFS').innerHTML=fieldStatusHtml(r.id)+(r.dog_notes?'<div class="dog-note" style="margin-top:6px">🐕 '+r.dog_notes+'</div>':'');
-  if(dogs[0]){var sc=dogScore(r);document.getElementById('detDS').innerHTML='<div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;">Match for '+dogs[0].name+'</div><div style="font-size:20px;">'+'⭐'.repeat(sc)+'☆'.repeat(5-sc)+'</div>';}
-  else document.getElementById('detDS').innerHTML='';
+  if(dogs[0]){var sc=dogScore(r);document.getElementById('detDS').innerHTML='<div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;">Match for '+dogs[0].name+'</div><div style="font-size:20px">'+'⭐'.repeat(sc)+'☆'.repeat(5-sc)+'</div>';}
+  else document.getElementById('detDS')&&(document.getElementById('detDS').innerHTML='');
   var myR=ratings[r.id]||0,sh='';
   for(var i=1;i<=5;i++)sh+='<span style="font-size:22px;cursor:pointer" onclick="rateRoute(\''+r.id+'\','+i+')">'+(i<=myR?'⭐':'☆')+'</span>';
   document.getElementById('detStars').innerHTML=sh;
-  var rx=reactions[r.id]||{},done=completions.has(String(r.id));
+  // Photos
+  renderDetPhotos(r.id);
+  var rx=reactions[r.id]||{};
   document.getElementById('detHB').style.opacity=rx.heart?1:.7;
-  document.getElementById('detDB').classList.toggle('on',done);
   document.getElementById('det').classList.add('open');
 }
 function closeDetail(){document.getElementById('det').classList.remove('open');}
 function walkFromDetail(){var r=detailRoute;closeDetail();if(r)startFollow(r.id);}
 function heartFromDetail(){if(detailRoute)heartRoute(detailRoute.id,document.getElementById('detHB'));}
-function doneFromDetail(){if(detailRoute)markDone(detailRoute.id,document.getElementById('detDB'));}
+function planFromDetail(){if(detailRoute)planRoute(detailRoute.id);}
 function rateRoute(id,stars){
   ratings[id]=stars;localStorage.setItem('pt_ratings',JSON.stringify(ratings));
   addXP(10);
@@ -922,38 +904,78 @@ function rateRoute(id,stars){
   toast(stars+'⭐ rated!','⭐');
 }
 
+// ── ROUTE PHOTOS ──────────────────────────────────────────────────────
+var photoForRoute=null;
+function addRoutePhoto(){
+  photoForRoute=detailRoute?String(detailRoute.id):null;
+  document.getElementById('photoInput').click();
+}
+function onPhotoSelected(input){
+  if(!input.files||!input.files[0]||!photoForRoute)return;
+  var file=input.files[0];
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var b64=e.target.result;
+    if(!routePhotos[photoForRoute])routePhotos[photoForRoute]=[];
+    routePhotos[photoForRoute].unshift(b64);
+    // Keep max 5 photos per route
+    if(routePhotos[photoForRoute].length>5)routePhotos[photoForRoute]=routePhotos[photoForRoute].slice(0,5);
+    localStorage.setItem('pt_photos',JSON.stringify(routePhotos));
+    renderDetPhotos(photoForRoute);
+    renderList();// update card thumbnail
+    addXP(15);toast('📸 Photo added! +15 XP','✅');
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+function renderDetPhotos(routeId){
+  var el=document.getElementById('detPhotos');if(!el)return;
+  var photos=routePhotos[String(routeId)]||[];
+  el.innerHTML='';
+  photos.forEach(function(src,i){
+    var img=document.createElement('img');img.src=src;img.className='photo-thumb';
+    img.onclick=function(){if(confirm('Remove this photo?')){routePhotos[String(routeId)].splice(i,1);localStorage.setItem('pt_photos',JSON.stringify(routePhotos));renderDetPhotos(routeId);renderList();}};
+    el.appendChild(img);
+  });
+  var add=document.createElement('div');add.className='photo-add';add.innerHTML='<span style="font-size:20px;">📸</span><span>Add photo</span>';
+  add.onclick=addRoutePhoto;el.appendChild(add);
+}
+
 // ── SAVED ─────────────────────────────────────────────────────────────
 function setSvTab(el,tab){document.querySelectorAll('.svt').forEach(function(t){t.classList.remove('on');});el.classList.add('on');renderSaved(tab);}
 function renderSaved(tab){
   var el=document.getElementById('savedList');if(!el)return;
   var routes=[];
   if(tab==='hearted')routes=allRoutes.filter(function(r){return reactions[r.id]&&reactions[r.id].heart;});
+  else if(tab==='planned')routes=allRoutes.filter(function(r){return planned.has(String(r.id));});
   else if(tab==='completed')routes=allRoutes.filter(function(r){return completions.has(String(r.id));});
   else if(tab==='created')routes=allRoutes.filter(function(r){return r.created_by===profile?.username;});
-  var msgs={hearted:'Tap ❤️ on routes you love.',completed:'Complete walks and log them here.',created:'Record a route on the Navigate tab!'};
-  if(!routes.length){el.innerHTML='<div class="empty"><div class="ei">'+{hearted:'❤️',completed:'✅',created:'🗺️'}[tab]+'</div><p>'+msgs[tab]+'</p></div>';return;}
+  var msgs={hearted:'Tap ❤️ on routes you love.',planned:'Plan routes to walk later using the 📋 button.',completed:'Mark walks as done to see them here.',created:'Record a route on the Navigate tab!'};
+  if(!routes.length){el.innerHTML='<div class="empty"><div class="ei">'+{hearted:'❤️',planned:'📋',completed:'✅',created:'🗺️'}[tab]+'</div><p>'+msgs[tab]+'</p></div>';return;}
   el.innerHTML='';
   routes.forEach(function(r){
     var card=document.createElement('div');card.className='rc';var rx=reactions[r.id]||{};
+    var isPlan=planned.has(String(r.id));
     card.innerHTML='<div class="rc-p" style="height:90px"><img src="'+getPhoto(r)+'" loading="lazy" alt=""><div class="rc-ov"></div></div>'
-      +'<div class="rc-bd"><div class="rc-n">'+r.name+'</div><div class="rc-m"><span>📏'+r.distance_km+'km</span><span>'+r.difficulty+'</span></div>'+fieldStatusHtml(r.id)+'</div>'
+      +'<div class="rc-bd"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div class="rc-n" style="margin-bottom:0">'+r.name+'</div>'+(isPlan?'<span class="plan-badge">📋 Planned</span>':'')+'</div>'
+      +'<div class="rc-m"><span>📏'+r.distance_km+'km</span><span>'+r.difficulty+'</span></div>'+fieldStatusHtml(r.id)+'</div>'
       +'<div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🚶🐕 Walkies!</button>'
+      +(isPlan?'<button style="flex:1;padding:10px;background:#FEE2E2;color:#991B1B;border:none;border-radius:11px;font-size:12px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();unplanRoute(\''+r.id+'\')">Remove plan</button>':'')
       +'<button class="brx'+(rx.heart?' on':'')+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button></div>';
     card.onclick=function(){openDetail(r);};el.appendChild(card);
   });
 }
+function unplanRoute(id){planned.delete(String(id));localStorage.setItem('pt_planned',JSON.stringify([...planned]));updateSavedStats();renderSaved('planned');toast('Removed from planned','📋');}
 function updateSavedStats(){
   document.getElementById('ssH').textContent=Object.values(reactions).filter(function(r){return r.heart;}).length;
   document.getElementById('ssD').textContent=completions.size;
-  document.getElementById('ssC').textContent=allRoutes.filter(function(r){return r.created_by===profile?.username;}).length;
+  document.getElementById('ssP').textContent=planned.size;
   if(profile)document.getElementById('svhT').textContent=profile.username+"'s Trails";
 }
 
 // ── MAP ───────────────────────────────────────────────────────────────
 var OSMt=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
 var SATt=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
-var dogLocMarker=null;
-var dropLatLng=null;
 
 function initMap(){
   if(mapInited)return;
@@ -966,6 +988,10 @@ function initMap(){
         if(navOn)checkNav(e.latlng);
         if(walkiesOn)onWalkiesLoc(e);
         updateDogMarker(e.latlng);
+        checkNearbyMarkers(e.latlng);
+      });
+      map.on('click',function(e){
+        if(drawOn)addDrawPoint(e.latlng);
       });
       addRouteMarkersToMap();
       if(allMarkers.length)renderMarkersOnMap();
@@ -976,75 +1002,10 @@ function initMap(){
 
 function updateDogMarker(latlng){
   var ico=profile?profile.avatar:'🐕';
-  var el=document.createElement('div');
-  el.className='dog-loc';
-  el.textContent=ico;
-  var dogIco=L.divIcon({className:'',html:el.outerHTML,iconSize:[40,40],iconAnchor:[20,20]});
-  if(dogLocMarker){map.removeLayer(dogLocMarker);}
+  var html='<div style="width:40px;height:40px;border-radius:50%;background:#fff;border:3px solid #1B4332;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 14px rgba(0,0,0,.35);">'+ico+'</div>';
+  var dogIco=L.divIcon({className:'',html:html,iconSize:[40,40],iconAnchor:[20,20]});
+  if(dogLocMarker)map.removeLayer(dogLocMarker);
   dogLocMarker=L.marker(latlng,{icon:dogIco,zIndexOffset:1000}).addTo(map);
-}
-
-function setupDragDrop(){
-  var fab=document.getElementById('reportFab');
-  var hint=document.getElementById('repHint');
-  var mapEl=document.getElementById('nmap');
-  if(!fab||!mapEl)return;
-  var isDragging=false,startX,startY,origX,origY,fabRect,mapRect;
-
-  // Show hint briefly on load
-  setTimeout(function(){if(hint)hint.style.opacity='0';},3000);
-
-  function onStart(x,y){
-    isDragging=true;
-    fab.classList.add('dragging');
-    fabRect=fab.getBoundingClientRect();
-    mapRect=mapEl.getBoundingClientRect();
-    startX=x;startY=y;
-    origX=fabRect.left;origY=fabRect.top;
-    fab.style.position='fixed';
-    fab.style.left=fabRect.left+'px';
-    fab.style.top=fabRect.top+'px';
-    fab.style.right='auto';
-  }
-  function onMove(x,y){
-    if(!isDragging)return;
-    fab.style.left=(origX+(x-startX))+'px';
-    fab.style.top=(origY+(y-startY))+'px';
-  }
-  function onEnd(x,y){
-    if(!isDragging)return;
-    isDragging=false;fab.classList.remove('dragging');
-    // Reset FAB position
-    fab.style.position='absolute';fab.style.left='';fab.style.top='80px';fab.style.right='12px';
-    // Check if dropped on map
-    var inMap=x>mapRect.left&&x<mapRect.right&&y>mapRect.top&&y<mapRect.bottom;
-    if(inMap){
-      var pt=map.containerPointToLatLng(L.point(x-mapRect.left,y-mapRect.top));
-      dropLatLng={lat:pt.lat,lng:pt.lng};
-      // Flash drop ring
-      var ring=document.getElementById('dropRing');
-      ring.style.left=x+'px';ring.style.top=y+'px';
-      ring.classList.add('on');
-      setTimeout(function(){ring.classList.remove('on');},700);
-      // Open report sheet
-      document.getElementById('repSub').textContent='📍 Pin dropped — tap what you found';
-      openRepSheet();
-    }else{
-      dropLatLng=null;
-    }
-  }
-  // Touch
-  fab.addEventListener('touchstart',function(e){var t=e.touches[0];onStart(t.clientX,t.clientY);e.preventDefault();},{passive:false});
-  fab.addEventListener('touchmove',function(e){var t=e.touches[0];onMove(t.clientX,t.clientY);e.preventDefault();},{passive:false});
-  fab.addEventListener('touchend',function(e){var t=e.changedTouches[0];onEnd(t.clientX,t.clientY);});
-  // Mouse (desktop)
-  fab.addEventListener('mousedown',function(e){onStart(e.clientX,e.clientY);});
-  document.addEventListener('mousemove',function(e){if(isDragging)onMove(e.clientX,e.clientY);});
-  document.addEventListener('mouseup',function(e){if(isDragging)onEnd(e.clientX,e.clientY);});
-  // Tap (no drag) = use current location
-  fab.addEventListener('click',function(e){
-    if(!isDragging){dropLatLng=userLat?{lat:userLat,lng:userLon}:null;document.getElementById('repSub').textContent=dropLatLng?'📍 Pinned at your location — tap what you found':'📍 Tap what you found';openRepSheet();}
-  });
 }
 
 function addRouteMarkersToMap(){
@@ -1065,6 +1026,81 @@ function renderMarkersOnMap(){
   allMarkers.forEach(function(m){addMarkerToMap(m,false);});
 }
 
+function addMarkerToMap(m,draggable){
+  if(!map)return;
+  var now=new Date();
+  if(m.expires_at&&new Date(m.expires_at)<now)return;
+  var html='<div style="background:#fff;border:2px solid #ccc;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);"><span style="transform:rotate(45deg);font-size:13px;">'+m.icon+'</span></div>';
+  var ico=L.divIcon({className:'',html:html,iconSize:[30,30],iconAnchor:[15,30]});
+  var ml=L.marker([m.lat,m.lng],{icon:ico,draggable:draggable||false}).addTo(map);
+  var ago=m.created_at?timeAgo(m.created_at):'';
+  var popup='<div style="min-width:140px"><b>'+m.icon+' '+m.label+'</b>'+(ago?'<br><small style="color:#666">'+ago+'</small>':'')+'<br><div style="margin-top:8px;display:flex;gap:6px;"><button onclick="deleteMarker(\''+m.id+'\')" style="flex:1;padding:5px;background:#FEE2E2;color:#991B1B;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🗑 Delete</button></div></div>';
+  ml.bindPopup(popup);
+  if(draggable){ml.on('dragend',function(e){var ll=e.target.getLatLng();var idx=allMarkers.findIndex(function(x){return x.id===m.id;});if(idx>-1){allMarkers[idx].lat=ll.lat;allMarkers[idx].lng=ll.lng;}toast('Marker moved','📍');});}
+  markerLayers.push(ml);
+  if(!m.is_permanent){
+    var circ=L.circle([m.lat,m.lng],{radius:50,color:'#F59E0B',fillColor:'#F59E0B',fillOpacity:.1,weight:1.5,dashArray:'6,4'}).addTo(map);
+    markerLayers.push(circ);
+  }
+}
+function deleteMarker(id){
+  map.closePopup();
+  allMarkers=allMarkers.filter(function(m){return m.id!==id;});
+  renderMarkersOnMap();renderList();
+  toast('Marker removed','🗑️');
+}
+
+// ── DRAG-DROP REPORT FAB ──────────────────────────────────────────────
+function setupDragDrop(){
+  var fab=document.getElementById('reportFab');
+  var mapEl=document.getElementById('nmap');
+  if(!fab||!mapEl)return;
+  var isDragging=false,moved=false,startX,startY,origLeft,origTop,mapRect;
+  function getOrigPos(){return{left:window.innerWidth-12-52,top:80};}
+
+  function onStart(x,y){
+    isDragging=true;moved=false;
+    var fr=fab.getBoundingClientRect();
+    mapRect=mapEl.getBoundingClientRect();
+    startX=x;startY=y;origLeft=fr.left;origTop=fr.top;
+    fab.classList.add('dragging');
+    fab.style.position='fixed';fab.style.left=fr.left+'px';fab.style.top=fr.top+'px';fab.style.right='auto';
+  }
+  function onMove(x,y){
+    if(!isDragging)return;
+    if(Math.abs(x-startX)>5||Math.abs(y-startY)>5)moved=true;
+    fab.style.left=(origLeft+(x-startX))+'px';fab.style.top=(origTop+(y-startY))+'px';
+  }
+  function onEnd(x,y){
+    if(!isDragging)return;
+    isDragging=false;fab.classList.remove('dragging');
+    fab.style.position='';fab.style.left='';fab.style.top='';fab.style.right='12px';
+    if(!moved){
+      // Tap — use current location
+      dropLatLng={lat:userLat,lng:userLon};
+      document.getElementById('repSub').textContent='📍 Pinned at your location';
+      openRepSheet();return;
+    }
+    var inMap=x>mapRect.left&&x<mapRect.right&&y>mapRect.top&&y<mapRect.bottom;
+    if(inMap){
+      var pt=map.containerPointToLatLng(L.point(x-mapRect.left,y-mapRect.top));
+      dropLatLng={lat:pt.lat,lng:pt.lng};
+      var ring=document.getElementById('dropRing');
+      ring.style.left=x+'px';ring.style.top=y+'px';
+      ring.style.display='block';
+      setTimeout(function(){ring.style.display='none';},700);
+      document.getElementById('repSub').textContent='📍 Dropped on map — tap what you found';
+      openRepSheet();vibrate(50);
+    }else{dropLatLng=null;}
+  }
+  fab.addEventListener('touchstart',function(e){onStart(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
+  fab.addEventListener('touchmove',function(e){onMove(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
+  fab.addEventListener('touchend',function(e){onEnd(e.changedTouches[0].clientX,e.changedTouches[0].clientY);});
+  fab.addEventListener('mousedown',function(e){onStart(e.clientX,e.clientY);});
+  document.addEventListener('mousemove',function(e){if(isDragging)onMove(e.clientX,e.clientY);});
+  document.addEventListener('mouseup',function(e){if(isDragging)onEnd(e.clientX,e.clientY);});
+}
+
 // ── ACCORDION ─────────────────────────────────────────────────────────
 function toggleAcc(head){
   head.classList.toggle('open');
@@ -1072,7 +1108,7 @@ function toggleAcc(head){
   if(body)body.classList.toggle('open');
 }
 
-// ── REPORT SHEET ──────────────────────────────────────────────────────
+// ── REPORT ────────────────────────────────────────────────────────────
 function openRepSheet(){document.getElementById('repSheet').classList.add('on');}
 function closeRepSheet(){document.getElementById('repSheet').classList.remove('on');}
 
@@ -1080,26 +1116,15 @@ function reportItem(h){
   closeRepSheet();
   var ll=dropLatLng||{lat:userLat,lng:userLon};
   dropLatLng=null;
-  // Expiry
   var expiresAt=null;
-  if(!h.perm){
-    var days=h.days||(EXPIRY[h.type]||30);
-    var exp=new Date();exp.setDate(exp.getDate()+days);expiresAt=exp.toISOString();
-  }
+  if(!h.perm){var days=h.days||(EXPIRY[h.type]||30);var exp=new Date();exp.setDate(exp.getDate()+days);expiresAt=exp.toISOString();}
   var md={type:h.type,icon:h.icon,label:h.label,lat:ll.lat,lng:ll.lng,reported_by:profile?profile.username:'Anonymous',is_permanent:h.perm||false,expires_at:expiresAt,created_at:new Date().toISOString()};
-  // Add to local array and map
   var localId='local-'+Date.now();
-  var localMd=Object.assign({id:localId},md);
-  allMarkers.unshift(localMd);
-  addMarkerToMap(localMd,true);
+  allMarkers.unshift(Object.assign({id:localId},md));
+  addMarkerToMap(Object.assign({id:localId},md),true);
   if(map)map.setView([ll.lat,ll.lng],16);
-  // Save to DB
   sbI('markers',[md]).then(function(res){
-    if(res&&res[0]){
-      // Replace local marker with DB version
-      var idx=allMarkers.findIndex(function(m){return m.id===localId;});
-      if(idx>-1)allMarkers[idx]=res[0];
-    }
+    if(res&&res[0]){var idx=allMarkers.findIndex(function(m){return m.id===localId;});if(idx>-1)allMarkers[idx]=res[0];}
     renderList();
   }).catch(function(){renderList();});
   totalReports++;localStorage.setItem('pt_reports',totalReports);
@@ -1107,36 +1132,56 @@ function reportItem(h){
   toast(h.icon+' '+h.label+' reported! +'+h.pts+' pts','✅');
 }
 
-function addMarkerToMap(m,draggable){
-  if(!map)return;
-  var now=new Date();
-  if(m.expires_at&&new Date(m.expires_at)<now)return;
-  var ico=L.divIcon({className:'',html:'<div style="background:#fff;border:2px solid #ccc;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);"><span style="transform:rotate(45deg);font-size:13px;">'+m.icon+'</span></div>',iconSize:[30,30],iconAnchor:[15,30]});
-  var ml=L.marker([m.lat,m.lng],{icon:ico,draggable:draggable||false}).addTo(map);
-  var popupContent='<div style="min-width:140px"><b>'+m.icon+' '+m.label+'</b><br>'+(m.created_at?'<small style="color:#666">'+timeAgo(m.created_at)+'</small>':'')+'<br><div style="display:flex;gap:6px;margin-top:8px;"><button onclick="deleteMarker(\''+m.id+'\')" style="flex:1;padding:5px;background:#FEE2E2;color:#991B1B;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🗑 Delete</button></div></div>';
-  ml.bindPopup(popupContent);
-  if(draggable){
-    ml.on('dragend',function(e){
-      var newll=e.target.getLatLng();
-      var idx=allMarkers.findIndex(function(x){return x.id===m.id;});
-      if(idx>-1){allMarkers[idx].lat=newll.lat;allMarkers[idx].lng=newll.lng;}
-      toast('Marker moved','📍');
-    });
-  }
-  markerLayers.push(ml);
-  if(!m.is_permanent){
-    var circ=L.circle([m.lat,m.lng],{radius:50,color:'#F59E0B',fillColor:'#F59E0B',fillOpacity:.1,weight:1.5,dashArray:'6,4'}).addTo(map);
-    markerLayers.push(circ);
+// ── CONFIRM / DENY ────────────────────────────────────────────────────
+var nearbyCheckLast=0;
+function checkNearbyMarkers(latlng){
+  var now=Date.now();
+  if(now-nearbyCheckLast<30000)return;// check every 30s max
+  nearbyCheckLast=now;
+  var nearby=allMarkers.filter(function(m){
+    if(m.is_permanent)return false;
+    if(cdnDismissed.has(m.id))return false;
+    if(m.expires_at&&new Date(m.expires_at)<new Date())return false;
+    return distKm(latlng.lat,latlng.lng,m.lat,m.lng)<0.05;// within 50m
+  });
+  if(nearby.length){
+    cdnMarker=nearby[0];
+    showCdn(cdnMarker);
   }
 }
-
-function deleteMarker(id){
-  map.closePopup();
-  allMarkers=allMarkers.filter(function(m){return m.id!==id;});
-  renderMarkersOnMap();
-  renderList();
-  toast('Marker removed','🗑️');
+function checkNearbyMarkersPrompt(){
+  // Ask about markers near last known position at end of walk
+  var nearby=allMarkers.filter(function(m){
+    if(m.is_permanent)return false;
+    if(cdnDismissed.has(m.id))return false;
+    return distKm(userLat,userLon,m.lat,m.lng)<0.2;
+  });
+  if(nearby.length){cdnMarker=nearby[0];showCdn(cdnMarker);}
 }
+function showCdn(m){
+  document.getElementById('cdnIco').textContent=m.icon;
+  document.getElementById('cdnTitle').textContent=m.label+' nearby';
+  document.getElementById('cdnSub').textContent='Reported '+timeAgo(m.created_at)+' — still there?';
+  document.getElementById('cdnBar').classList.add('on');
+  vibrate([100,50,100]);
+}
+function confirmMarker(yes){
+  if(!cdnMarker)return;
+  dismissCdn();
+  if(yes){
+    // Extend expiry
+    var idx=allMarkers.findIndex(function(m){return m.id===cdnMarker.id;});
+    if(idx>-1){var ext=new Date();var days=EXPIRY[cdnMarker.type]||30;ext.setDate(ext.getDate()+days);allMarkers[idx].expires_at=ext.toISOString();}
+    addXP(10);toast(cdnMarker.icon+' Confirmed! +10 XP','✅');
+  }else{
+    // Mark as not seen
+    allMarkers=allMarkers.filter(function(m){return m.id!==cdnMarker.id;});
+    renderMarkersOnMap();renderList();
+    addXP(5);toast('Thanks — marker removed. +5 XP','👍');
+  }
+  totalReports++;localStorage.setItem('pt_reports',totalReports);updateRank();
+}
+function dismissCdn(){document.getElementById('cdnBar').classList.remove('on');if(cdnMarker)cdnDismissed.add(cdnMarker.id);cdnMarker=null;}
 
 // ── NAVIGATE ──────────────────────────────────────────────────────────
 function openRms(r){
@@ -1154,6 +1199,8 @@ function detailFromRms(){var r=rmsRoute;closeRms();if(r)openDetail(r);}
 function startFollow(id){
   var r=allRoutes.find(function(x){return String(x.id)===String(id);});if(!r)return;
   var path=typeof r.path==='string'?JSON.parse(r.path):r.path;if(!path||path.length<2){toast('No path data','⚠️');return;}
+  // Remove from planned, start tracking
+  planned.delete(String(id));localStorage.setItem('pt_planned',JSON.stringify([...planned]));
   showPage('navigate');
   var attempts=0;
   function tryFollow(){
@@ -1170,7 +1217,7 @@ function startFollow(id){
     document.getElementById('navCard').classList.add('on');
     document.getElementById('navProg').style.width='0%';
     document.getElementById('navBottom').style.display='none';
-    give('🚶🐕 '+r.name,r.distance_km+' km · follow the green path');
+    give('🚶🐕 '+r.name,r.distance_km+' km · follow the path');
     speak('Walkies! Starting '+r.name+'. '+r.distance_km+' kilometres.');
     map.locate({watch:true,setView:false});
     toast('🚶🐕 Walkies! '+r.name,'🐾');
@@ -1184,8 +1231,11 @@ function checkNav(ll){
   if(ll.distanceTo(L.latLng(navWPs[navIdx][0],navWPs[navIdx][1]))<40){
     navIdx++;
     document.getElementById('navProg').style.width=(navIdx/navWPs.length*100)+'%';
-    if(navIdx>=navWPs.length-1){give('🏁 Arrived!','Great walk!');speak('You have arrived! Well done!');setTimeout(stopNav,4000);}
-    else{var ins=getIns(navIdx);give(ins.t,ins.s);speak(ins.v);}
+    if(navIdx>=navWPs.length-1){
+      give('🏁 Arrived!','Great walk!');speak('You have arrived! Well done!');
+      setTimeout(stopNav,4000);
+      checkNearbyMarkersPrompt();
+    }else{var ins=getIns(navIdx);give(ins.t,ins.s);speak(ins.v);}
   }
 }
 function getIns(i){var wp=navWPs[i],nx=navWPs[Math.min(i+1,navWPs.length-1)],d=bdir(bear(wp,nx));return{t:d.a+' '+d.l,s:'Waypoint '+(i)+'/'+navWPs.length,v:d.v};}
@@ -1204,13 +1254,68 @@ function stopNav(){
   toast('Walk complete! 🐾','🏁');
 }
 function locateMe(){if(!map)return;map.locate({setView:true,maxZoom:16});map.once('locationfound',function(){toast('Found you!','📍');});map.once('locationerror',function(){toast('Location unavailable','⚠️');});}
-function toggleSat(){
-  sat=!sat;
-  if(sat){OSMt.remove();SATt.addTo(map);}else{SATt.remove();OSMt.addTo(map);}
-  var btn=document.getElementById('satBtn');
-  if(btn){btn.classList.toggle('on',sat);btn.title=sat?'Street map':'Satellite';}
-}
+function toggleSat(){sat=!sat;sat?(OSMt.remove(),SATt.addTo(map)):(SATt.remove(),OSMt.addTo(map));var b=document.getElementById('satBtn');if(b)b.classList.toggle('on',sat);}
 function focusPlan(){document.getElementById('planInput').focus();}
+
+// ── DRAW ROUTE ────────────────────────────────────────────────────────
+function toggleDraw(){
+  drawOn=!drawOn;
+  var btn=document.getElementById('drawBtn');
+  var bar=document.getElementById('drawBar');
+  if(drawOn){
+    btn.classList.add('on');bar.classList.add('on');
+    document.getElementById('navBottom').style.display='none';
+    drawPath=[];drawDist=0;
+    if(drawLine){map.removeLayer(drawLine);drawLine=null;}
+    document.getElementById('drawDist').textContent='0.00 km';
+    document.getElementById('drawInfo').textContent='Tap map to add waypoints';
+    toast('✏️ Draw mode — tap the map!','✏️');
+  }else{
+    btn.classList.remove('on');bar.classList.remove('on');
+    document.getElementById('navBottom').style.display='';
+    if(drawLine){map.removeLayer(drawLine);drawLine=null;}
+    drawPath=[];drawDist=0;
+  }
+}
+function addDrawPoint(latlng){
+  if(!drawOn)return;
+  if(drawPath.length>0){
+    var last=drawPath[drawPath.length-1];
+    drawDist+=distKm(last[0],last[1],latlng.lat,latlng.lng);
+  }
+  drawPath.push([latlng.lat,latlng.lng]);
+  if(drawLine)map.removeLayer(drawLine);
+  drawLine=L.polyline(drawPath,{color:'#3B82F6',weight:5,opacity:.9,lineCap:'round',dashArray:drawPath.length<2?'8,4':null}).addTo(map);
+  // Waypoint dot
+  L.circleMarker(latlng,{radius:6,color:'#3B82F6',fillColor:'#fff',fillOpacity:1,weight:2}).addTo(map);
+  document.getElementById('drawDist').textContent=drawDist.toFixed(2)+' km';
+  document.getElementById('drawInfo').textContent=drawPath.length+' waypoints · ~'+Math.round(drawDist*12)+' min';
+  vibrate(30);
+}
+function undoDrawPoint(){
+  if(drawPath.length<2)return;
+  drawPath.pop();
+  // Recalculate distance
+  drawDist=0;
+  for(var i=1;i<drawPath.length;i++)drawDist+=distKm(drawPath[i-1][0],drawPath[i-1][1],drawPath[i][0],drawPath[i][1]);
+  if(drawLine)map.removeLayer(drawLine);
+  if(drawPath.length>1)drawLine=L.polyline(drawPath,{color:'#3B82F6',weight:5,opacity:.9,lineCap:'round'}).addTo(map);
+  else drawLine=null;
+  document.getElementById('drawDist').textContent=drawDist.toFixed(2)+' km';
+  document.getElementById('drawInfo').textContent=drawPath.length+' waypoints';
+}
+function finishDraw(){
+  if(drawPath.length<2){toast('Add at least 2 waypoints','⚠️');return;}
+  // Pre-fill save sheet
+  document.getElementById('saveTit').textContent='💾 Save Your Drawn Route';
+  document.getElementById('rName').value='';
+  document.getElementById('rDesc').value='';
+  document.getElementById('rDist').value=drawDist.toFixed(2);
+  document.getElementById('rPlan').checked=false;
+  recPath=drawPath.slice();
+  document.getElementById('saveSheet').classList.add('on');
+  toggleDraw();
+}
 
 // ── JUST WALKIES ──────────────────────────────────────────────────────
 function justWalkies(){
@@ -1226,18 +1331,17 @@ function justWalkies(){
       walkiesPath.push([e.latlng.lat,e.latlng.lng]);
       if(walkiesLine)map.removeLayer(walkiesLine);
       walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
-      document.getElementById('walkiesActive').classList.add('on');
+      document.getElementById('waBar').classList.add('on');
       document.getElementById('navBottom').style.display='none';
       map.locate({watch:true,setView:false});
       walkiesTimer=setInterval(updateWalkiesTimer,1000);
       speak('Walkies! Have a great walk!');
-      toast('🚶🐕 Just Walkies started! Walk freely.','🐾');
+      toast('🚶🐕 Walkies started!','🐾');
     });
-    map.once('locationerror',function(){toast('Please enable location for Walkies','⚠️');});
+    map.once('locationerror',function(){toast('Please enable location','⚠️');});
   }
   setTimeout(tryStart,300);
 }
-
 function onWalkiesLoc(e){
   if(!walkiesOn)return;
   var ll=[e.latlng.lat,e.latlng.lng];
@@ -1245,8 +1349,7 @@ function onWalkiesLoc(e){
     var last=walkiesPath[walkiesPath.length-1];
     var d=e.latlng.distanceTo(L.latLng(last[0],last[1]));
     if(d>8){
-      walkiesDist+=d/1000;
-      walkiesPath.push(ll);
+      walkiesDist+=d/1000;walkiesPath.push(ll);
       if(walkiesLine)map.removeLayer(walkiesLine);
       walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
       document.getElementById('waDist').textContent=walkiesDist.toFixed(2)+' km';
@@ -1254,28 +1357,26 @@ function onWalkiesLoc(e){
     }
   }
 }
-
 function updateWalkiesTimer(){
   if(!walkiesOn)return;
-  var el=Math.floor((Date.now()-walkiesStart)/1000);
-  var m=Math.floor(el/60),s=el%60;
+  var el=Math.floor((Date.now()-walkiesStart)/1000),m=Math.floor(el/60),s=el%60;
   document.getElementById('waTime').textContent=m+':'+(s<10?'0':'')+s;
 }
-
 function stopWalkies(){
   walkiesOn=false;
   clearInterval(walkiesTimer);walkiesTimer=null;
-  // Only stop locate if nav isn't also using it
   if(map&&!navOn)map.stopLocate();
-  document.getElementById('walkiesActive').classList.remove('on');
+  document.getElementById('waBar').classList.remove('on');
   document.getElementById('navBottom').style.display='';
   if(walkiesDist>0){totalDist+=walkiesDist;localStorage.setItem('pt_dist',totalDist);}
   if(walkiesPath.length>1){
+    document.getElementById('saveTit').textContent='💾 Save Your Walk';
     document.getElementById('rName').value='My walk '+(new Date().toLocaleDateString('en-GB'));
     document.getElementById('rDist').value=walkiesDist.toFixed(2);
+    document.getElementById('rPlan').checked=false;
     recPath=walkiesPath.slice();
     document.getElementById('saveSheet').classList.add('on');
-    toast('Great walk! '+walkiesDist.toFixed(2)+' km — save it?','🏁');
+    toast('Great walk! '+walkiesDist.toFixed(2)+' km','🏁');
   }else{
     if(walkiesLine&&map){map.removeLayer(walkiesLine);walkiesLine=null;}
     toast('Walk ended','⏹');
@@ -1283,31 +1384,26 @@ function stopWalkies(){
   walkiesPath=[];walkiesDist=0;
 }
 
-// ── PLAN ROUTE ────────────────────────────────────────────────────────
+// ── PLAN SEARCH ───────────────────────────────────────────────────────
 var recPath=[];
 function onPlanSearch(v){
-  clearTimeout(geoTO);
-  var sug=document.getElementById('planSug');
+  clearTimeout(geoTO);var sug=document.getElementById('planSug');
   if(v.length<3){sug.style.display='none';return;}
   geoTO=setTimeout(function(){
     fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(v+' UK')+'&format=json&limit=4')
       .then(function(r){return r.json();}).then(function(data){
         if(!data.length){sug.style.display='none';return;}
         sug.style.display='block';
-        sug.innerHTML=data.map(function(d){
-          return '<div class="nsi" onclick="planTo('+d.lat+','+d.lon+',\''+d.display_name.replace(/'/g,"\\'")+'\')">'+'🗺️ <span>'+d.display_name.split(',').slice(0,2).join(',')+'</span></div>';
-        }).join('');
+        sug.innerHTML=data.map(function(d){return'<div class="nsi" onclick="planTo('+d.lat+','+d.lon+',\''+d.display_name.replace(/'/g,"\\'")+'\')">🗺️ <span>'+d.display_name.split(',').slice(0,2).join(',')+'</span></div>';}).join('');
       }).catch(function(){});
   },500);
 }
-
 function planTo(lat,lon,name){
   document.getElementById('planSug').style.display='none';
   document.getElementById('planInput').value=name.split(',')[0];
   toast('Planning…','🗺️');
   if(!map){initMap();setTimeout(function(){doPlan(lat,lon);},600);}else doPlan(lat,lon);
 }
-
 function doPlan(lat,lon){
   var c=map.getCenter();
   fetch('https://api.openrouteservice.org/v2/directions/foot-walking?api_key=5b3ce3597851110001cf6248a5b8b56d0f3a4f5b8a8e7b0d7c4d3a2b&start='+c.lng+','+c.lat+'&end='+lon+','+lat)
@@ -1318,29 +1414,34 @@ function doPlan(lat,lon){
         if(planL)map.removeLayer(planL);
         planL=L.polyline(wps,{color:'#3B82F6',weight:6,opacity:.9,dashArray:'10,5',lineCap:'round'}).addTo(map);
         map.fitBounds(L.latLngBounds(wps),{padding:[50,50]});
-        toast('Route found — '+dist+' km','✅');
+        toast('Route: '+dist+' km','✅');
       }else throw new Error();
     }).catch(function(){
-      var c=map.getCenter();
+      var c2=map.getCenter();
       if(planL)map.removeLayer(planL);
-      planL=L.polyline([[c.lat,c.lng],[lat,lon]],{color:'#F59E0B',weight:5,dashArray:'8,6',lineCap:'round'}).addTo(map);
-      map.fitBounds(L.latLngBounds([[c.lat,c.lng],[lat,lon]]),{padding:[60,60]});
+      planL=L.polyline([[c2.lat,c2.lng],[lat,lon]],{color:'#F59E0B',weight:5,dashArray:'8,6',lineCap:'round'}).addTo(map);
+      map.fitBounds(L.latLngBounds([[c2.lat,c2.lng],[lat,lon]]),{padding:[60,60]});
       toast('Approximate route shown','⚠️');
     });
 }
+function focusPlan(){document.getElementById('planInput').focus();}
 
 // ── SAVE ROUTE ────────────────────────────────────────────────────────
 function saveRoute(){
   var n=document.getElementById('rName').value.trim();
   if(!n){toast('Enter a route name!','⚠️');return;}
+  var isPlan=document.getElementById('rPlan').checked;
   var btn=document.getElementById('btnSave');btn.disabled=true;btn.textContent='Saving…';
   var data={name:n,description:document.getElementById('rDesc').value.trim(),difficulty:document.getElementById('rDiff').value,distance_km:parseFloat(document.getElementById('rDist').value)||null,off_lead:document.getElementById('rOff').checked,has_water:document.getElementById('rWater').checked,path:recPath,created_by:profile?profile.username:'Anonymous'};
   sbI('routes',[data]).then(function(s){
-    allRoutes.unshift(s[0]);renderList();
-    if(walkiesLine){map.removeLayer(walkiesLine);walkiesLine=null;}
+    var saved=s[0];
+    allRoutes.unshift(saved);
+    if(isPlan){planned.add(String(saved.id));localStorage.setItem('pt_planned',JSON.stringify([...planned]));}
+    else{totalWalks++;localStorage.setItem('pt_walks',totalWalks);}
+    if(walkiesLine&&map){map.removeLayer(walkiesLine);walkiesLine=null;}
     document.getElementById('saveSheet').classList.remove('on');
-    addXP(100);updateSavedStats();toast('"'+n+'" is live! +100 XP 🎉','🗺️');
-    totalWalks++;localStorage.setItem('pt_walks',totalWalks);
+    addXP(100);updateSavedStats();renderList();
+    toast(isPlan?'"'+n+'" planned! 📋':'"'+n+'" is live! +100 XP 🎉','🗺️');
   }).catch(function(){toast('Save failed — try again','❌');})
   .finally(function(){btn.disabled=false;btn.textContent='Save to Paw Trails 🐾';});
 }
@@ -1348,14 +1449,13 @@ function saveRoute(){
 // ── ACTIVITY ──────────────────────────────────────────────────────────
 function updateActivity(){
   if(!profile)return;
-  document.getElementById('actAv').textContent=profile.avatar||'🦊';
+  document.getElementById('actAv').textContent=profile.avatar||'🐕';
   document.getElementById('actNm').textContent=profile.username;
   document.getElementById('asW').textContent=totalWalks;
   document.getElementById('asD').textContent=totalDist.toFixed(1);
   document.getElementById('asR').textContent=totalReports;
   updateRank();renderDogs();renderMedals();
 }
-
 function updateRank(){
   var rank=getRank(totalReports);
   var nextR=RANKS.find(function(r){return r.min>totalReports;});
@@ -1364,36 +1464,19 @@ function updateRank(){
   document.getElementById('rnkN').textContent=rank.name;
   document.getElementById('rnkS').textContent=totalReports+' hazard reports';
   document.getElementById('rnkP').style.width=pct+'%';
-  document.getElementById('rnkNt').textContent=nextR?(nextR.min-totalReports)+' more reports → '+nextR.name:'Maximum rank! 👑';
+  document.getElementById('rnkNt').textContent=nextR?(nextR.min-totalReports)+' more → '+nextR.name:'Maximum rank! 👑';
   document.getElementById('rankCh').textContent=rank.icon+' '+rank.name;
   document.getElementById('actRnk').textContent=rank.icon+' '+rank.name+' · '+totalReports+' reports';
   document.getElementById('profRP').textContent=rank.icon+' '+rank.name;
-  var ranks=[null,'rng1','rng2','rng3'];
-  for(var i=1;i<=3;i++){
-    var el=document.getElementById(ranks[i]);
-    var ln=document.getElementById('rl'+i);
-    var done=totalReports>=RANKS[i].min;
-    if(el){var ico=el.querySelector('div');if(ico)ico.style.opacity=done?'1':'0.3';}
-    if(ln)ln.style.background=done?'var(--gl)':'var(--bd)';
-  }
 }
-
 function renderDogs(){
-  var el=document.getElementById('dogsList');el.innerHTML='';
+  var el=document.getElementById('dogsList');if(!el)return;el.innerHTML='';
   dogs.forEach(function(d){
     var lv=Math.floor((d.xp||0)/100)+1;
-    el.innerHTML+='<div class="dc"><div class="dav">'+(d.emoji||'🐕')+'</div><div style="flex:1"><div style="font-size:15px;font-weight:700;">'+d.name+'</div><div style="font-size:12px;color:var(--t2);">'+(d.breed||'Mixed breed')+'</div><div style="display:inline-block;background:var(--m);color:var(--g);font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;margin-top:4px;">Level '+lv+'</div><div style="height:4px;background:var(--bd);border-radius:2px;margin-top:6px;overflow:hidden;"><div style="width:'+((d.xp||0)%100)+'%;height:100%;background:var(--gl);border-radius:2px;"></div></div></div></div>';
+    el.innerHTML+='<div class="dc"><div class="dav">'+(d.emoji||'🐕')+'</div><div style="flex:1"><div style="font-size:15px;font-weight:700;">'+d.name+'</div><div style="font-size:12px;color:var(--t2);">'+(d.breed||'Mixed breed')+'</div><div style="background:var(--m);color:var(--g);font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;margin-top:4px;display:inline-block;">Level '+lv+'</div></div></div>';
   });
 }
-
-function addDogPrompt(){
-  var n=prompt("Dog's name?");if(!n)return;
-  var b=prompt('Breed? (optional)')||'';
-  var d={name:n,breed:b,emoji:['🐕','🦮','🐩','🐾'][dogs.length%4],xp:0,dist:0};
-  dogs.push(d);localStorage.setItem('pt_dogs',JSON.stringify(dogs));
-  renderDogs();toast(d.emoji+' '+n+' added!','🐕');
-}
-
+function addDogPrompt(){var n=prompt("Dog's name?");if(!n)return;var b=prompt('Breed?')||'';var d={name:n,breed:b,emoji:['🐕','🦮','🐩','🐾'][dogs.length%4],xp:0};dogs.push(d);localStorage.setItem('pt_dogs',JSON.stringify(dogs));renderDogs();toast(d.emoji+' '+n+' added!','🐕');}
 function renderMedals(){
   var g=document.getElementById('medGrid');if(!g)return;g.innerHTML='';
   var hearts=Object.values(reactions).filter(function(r){return r.heart;}).length;
@@ -1410,36 +1493,19 @@ function addXP(n){
   var el=document.getElementById('profXP');if(el)el.textContent=xp+' XP';
   var fill=document.getElementById('profXPF');if(fill)fill.style.width=Math.min((xp/5000)*100,100)+'%';
   var fl=document.getElementById('xpFlash');
-  if(fl){
-    fl.textContent='+'+n+' XP';
-    fl.classList.add('show');
-    clearTimeout(_xpT);
-    _xpT=setTimeout(function(){fl.classList.remove('show');},2000);
-  }
+  if(fl){fl.textContent='+'+n+' XP';fl.classList.add('show');clearTimeout(_xpT);_xpT=setTimeout(function(){fl.classList.remove('show');},2000);}
 }
 
 // ── ONBOARDING ────────────────────────────────────────────────────────
+var DOG_AVATARS=[
+  {ico:'🐕',lbl:'Labrador'},{ico:'🦮',lbl:'Golden'},{ico:'🐩',lbl:'Poodle'},{ico:'🐕‍🦺',lbl:'Working'},
+  {ico:'🐾',lbl:'Spaniel'},{ico:'🦴',lbl:'Terrier'},{ico:'🐶',lbl:'Puppy'},{ico:'🐺',lbl:'Husky'},
+];
 function initOb(){
   var g=document.getElementById('avGrid');
-  var DOGS=[
-    {ico:'🐕',lbl:'Labrador'},
-    {ico:'🦮',lbl:'Golden'},
-    {ico:'🐩',lbl:'Poodle'},
-    {ico:'🐕‍🦺',lbl:'Working'},
-    {ico:'🐾',lbl:'Spaniel'},
-    {ico:'🦴',lbl:'Terrier'},
-    {ico:'🐶',lbl:'Puppy'},
-    {ico:'🐺',lbl:'Husky'},
-    {ico:'🦊',lbl:'Fox Red'},
-    {ico:'🐻',lbl:'Choc Lab'},
-    {ico:'🐗',lbl:'Staffie'},
-    {ico:'🦝',lbl:'Schnauzer'},
-  ];
-  DOGS.forEach(function(d,i){
-    var el=document.createElement('div');
-    el.className='avo'+(i===0?' sel':'');
-    el.style.flexDirection='column';el.style.gap='2px';
-    el.innerHTML='<span style="font-size:20px;">'+d.ico+'</span><span style="font-size:8px;color:var(--t2);font-weight:600;">'+d.lbl+'</span>';
+  DOG_AVATARS.forEach(function(d,i){
+    var el=document.createElement('div');el.className='avo'+(i===0?' sel':'');
+    el.innerHTML='<span class="avo-ico">'+d.ico+'</span><span class="avo-lbl">'+d.lbl+'</span>';
     el.onclick=function(){document.querySelectorAll('.avo').forEach(function(x){x.classList.remove('sel');});el.classList.add('sel');selAv=d.ico;};
     g.appendChild(el);
   });
@@ -1459,7 +1525,7 @@ function obNext(to){
     dogs=[];
     document.querySelectorAll('.deob').forEach(function(e){
       var nm=e.querySelector('[id$="n"]').value.trim(),br=e.querySelector('[id$="b"]').value.trim();
-      if(nm)dogs.push({name:nm,breed:br,emoji:['🐕','🦮','🐩','🐾'][dogs.length%4],xp:0,dist:0});
+      if(nm)dogs.push({name:nm,breed:br,emoji:selAv,xp:0});
     });
     document.getElementById('readyAv').textContent=profile.avatar;
     document.getElementById('readyNm').textContent='Hey '+profile.username+'! 👋';
@@ -1482,14 +1548,15 @@ function obFinish(){
   applyProfile();addXP(50);toast('Welcome '+profile.username+'! +50 XP 🐾','🎉');
 }
 function applyProfile(){
-  document.getElementById('hdrAv').textContent=profile.avatar||'🦊';
-  document.getElementById('profAv').textContent=profile.avatar||'🦊';
+  var av=profile.avatar||'🐕';
+  document.getElementById('hdrAv').textContent=av;
+  document.getElementById('profAv').textContent=av;
+  document.getElementById('actAv').textContent=av;
   document.getElementById('profNm').textContent=profile.username;
   document.getElementById('profXP').textContent=xp+' XP';
   document.getElementById('profXPF').style.width=Math.min((xp/5000)*100,100)+'%';
   updateActivity();updateSavedStats();
 }
-
 // ── TOAST ─────────────────────────────────────────────────────────────
 var _tt;
 function toast(msg,ico){
@@ -1497,8 +1564,9 @@ function toast(msg,ico){
   var t=document.getElementById('toast');
   document.getElementById('tMsg').textContent=msg;
   document.getElementById('tIco').textContent=ico;
-  t.classList.add('show');clearTimeout(_tt);
-  _tt=setTimeout(function(){t.classList.remove('show');},3500);
+  t.classList.add('show');
+  clearTimeout(_tt);
+  _tt=setTimeout(function(){t.classList.remove('show');},3000);
 }
 </script>
 </body>
