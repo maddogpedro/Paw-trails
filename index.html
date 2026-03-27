@@ -273,6 +273,124 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .empty p{font-size:14px;line-height:1.7;}
 /* plan badge */
 .plan-badge{background:#EFF6FF;color:#1D4ED8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+/* offline badge */
+.offline-badge{background:#F0FDF4;color:#166534;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+
+/* ── WALKER CARD ── */
+.walker-card{margin:14px;border-radius:20px;overflow:hidden;border:0.5px solid var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.1);}
+.wc-bg{height:140px;position:relative;overflow:hidden;background:#1B4332;}
+.wc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 20%,rgba(0,0,0,.55));}
+.wc-content{position:absolute;bottom:12px;left:14px;right:14px;display:flex;align-items:flex-end;justify-content:space-between;}
+.wc-left{display:flex;align-items:center;gap:10px;}
+.wc-av{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:2.5px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.wc-name{color:#fff;font-size:16px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.wc-body{background:var(--card);padding:12px 14px;}
+.wc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.wc-stat{text-align:center;}
+.wc-sn{font-size:17px;font-weight:700;color:var(--t);}
+.wc-sl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;}
+.wc-xp-bar{display:flex;align-items:center;gap:8px;}
+.wc-xp-label{font-size:12px;font-weight:700;color:var(--t);white-space:nowrap;}
+.wc-xp-bg{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.wc-xp-fill{height:100%;background:var(--g);border-radius:3px;transition:width .5s;}
+.wc-xp-next{font-size:11px;color:var(--t2);white-space:nowrap;}
+
+/* ── TITLE BAR ── */
+.wc-title-bar{height:22px;border-radius:4px;overflow:hidden;display:flex;align-items:center;margin-top:4px;min-width:140px;}
+.title-bar-full{position:relative;height:40px;border-radius:6px;overflow:hidden;cursor:pointer;display:flex;align-items:center;margin-bottom:8px;transition:transform .12s;}
+.title-bar-full:active{transform:scale(.98);}
+.title-bar-full.locked{opacity:.35;cursor:default;}
+.tb-bg{position:absolute;inset:0;}
+.tb-border{position:absolute;inset:0;border-radius:6px;}
+.tb-text{position:relative;z-index:2;padding:0 12px;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex:1;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+.tb-text-small{position:relative;z-index:2;padding:0 10px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+.tb-pts{position:relative;z-index:2;padding-right:10px;font-size:10px;font-weight:600;opacity:.85;}
+.tb-lock{position:relative;z-index:2;padding-right:10px;font-size:10px;opacity:.6;}
+
+/* ── SHIELDS ── */
+.shields-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px;}
+.shield-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.shield-wrap.locked{opacity:.28;filter:grayscale(.8);cursor:default;}
+.shield-svg{width:56px;height:64px;transition:transform .15s;}
+.shield-wrap:not(.locked):active .shield-svg{transform:scale(.9);}
+.shield-name{font-size:10px;font-weight:600;color:var(--t);text-align:center;line-height:1.2;}
+.shield-tier{font-size:9px;font-weight:700;text-align:center;}
+.shield-prog-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.shield-prog-bar{flex:1;height:5px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.shield-prog-fill{height:100%;border-radius:3px;}
+.shield-prog-lbl{font-size:11px;color:var(--t2);width:40px;text-align:right;}
+
+/* ── BACKGROUNDS ── */
+.bg-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px;}
+.bg-swatch{height:50px;border-radius:12px;cursor:pointer;position:relative;overflow:hidden;border:2.5px solid transparent;}
+.bg-swatch.active{border-color:var(--g);}
+.bg-swatch.locked{opacity:.35;filter:grayscale(.6);}
+.bg-swatch svg{width:100%;height:100%;}
+.bg-swatch-lbl{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:8px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);}
+
+/* ── PROFILE SECTIONS ── */
+.prof-section{margin:0 14px 16px;}
+.prof-sect-title{font-size:13px;font-weight:700;color:var(--t2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.prof-sect-title::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+/* ── OFFLINE ── */
+.offline-chip{background:#F0FDF4;color:#166534;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:3px;}
+/* offline badge */
+.offline-badge{background:#F0FDF4;color:#166534;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+
+/* SHIELDS */
+.shields-section{padding:0 14px 14px;}
+.shields-title{font-size:15px;font-weight:700;margin-bottom:10px;}
+.shields-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.shield-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.shield-wrap:active{transform:scale(.95);}
+.shield-svg{width:56px;height:64px;transition:filter .2s;}
+.shield-locked .shield-svg{filter:grayscale(1);opacity:.3;}
+.shield-name{font-size:10px;font-weight:700;color:var(--t);text-align:center;line-height:1.2;}
+.shield-tier{font-size:9px;text-align:center;font-weight:700;}
+.shield-prog{width:100%;height:3px;background:var(--bd);border-radius:2px;overflow:hidden;margin-top:2px;}
+.shield-prog-fill{height:100%;border-radius:2px;}
+.equipped-shield{position:absolute;bottom:12px;right:14px;}
+
+/* TITLE BARS */
+.titles-section{padding:0 14px 14px;}
+.title-bar{position:relative;height:44px;border-radius:6px;overflow:hidden;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;transition:transform .12s;}
+.title-bar:active{transform:scale(.98);}
+.title-bar.locked{opacity:.35;cursor:default;}
+.title-bar.locked:active{transform:none;}
+.title-bar.equipped{outline:3px solid #fff;box-shadow:0 0 0 5px var(--g);}
+.tb-bg{position:absolute;inset:0;}
+.tb-border{position:absolute;inset:0;border-radius:6px;pointer-events:none;z-index:2;}
+.tb-text{position:relative;z-index:1;padding:0 14px;font-size:13px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:10px;flex:1;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.tb-pts{position:relative;z-index:1;padding-right:12px;font-size:10px;font-weight:700;opacity:.85;text-align:right;}
+.tb-lock{position:relative;z-index:1;padding-right:12px;font-size:10px;opacity:.6;}
+
+/* WALKER CARD */
+.walker-card{margin:14px;border-radius:18px;overflow:hidden;border:0.5px solid var(--bd);box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.wc-bg{height:130px;position:relative;overflow:hidden;}
+.wc-bg svg{position:absolute;inset:0;width:100%;height:100%;}
+.wc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 20%,rgba(0,0,0,.6));}
+.wc-content{position:absolute;bottom:12px;left:14px;right:14px;display:flex;align-items:flex-end;justify-content:space-between;}
+.wc-left{display:flex;align-items:center;gap:10px;}
+.wc-av{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:2.5px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.wc-name{color:#fff;font-size:16px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.wc-title{font-size:10px;color:rgba(255,255,255,.8);margin-top:2px;}
+.wc-body{background:var(--card);padding:12px 14px;}
+.wc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.wc-stat{text-align:center;}
+.wc-stat-n{font-size:18px;font-weight:700;color:var(--g);}
+.wc-stat-l{font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;}
+.wc-xpbar{background:var(--bg);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px;}
+.wc-xpfill{flex:1;height:5px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.wc-xpinner{height:100%;background:var(--g);border-radius:3px;}
+
+/* BG PICKER */
+.bg-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:0 14px 14px;}
+.bg-sw{height:38px;border-radius:9px;cursor:pointer;border:2px solid transparent;overflow:hidden;position:relative;}
+.bg-sw.active{border-color:var(--g);}
+.bg-sw.locked-bg{opacity:.35;}
+.bg-sw svg{width:100%;height:100%;}
+
 </style>
 </head>
 <body>
@@ -316,7 +434,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div class="logo"><div class="logo-b">🐾</div>Paw Trails</div>
     <div style="display:flex;align-items:center;gap:8px;">
       <div class="rank-ch" id="rankCh">🐾 Pup</div>
-      <div class="av-btn" id="hdrAv" onclick="showPage('profile')">🐕</div>
+      <div class="av-btn" id="hdrAv" onclick="showPage('profile');renderProfile()">🐕</div>
     </div>
   </div>
 
@@ -440,16 +558,58 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 
     <!-- PROFILE -->
     <div class="page" id="page-profile">
-      <div class="prt">
-        <div class="prav" id="profAv">🐕</div>
-        <div>
-          <div class="prnm" id="profNm">Trail Walker</div>
-          <div class="prrp" id="profRP">🐾 Pup</div>
-          <div class="prxp" id="profXP">0 XP</div>
-          <div class="prxpb"><div class="prxpf" id="profXPF" style="width:0%"></div></div>
+      <!-- WALKER CARD -->
+      <div class="walker-card" id="walkerCard">
+        <div class="wc-bg" id="wcBg">
+          <svg id="wcSvg" style="position:absolute;inset:0;width:100%;height:100%;"></svg>
+          <div class="wc-overlay"></div>
+          <div class="wc-content">
+            <div class="wc-left">
+              <div class="wc-av" id="wcAv">🐕</div>
+              <div>
+                <div class="wc-name" id="wcName">Trail Walker</div>
+                <div class="wc-title-bar" id="wcTitleBar"></div>
+              </div>
+            </div>
+            <div class="wc-shield" id="wcShield"></div>
+          </div>
+        </div>
+        <div class="wc-body">
+          <div class="wc-stats">
+            <div class="wc-stat"><div class="wc-sn" id="wcW">0</div><div class="wc-sl">Walks</div></div>
+            <div class="wc-stat"><div class="wc-sn" id="wcD">0.0</div><div class="wc-sl">km</div></div>
+            <div class="wc-stat"><div class="wc-sn" id="wcR">0</div><div class="wc-sl">Reports</div></div>
+            <div class="wc-stat"><div class="wc-sn" id="wcS">0</div><div class="wc-sl">Shields</div></div>
+          </div>
+          <div class="wc-xp-bar">
+            <div class="wc-xp-label" id="wcXpLbl">0 XP</div>
+            <div class="wc-xp-bg"><div class="wc-xp-fill" id="wcXpFill" style="width:0%"></div></div>
+            <div class="wc-xp-next" id="wcXpNext">→ Pack Leader</div>
+          </div>
         </div>
       </div>
-      <button class="prbtn" style="background:var(--g);color:#fff;" onclick="showPage('navigate');initMap();">🗺️ Plan a Walk</button>
+
+      <!-- BACKGROUNDS -->
+      <div class="prof-section">
+        <div class="prof-sect-title">🌄 Card Background</div>
+        <div class="bg-picker" id="bgPicker"></div>
+      </div>
+
+      <!-- TITLE BARS -->
+      <div class="prof-section">
+        <div class="prof-sect-title">📛 Title Bar — tap to equip</div>
+        <div id="titleList"></div>
+      </div>
+
+      <!-- SHIELDS -->
+      <div class="prof-section">
+        <div class="prof-sect-title">🛡️ Shields — tap to equip</div>
+        <div class="shields-grid" id="shieldsGrid"></div>
+        <div class="prof-sect-title" style="margin-top:14px;">Progress toward next</div>
+        <div id="shieldProgress"></div>
+      </div>
+
+      <button class="prbtn" style="background:var(--g);color:#fff;margin-top:4px;" onclick="showPage('navigate');initMap();">🗺️ Plan a Walk</button>
       <button class="prbtn" style="background:var(--bg);color:var(--t2);border:1.5px solid var(--bd);margin-top:8px;" onclick="showPage('activity');updateActivity();">📊 View Activity</button>
       <div style="height:80px;"></div>
     </div>
@@ -461,7 +621,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div class="tab" id="tSv" onclick="showPage('saved');renderSaved('hearted')"><div class="ti">🧡</div><div class="tl">Saved</div></div>
     <div class="tab" id="tNv" onclick="showPage('navigate');initMap()"><div class="ti">🧭</div><div class="tl">Navigate</div></div>
     <div class="tab" id="tAc" onclick="showPage('activity');updateActivity()"><div class="ti">📊</div><div class="tl">Activity</div></div>
-    <div class="tab" id="tPr" onclick="showPage('profile')"><div class="ti">👤</div><div class="tl">Profile</div></div>
+    <div class="tab" id="tPr" onclick="showPage('profile');renderProfile()"><div class="ti">👤</div><div class="tl">Profile</div></div>
   </div>
 </div>
 
@@ -486,6 +646,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <button class="dfw" onclick="walkFromDetail()">🚶🐕 Walkies!</button>
     <button style="flex:1;padding:14px;background:#EFF6FF;color:#1D4ED8;border:none;border-radius:13px;font-size:13px;font-weight:700;cursor:pointer;" onclick="planFromDetail()">📋 Plan</button>
     <button class="dfh" id="detHB" onclick="heartFromDetail()">❤️</button>
+    <button style="flex:1;padding:14px;background:var(--bg);border:1.5px solid var(--bd);border-radius:13px;font-size:13px;font-weight:700;cursor:pointer;color:var(--t2);" id="detDlBtn" onclick="toggleOffline()">📥</button>
   </div>
 </div>
 
@@ -682,9 +843,12 @@ window.onload=function(){
       totalDist=parseFloat(localStorage.getItem('pt_dist')||'0');
       xp=parseInt(localStorage.getItem('pt_xp')||'0');
       VIBRATE_ON=localStorage.getItem('pt_vibrate')!=='false';
+      subtypeCounts=JSON.parse(localStorage.getItem('pt_subtypes')||'{}');
+      loadOfflineRoutes();
       document.getElementById('obOv').classList.add('gone');
       applyProfile();
-    }else{initOb();}
+    }else{initOb();loadOfflineRoutes();}
+  subtypeCounts=JSON.parse(localStorage.getItem('pt_subtypes')||'{}');
   }catch(e){initOb();}
   allRoutes=SEED.map(function(r,i){return Object.assign({},r,{id:'local-'+i});});
   renderList();updateSavedStats();renderMedals();
@@ -1128,6 +1292,7 @@ function reportItem(h){
     renderList();
   }).catch(function(){renderList();});
   totalReports++;localStorage.setItem('pt_reports',totalReports);
+  bumpSubtype(h.type);
   addXP(h.pts||15);updateRank();
   toast(h.icon+' '+h.label+' reported! +'+h.pts+' pts','✅');
 }
@@ -1318,6 +1483,7 @@ function finishDraw(){
 }
 
 // ── JUST WALKIES ──────────────────────────────────────────────────────
+var walkiesWatchId=null;
 function justWalkies(){
   showPage('navigate');
   var attempts=0;
@@ -1325,35 +1491,48 @@ function justWalkies(){
     attempts++;
     if(!mapInited){initMap();if(attempts<20)setTimeout(tryStart,250);return;}
     if(!map){if(attempts<20)setTimeout(tryStart,250);return;}
-    map.locate({setView:true,maxZoom:17});
-    map.once('locationfound',function(e){
+    if(!navigator.geolocation){toast('GPS not available','⚠️');return;}
+    // Get initial position to centre map
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var lat=pos.coords.latitude,lng=pos.coords.longitude;
       walkiesOn=true;walkiesPath=[];walkiesDist=0;walkiesStart=Date.now();
-      walkiesPath.push([e.latlng.lat,e.latlng.lng]);
+      walkiesPath.push([lat,lng]);
+      map.setView([lat,lng],17);
       if(walkiesLine)map.removeLayer(walkiesLine);
       walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
+      updateDogMarker(L.latLng(lat,lng));
       document.getElementById('waBar').classList.add('on');
       document.getElementById('navBottom').style.display='none';
-      map.locate({watch:true,setView:false});
       walkiesTimer=setInterval(updateWalkiesTimer,1000);
       speak('Walkies! Have a great walk!');
       toast('🚶🐕 Walkies started!','🐾');
-    });
-    map.once('locationerror',function(){toast('Please enable location','⚠️');});
+      // Now start continuous watch with native API
+      if(walkiesWatchId!==null)navigator.geolocation.clearWatch(walkiesWatchId);
+      walkiesWatchId=navigator.geolocation.watchPosition(
+        function(p){onWalkiesPos(p);},
+        function(e){console.warn('GPS error',e);},
+        {enableHighAccuracy:true,maximumAge:0,timeout:10000}
+      );
+    },function(){toast('Please enable location','⚠️');},{enableHighAccuracy:true,timeout:10000});
   }
   setTimeout(tryStart,300);
 }
-function onWalkiesLoc(e){
+function onWalkiesPos(pos){
   if(!walkiesOn)return;
-  var ll=[e.latlng.lat,e.latlng.lng];
+  var lat=pos.coords.latitude,lng=pos.coords.longitude;
+  var latlng=L.latLng(lat,lng);
+  updateDogMarker(latlng);
+  checkNearbyMarkers(latlng);
   if(walkiesPath.length>0){
     var last=walkiesPath[walkiesPath.length-1];
-    var d=e.latlng.distanceTo(L.latLng(last[0],last[1]));
-    if(d>8){
-      walkiesDist+=d/1000;walkiesPath.push(ll);
+    var d=latlng.distanceTo(L.latLng(last[0],last[1]));
+    if(d>3){// 3m threshold — captures corners properly
+      walkiesDist+=d/1000;
+      walkiesPath.push([lat,lng]);
       if(walkiesLine)map.removeLayer(walkiesLine);
       walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
       document.getElementById('waDist').textContent=walkiesDist.toFixed(2)+' km';
-      map.panTo(e.latlng,{animate:true,duration:.4});
+      map.panTo(latlng,{animate:true,duration:.3});
     }
   }
 }
@@ -1365,7 +1544,8 @@ function updateWalkiesTimer(){
 function stopWalkies(){
   walkiesOn=false;
   clearInterval(walkiesTimer);walkiesTimer=null;
-  if(map&&!navOn)map.stopLocate();
+  // Stop native GPS watch
+  if(walkiesWatchId!==null){navigator.geolocation.clearWatch(walkiesWatchId);walkiesWatchId=null;}
   document.getElementById('waBar').classList.remove('on');
   document.getElementById('navBottom').style.display='';
   if(walkiesDist>0){totalDist+=walkiesDist;localStorage.setItem('pt_dist',totalDist);}
@@ -1376,7 +1556,7 @@ function stopWalkies(){
     document.getElementById('rPlan').checked=false;
     recPath=walkiesPath.slice();
     document.getElementById('saveSheet').classList.add('on');
-    toast('Great walk! '+walkiesDist.toFixed(2)+' km','🏁');
+    toast('Great walk! '+walkiesDist.toFixed(2)+' km — save it?','🏁');
   }else{
     if(walkiesLine&&map){map.removeLayer(walkiesLine);walkiesLine=null;}
     toast('Walk ended','⏹');
@@ -1547,15 +1727,265 @@ function obFinish(){
   document.getElementById('obOv').classList.add('gone');
   applyProfile();addXP(50);toast('Welcome '+profile.username+'! +50 XP 🐾','🎉');
 }
+// ── SHIELDS SYSTEM ────────────────────────────────────────────────────
+var SHIELDS=[
+  {id:'cattle',icon:'🐄',name:'Cattle Spotter',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'cattle'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:10,type:'reports',subtype:'cattle'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:30,type:'reports',subtype:'cattle'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:50,type:'reports',subtype:'cattle'}]},
+  {id:'sheep',icon:'🐑',name:'Sheep Spotter',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'sheep'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:10,type:'reports',subtype:'sheep'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:30,type:'reports',subtype:'sheep'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:50,type:'reports',subtype:'sheep'}]},
+  {id:'bench',icon:'🪑',name:'Bench Seeker',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'bench'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:5,type:'reports',subtype:'bench'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:15,type:'reports',subtype:'bench'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:30,type:'reports',subtype:'bench'}]},
+  {id:'view',icon:'🌄',name:'View Chaser',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'view'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:5,type:'reports',subtype:'view'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:15,type:'reports',subtype:'view'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:30,type:'reports',subtype:'view'}]},
+  {id:'poobin',icon:'🗑️',name:'Clean Up Crew',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'poobin'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:10,type:'reports',subtype:'poobin'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:20,type:'reports',subtype:'poobin'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:30,type:'reports',subtype:'poobin'}]},
+  {id:'walks',icon:'🥾',name:'Trailblazer',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'walks'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:5,type:'walks'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:15,type:'walks'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:25,type:'walks'}]},
+  {id:'pioneer',icon:'📍',name:'Pioneer',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:5,type:'reports'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:20,type:'reports'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:40,type:'reports'}]},
+  {id:'horse',icon:'🐎',name:'Horse Spotter',tiers:[{t:'Bronze',col:'#CD7F32',bc:'#A0522D',n:1,type:'reports',subtype:'horses'},{t:'Silver',col:'#94A3B8',bc:'#64748B',n:5,type:'reports',subtype:'horses'},{t:'Gold',col:'#F59E0B',bc:'#D97706',n:15,type:'reports',subtype:'horses'},{t:'Diamond',col:'#67E8F9',bc:'#0891B2',n:30,type:'reports',subtype:'horses'}]},
+];
+
+// subtype report counts - tracked locally
+var subtypeCounts={};
+function getSubtypeCount(type){return subtypeCounts[type]||0;}
+function bumpSubtype(type){subtypeCounts[type]=(subtypeCounts[type]||0)+1;localStorage.setItem('pt_subtypes',JSON.stringify(subtypeCounts));}
+
+function getShieldLevel(shield){
+  var count=0;
+  if(shield.tiers[0].subtype)count=getSubtypeCount(shield.tiers[0].subtype);
+  else if(shield.tiers[0].type==='walks')count=totalWalks;
+  else count=totalReports;
+  var earned=-1;
+  shield.tiers.forEach(function(t,i){if(count>=t.n)earned=i;});
+  return{earned:earned,count:count,next:earned<3?shield.tiers[earned+1]:null,current:earned>=0?shield.tiers[earned]:null};
+}
+
+function shieldSVG(icon,col,bc,size){
+  size=size||56;
+  return '<svg width="'+size+'" height="'+(size*1.14)+'" viewBox="0 0 60 68">'
+    +'<path d="M30 2 L56 12 L56 38 C56 52 44 62 30 66 C16 62 4 52 4 38 L4 12 Z" fill="'+col+'" stroke="'+bc+'" stroke-width="2"/>'
+    +'<path d="M30 10 L48 18 L48 38 C48 48 40 56 30 59 C20 56 12 48 12 38 L12 18 Z" fill="'+bc+'"/>'
+    +'<text x="30" y="42" text-anchor="middle" font-size="20" fill="white">'+icon+'</text>'
+    +'</svg>';
+}
+
+var equippedShield=null;
+function renderShields(){
+  var grid=document.getElementById('shieldsGrid');if(!grid)return;
+  grid.innerHTML='';
+  SHIELDS.forEach(function(sh){
+    var lv=getShieldLevel(sh);
+    var tier=lv.current||sh.tiers[0];
+    var isLocked=lv.earned<0;
+    var wrap=document.createElement('div');
+    wrap.className='shield-wrap'+(isLocked?' shield-locked':'');
+    var pct=lv.next?Math.min((lv.count/lv.next.n)*100,100):100;
+    wrap.innerHTML='<div class="shield-svg">'+shieldSVG(sh.icon,isLocked?'#9CA3AF':tier.col,isLocked?'#6B7280':tier.bc,56)+'</div>'
+      +'<div class="shield-name">'+sh.name+'</div>'
+      +'<div class="shield-tier" style="color:'+(isLocked?'#9CA3AF':tier.bc)+'">'+tier.t+'</div>'
+      +'<div class="shield-prog"><div class="shield-prog-fill" style="width:'+pct+'%;background:'+(isLocked?'#9CA3AF':tier.col)+'"></div></div>';
+    if(!isLocked){
+      wrap.onclick=function(){
+        equippedShield=sh;
+        localStorage.setItem('pt_shield',sh.id);
+        updateWalkerCard();
+        toast('🛡️ '+sh.name+' equipped!','✅');
+      };
+    }
+    grid.appendChild(wrap);
+  });
+}
+
+// ── TITLE BARS ────────────────────────────────────────────────────────
+var TITLES=[
+  {id:'rainsun',text:'Rain or Shine',icon:'🌧️',textCol:'#c8e8ff',bg:'linear-gradient(90deg,#0a1828,#1a3858,#1e4060,#162840,#0a1828)',border:'inset 0 0 0 2.5px #4488cc,inset 0 0 0 1px #2266aa',unlock:{type:'walks',n:1},lockMsg:'Complete 1 walk'},
+  {id:'mudlover',text:'The Mud Lover',icon:'🟤',textCol:'#d4a870',bg:'linear-gradient(90deg,#1e0e04,#3a1e08,#4a2810,#3a1e08,#1e0e04)',border:'inset 0 0 0 2.5px #6a3a10,inset 0 0 0 1px #4a2808',unlock:{type:'reports',subtype:'mud',n:5},lockMsg:'Report mud 5 times'},
+  {id:'benchseeker',text:'Bench Seeker',icon:'🪑',textCol:'#f0d4a0',bg:'linear-gradient(90deg,#3a2008,#5a3410,#6a4018,#5a3410,#3a2008)',border:'inset 0 0 0 2.5px #7a5520,inset 0 0 0 1px #5a3a10',unlock:{type:'reports',subtype:'bench',n:3},lockMsg:'Report 3 benches'},
+  {id:'viewchaser',text:'View Chaser',icon:'🌄',textCol:'#ffeedd',bg:'linear-gradient(90deg,#0a0818,#1a1030,#3a2858,#604070,#d06888,#f09858,#f8c878)',border:'inset 0 0 0 2.5px #888,inset 0 0 0 1px #555',unlock:{type:'reports',subtype:'view',n:3},lockMsg:'Report 3 great views'},
+  {id:'dawnpatrol',text:'Dawn Patrol',icon:'🌅',textCol:'#ffe8c0',bg:'linear-gradient(90deg,#100808,#582818,#a84828,#e07830,#f8b848,#f8d858)',border:'inset 0 0 0 2.5px #cc7722,inset 0 0 0 1px #aa5510',unlock:{type:'walks',n:5},lockMsg:'Complete 5 walks'},
+  {id:'cattlewhisp',text:'Cattle Whisperer',icon:'🐄',textCol:'#d4f0a0',bg:'linear-gradient(90deg,#081408,#102010,#183018,#102010,#081408)',border:'inset 0 0 0 2.5px #448822,inset 0 0 0 1px #226608',unlock:{type:'reports',subtype:'cattle',n:10},lockMsg:'Report cattle 10 times'},
+  {id:'trailblazer',text:'Trailblazer',icon:'🔥',textCol:'#ffcccc',bg:'linear-gradient(90deg,#180808,#280e0e,#3a1010,#280e0e,#180808)',border:'inset 0 0 0 2.5px #aa2222,inset 0 0 0 1px #881818',unlock:{type:'walks',n:10},lockMsg:'Complete 10 walks'},
+  {id:'cleanup',text:'Clean Up Crew',icon:'🗑️',textCol:'#bbf7d0',bg:'linear-gradient(90deg,#052e16,#065f46,#047857,#065f46,#052e16)',border:'inset 0 0 0 2.5px #22c55e,inset 0 0 0 1px #15803d',unlock:{type:'reports',subtype:'poobin',n:10},lockMsg:'Report 10 poo bins'},
+  {id:'packleader',text:'Pack Leader',icon:'👑',textCol:'#ffe888',bg:'linear-gradient(90deg,#100800,#201400,#3a2800,#201400,#3a2800,#201400,#100800)',border:'inset 0 0 0 2.5px #ffdd44,inset 0 0 0 1px #664400',unlock:{type:'rank',n:40},lockMsg:'Reach Pack Leader rank'},
+  {id:'pioneer',text:'The Pioneer',icon:'📍',textCol:'#fde68a',bg:'linear-gradient(90deg,#1c1917,#292524,#44403c,#292524,#1c1917)',border:'inset 0 0 0 2.5px #d97706,inset 0 0 0 1px #92400e',unlock:{type:'reports',n:1},lockMsg:'Submit your first report'},
+];
+
+var equippedTitle=null;
+function isTitleUnlocked(t){
+  var u=t.unlock;
+  if(u.type==='walks')return totalWalks>=u.n;
+  if(u.type==='rank')return totalReports>=u.n;
+  if(u.type==='reports'&&u.subtype)return getSubtypeCount(u.subtype)>=u.n;
+  if(u.type==='reports')return totalReports>=u.n;
+  return false;
+}
+function renderTitles(){
+  var el=document.getElementById('titleList');if(!el)return;
+  el.innerHTML='';
+  TITLES.forEach(function(t){
+    var unlocked=isTitleUnlocked(t);
+    var isEq=equippedTitle&&equippedTitle.id===t.id;
+    var bar=document.createElement('div');
+    bar.className='title-bar'+(unlocked?'':' locked')+(isEq?' equipped':'');
+    bar.style.cssText='position:relative;height:44px;border-radius:6px;overflow:hidden;cursor:'+(unlocked?'pointer':'default')+';margin-bottom:8px;display:flex;align-items:center;'+(isEq?'outline:3px solid #fff;box-shadow:0 0 0 5px #1B4332;':'');
+    var bgDiv=document.createElement('div');bgDiv.style.cssText='position:absolute;inset:0;background:'+t.bg+';';
+    var borderDiv=document.createElement('div');borderDiv.style.cssText='position:absolute;inset:0;border-radius:6px;box-shadow:'+t.border+';pointer-events:none;z-index:2;';
+    var textDiv=document.createElement('div');textDiv.style.cssText='position:relative;z-index:1;padding:0 14px;font-size:13px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:10px;flex:1;text-shadow:0 1px 4px rgba(0,0,0,.6);color:'+t.textCol+';';
+    textDiv.innerHTML='<span style="font-size:16px">'+t.icon+'</span>'+t.text;
+    var rightDiv=document.createElement('div');rightDiv.style.cssText='position:relative;z-index:1;padding-right:12px;font-size:10px;font-weight:700;color:'+t.textCol+';opacity:.8;';
+    rightDiv.textContent=unlocked?(isEq?'✅ Equipped':'Tap to equip'):t.lockMsg;
+    bar.appendChild(bgDiv);bar.appendChild(borderDiv);bar.appendChild(textDiv);bar.appendChild(rightDiv);
+    if(unlocked){
+      bar.onclick=function(){
+        equippedTitle=t;
+        localStorage.setItem('pt_title',t.id);
+        updateWalkerCard();
+        renderTitles();
+        toast('📛 '+t.text+' equipped!','✅');
+      };
+    }
+    el.appendChild(bar);
+  });
+}
+
+// ── BACKGROUND SCENES ─────────────────────────────────────────────────
+var BACKGROUNDS=[
+  {id:'moorland',name:'Moorland',unlock:'Starter',locked:false,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#c8a8d8"/><rect width="300" height="75" fill="#b090c8"/><ellipse cx="50" cy="88" rx="90" ry="28" fill="#7a5590" opacity=".8"/><ellipse cx="220" cy="84" rx="110" ry="32" fill="#8a6598" opacity=".8"/><rect x="0" y="90" width="300" height="40" fill="#6b3f7a"/><circle cx="20" cy="95" r="5" fill="#9b6fa8"/><circle cx="55" cy="97" r="4" fill="#b88ac0"/><circle cx="100" cy="94" r="6" fill="#9b6fa8"/><circle cx="160" cy="96" r="4" fill="#c0a0cc"/><circle cx="220" cy="94" r="5" fill="#9b6fa8"/><circle cx="270" cy="97" r="4" fill="#b88ac0"/><circle cx="200" cy="20" r="14" fill="#f5d080" opacity=".6"/><ellipse cx="70" cy="22" rx="28" ry="9" fill="rgba(255,255,255,.2)"/></svg>'},
+  {id:'woodland',name:'Woodland',unlock:'Complete 5 walks',locked:false,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#5a9848"/><rect width="300" height="75" fill="#3a6828"/><rect x="10" y="35" width="14" height="95" fill="#2a1808"/><ellipse cx="17" cy="28" rx="22" ry="28" fill="#1e3010"/><rect x="60" y="28" width="16" height="102" fill="#2a1808"/><ellipse cx="68" cy="20" rx="26" ry="30" fill="#284018"/><rect x="140" y="32" width="14" height="98" fill="#2a1808"/><ellipse cx="147" cy="24" rx="24" ry="28" fill="#1e3010"/><rect x="210" y="25" width="18" height="105" fill="#2a1808"/><ellipse cx="219" cy="16" rx="28" ry="32" fill="#284018"/><rect x="270" y="38" width="14" height="92" fill="#2a1808"/><ellipse cx="277" cy="30" rx="20" ry="26" fill="#1e3010"/><rect x="0" y="100" width="300" height="30" fill="#3a2810"/><ellipse cx="50" cy="108" rx="20" ry="6" fill="rgba(220,200,80,.15)"/><ellipse cx="160" cy="106" rx="18" ry="5" fill="rgba(220,200,80,.15)"/><ellipse cx="250" cy="109" rx="16" ry="5" fill="rgba(220,200,80,.12)"/></svg>'},
+  {id:'lake',name:'Lakeside',unlock:'Walk Chew Valley Lake',locked:false,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#b8d8f0"/><rect width="300" height="70" fill="#a0c8e8"/><ellipse cx="60" cy="62" rx="100" ry="24" fill="#0e2038" opacity=".6"/><ellipse cx="230" cy="60" rx="110" ry="22" fill="#0c1c34" opacity=".6"/><rect x="0" y="68" width="8" height="62" fill="#060e18"/><ellipse cx="4" cy="62" rx="10" ry="14" fill="#060e18"/><rect x="16" y="62" width="7" height="68" fill="#060e18"/><ellipse cx="19" cy="56" rx="9" ry="13" fill="#060e18"/><rect x="260" y="64" width="8" height="66" fill="#060e18"/><ellipse cx="264" cy="58" rx="10" ry="13" fill="#060e18"/><rect x="275" y="60" width="7" height="70" fill="#060e18"/><ellipse cx="278" cy="54" rx="9" ry="12" fill="#060e18"/><rect x="0" y="70" width="300" height="60" fill="#3878b8"/><rect x="120" y="70" width="60" height="60" fill="rgba(255,220,100,.15)"/><line x1="40" y1="80" x2="100" y2="80" stroke="rgba(255,255,255,.2)" stroke-width="1"/><line x1="180" y1="85" x2="260" y2="85" stroke="rgba(255,255,255,.15)" stroke-width="1"/><circle cx="220" cy="18" r="14" fill="#fff8e0" opacity=".8"/><circle cx="226" cy="14" r="11" fill="#b8d8f0"/></svg>'},
+  {id:'coastal',name:'Coastal',unlock:'Walk a coastal route',locked:true,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#a0c8e8"/><rect width="300" height="70" fill="#78a8d8"/><polygon points="0,130 0,55 30,40 55,58 55,130" fill="#b8a888"/><polygon points="245,130 245,45 270,30 300,44 300,130" fill="#a89878"/><line x1="0" y1="62" x2="48" y2="65" stroke="rgba(0,0,0,.1)" stroke-width="1"/><line x1="0" y1="75" x2="50" y2="78" stroke="rgba(0,0,0,.08)" stroke-width="1"/><line x1="252" y1="58" x2="300" y2="62" stroke="rgba(0,0,0,.1)" stroke-width="1"/><rect x="0" y="70" width="300" height="60" fill="#3878b8"/><path d="M0 80 Q50 76 100 80 Q150 84 200 80 Q250 76 300 80" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/><path d="M0 92 Q60 88 120 92 Q180 96 240 92 Q270 90 300 92" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"/><ellipse cx="150" cy="126" rx="50" ry="8" fill="#d4b878"/><path d="M100 38 Q104 35 108 38" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2" stroke-linecap="round"/><path d="M130 30 Q135 27 140 30" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/></svg>'},
+  {id:'mountain',name:'Mountains',unlock:'Complete a hard route',locked:true,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#a0b8d8"/><rect width="300" height="80" fill="#7898c0"/><polygon points="0,130 30,60 60,85 95,40 130,75 165,35 200,65 235,45 270,70 300,55 300,130" fill="#5a6878"/><polygon points="95,40 85,58 105,58" fill="#f0f4ff"/><polygon points="165,35 155,55 175,55" fill="#f0f4ff"/><polygon points="235,45 225,62 245,62" fill="#f0f4ff"/><rect x="0" y="100" width="300" height="30" fill="#3a4a2a"/><polygon points="25,100 20,100 22.5,85" fill="#2a3820"/><polygon points="60,100 55,100 57.5,88" fill="#2a3820"/><polygon points="100,100 95,100 97.5,87" fill="#2a3820"/><polygon points="200,100 195,100 197.5,84" fill="#2a3820"/><polygon points="240,100 235,100 237.5,86" fill="#2a3820"/><polygon points="280,100 275,100 277.5,88" fill="#2a3820"/></svg>'},
+  {id:'night',name:'Night Walk',unlock:'Walk after 9pm',locked:true,svg:'<svg viewBox="0 0 300 130" preserveAspectRatio="xMidYMid slice"><rect width="300" height="130" fill="#050510"/><circle cx="245" cy="22" r="16" fill="#f0e8c0" opacity=".9"/><circle cx="251" cy="18" r="13" fill="#050510"/><circle cx="15" cy="8" r="1" fill="white" opacity=".9"/><circle cx="40" cy="18" r="1.2" fill="white" opacity=".8"/><circle cx="70" cy="6" r="1" fill="white" opacity=".95"/><circle cx="100" cy="22" r=".8" fill="white" opacity=".7"/><circle cx="130" cy="10" r="1.2" fill="white" opacity=".9"/><circle cx="160" cy="4" r="1" fill="white" opacity=".85"/><circle cx="190" cy="16" r=".8" fill="white" opacity=".75"/><circle cx="220" cy="8" r="1" fill="white" opacity=".8"/><circle cx="30" cy="34" r=".6" fill="white" opacity=".5"/><circle cx="80" cy="38" r=".6" fill="white" opacity=".55"/><circle cx="140" cy="30" r=".6" fill="white" opacity=".5"/><circle cx="200" cy="36" r=".6" fill="white" opacity=".48"/><ellipse cx="100" cy="48" rx="80" ry="18" fill="#0e0e2e" opacity=".9"/><ellipse cx="220" cy="45" rx="100" ry="22" fill="#080818" opacity=".9"/><rect x="0" y="90" width="300" height="40" fill="#050510"/><rect x="0" y="85" width="300" height="15" fill="#080818"/><polygon points="130,90 155,90 145,90" fill="rgba(255,200,80,.15)" opacity=".6"/><rect x="140" y="72" width="3" height="18" fill="#030308"/><circle cx="141" cy="70" r="3" fill="#030308"/><ellipse cx="150" cy="86" rx="5" ry="3" fill="#030308"/></svg>'},
+];
+
+var equippedBg=localStorage.getItem('pt_bg')||'moorland';
+function renderBgPicker(){
+  var el=document.getElementById('bgPicker');if(!el)return;
+  el.innerHTML='';
+  BACKGROUNDS.forEach(function(bg){
+    var sw=document.createElement('div');
+    sw.className='bg-sw'+(bg.locked?' locked-bg':'')+(equippedBg===bg.id?' active':'');
+    sw.innerHTML=bg.svg;
+    sw.title=bg.locked?bg.unlock:bg.name;
+    if(!bg.locked){
+      sw.onclick=function(){
+        equippedBg=bg.id;
+        localStorage.setItem('pt_bg',bg.id);
+        updateWalkerCard();
+        document.querySelectorAll('.bg-sw').forEach(function(s){s.classList.remove('active');});
+        sw.classList.add('active');
+      };
+    }
+    el.appendChild(sw);
+  });
+}
+
+function updateWalkerCard(){
+  // Background
+  var bg=BACKGROUNDS.find(function(b){return b.id===equippedBg;})||BACKGROUNDS[0];
+  var bgEl=document.getElementById('wcBg');
+  if(bgEl){var svgEl=bgEl.querySelector('svg');if(svgEl)svgEl.outerHTML=bg.svg;else{var wrap=bgEl;wrap.querySelector('svg')||wrap.insertAdjacentHTML('afterbegin',bg.svg);}}
+  // Avatar
+  var av=profile?profile.avatar:'🐕';
+  var wcAv=document.getElementById('wcAv');if(wcAv)wcAv.textContent=av;
+  // Name
+  var wcNm=document.getElementById('wcName');if(wcNm)wcNm.textContent=profile?profile.username:'Trail Walker';
+  // Title
+  var wcT=document.getElementById('wcTitleBar');
+  if(wcT){
+    if(equippedTitle){
+      wcT.innerHTML='<div style="height:20px;border-radius:3px;overflow:hidden;display:flex;align-items:center;width:160px;position:relative;">'
+        +'<div style="position:absolute;inset:0;background:'+equippedTitle.bg+';"></div>'
+        +'<div style="position:absolute;inset:0;border-radius:3px;box-shadow:'+equippedTitle.border+';"></div>'
+        +'<span style="position:relative;z-index:1;padding:0 8px;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:'+equippedTitle.textCol+';text-shadow:0 1px 3px rgba(0,0,0,.6);">'+equippedTitle.icon+' '+equippedTitle.text+'</span>'
+        +'</div>';
+    }else{
+      wcT.innerHTML='<span style="font-size:10px;color:rgba(255,255,255,.7);">🐾 '+getRank(totalReports).name+'</span>';
+    }
+  }
+  // Shield
+  var wcSh=document.getElementById('wcShield');
+  if(wcSh){
+    if(equippedShield){var lv=getShieldLevel(equippedShield);var tier=lv.current||equippedShield.tiers[0];wcSh.innerHTML=shieldSVG(equippedShield.icon,tier.col,tier.bc,36);}
+    else wcSh.innerHTML='';
+  }
+  // Stats
+  var wW=document.getElementById('wcW');if(wW)wW.textContent=totalWalks;
+  var wD=document.getElementById('wcD');if(wD)wD.textContent=totalDist.toFixed(1);
+  var wR=document.getElementById('wcR');if(wR)wR.textContent=totalReports;
+  var earnedCount=SHIELDS.filter(function(s){return getShieldLevel(s).earned>=0;}).length;
+  var wS=document.getElementById('wcS');if(wS)wS.textContent=earnedCount;
+  // XP
+  var xcL=document.getElementById('wcXpLbl');if(xcL)xcL.textContent=xp+' XP';
+  var xcF=document.getElementById('wcXpFill');if(xcF)xcF.style.width=Math.min((xp/5000)*100,100)+'%';
+  var xcN=document.getElementById('wcXpNext');if(xcN){var nxt=RANKS.find(function(r){return r.min>totalReports;});xcN.textContent=nxt?'→ '+nxt.name:'👑 Max rank!';}
+  // Header
+  var hA=document.getElementById('hdrAv');if(hA)hA.textContent=av;
+  var rC=document.getElementById('rankCh');if(rC)rC.textContent=getRank(totalReports).icon+' '+getRank(totalReports).name;
+}
+
+function renderProfile(){
+  // Set SVG background first
+  var bg=BACKGROUNDS.find(function(b){return b.id===equippedBg;})||BACKGROUNDS[0];
+  var bgEl=document.getElementById('wcBg');
+  if(bgEl){
+    var existing=bgEl.querySelector('svg');
+    if(existing)existing.remove();
+    bgEl.insertAdjacentHTML('afterbegin',bg.svg);
+    var newSvg=bgEl.querySelector('svg');
+    if(newSvg){newSvg.style.position='absolute';newSvg.style.inset='0';newSvg.style.width='100%';newSvg.style.height='100%';}
+  }
+  // Restore equipped items from storage
+  var storedShield=localStorage.getItem('pt_shield');
+  if(storedShield)equippedShield=SHIELDS.find(function(s){return s.id===storedShield;})||null;
+  var storedTitle=localStorage.getItem('pt_title');
+  if(storedTitle)equippedTitle=TITLES.find(function(t){return t.id===storedTitle;})||null;
+  updateWalkerCard();
+  renderBgPicker();
+  renderShields();
+  renderTitles();
+}
+
+// ── OFFLINE MODE ──────────────────────────────────────────────────────
+var offlineRoutes={};
+function loadOfflineRoutes(){
+  try{offlineRoutes=JSON.parse(localStorage.getItem('pt_offline')||'{}');}catch(e){offlineRoutes={};}
+}
+function isOffline(routeId){return !!offlineRoutes[String(routeId)];}
+function toggleOffline(){
+  if(!detailRoute)return;
+  var id=String(detailRoute.id);
+  var btn=document.getElementById('detDlBtn');
+  if(offlineRoutes[id]){
+    delete offlineRoutes[id];
+    localStorage.setItem('pt_offline',JSON.stringify(offlineRoutes));
+    if(btn)btn.textContent='📥';
+    toast('Route removed from offline','📥');
+  }else{
+    // Save route data to offline cache
+    offlineRoutes[id]={
+      id:detailRoute.id,name:detailRoute.name,description:detailRoute.description,
+      difficulty:detailRoute.difficulty,distance_km:detailRoute.distance_km,
+      duration_mins:detailRoute.duration_mins,off_lead:detailRoute.off_lead,
+      has_water:detailRoute.has_water,dog_notes:detailRoute.dog_notes,
+      path:detailRoute.path,created_by:detailRoute.created_by,
+      cached_at:new Date().toISOString()
+    };
+    localStorage.setItem('pt_offline',JSON.stringify(offlineRoutes));
+    if(btn)btn.textContent='✅';
+    addXP(5);
+    toast('📥 Route saved for offline use!','✅');
+  }
+  renderList();
+}
+
+// Merge offline routes into allRoutes if not already present
+function mergeOfflineRoutes(){
+  Object.values(offlineRoutes).forEach(function(r){
+    var exists=allRoutes.find(function(x){return String(x.id)===String(r.id);});
+    if(!exists)allRoutes.push(r);
+  });
+}
 function applyProfile(){
   var av=profile.avatar||'🐕';
   document.getElementById('hdrAv').textContent=av;
-  document.getElementById('profAv').textContent=av;
   document.getElementById('actAv').textContent=av;
-  document.getElementById('profNm').textContent=profile.username;
-  document.getElementById('profXP').textContent=xp+' XP';
-  document.getElementById('profXPF').style.width=Math.min((xp/5000)*100,100)+'%';
   updateActivity();updateSavedStats();
+  renderProfile();
 }
 // ── TOAST ─────────────────────────────────────────────────────────────
 var _tt;
