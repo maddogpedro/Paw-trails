@@ -121,7 +121,22 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .mbar.on{display:flex;}
 .nav-pitch-indicator{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(27,67,50,.92);color:#fff;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:700;z-index:20;display:none;align-items:center;gap:5px;white-space:nowrap;}
 .nav-pitch-indicator.on{display:flex;}
-/* save sheet */
+/* navigate bottom bar */
+.nav-bottom-bar{position:absolute;bottom:16px;left:12px;right:12px;display:flex;gap:10px;z-index:20;}
+.nav-walkies-btn{flex:2;background:var(--g);color:#fff;border:none;border-radius:18px;padding:14px 18px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 6px 20px rgba(27,67,50,.5);transition:transform .15s;}
+.nav-walkies-btn:active{transform:scale(.96);}
+.nav-plan-btn{flex:1;background:rgba(255,255,255,.95);color:var(--g);border:none;border-radius:18px;padding:14px 12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .15s;}
+.nav-plan-btn:active{transform:scale(.96);}
+/* walkies active tracker */
+.walkies-active{position:absolute;bottom:16px;left:12px;right:12px;background:var(--g);color:#fff;border-radius:18px;padding:14px 18px;z-index:20;display:none;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(27,67,50,.5);}
+.walkies-active.on{display:flex;}
+.wa-info{display:flex;gap:20px;}
+.wa-dist{font-size:20px;font-weight:800;}
+.wa-time{font-size:14px;opacity:.8;padding-top:4px;}
+.wa-stop{background:rgba(255,255,255,.2);border:none;border-radius:11px;color:#fff;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.wa-stop:active{background:rgba(255,255,255,.3);}
+.badge-verified{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:3px;}
+.badge-community{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:3px;}
 .ssheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;}
 .ssheet.on{display:flex;}
 .ssi{background:var(--card);border-radius:22px 22px 0 0;padding:22px 18px 36px;width:100%;}
@@ -320,18 +335,53 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
       <div class="nw">
         <div class="nmw">
           <div id="nmap"></div>
+          <!-- Top: Plan a Route search -->
           <div class="ntop">
-            <div class="nsb"><span>🗺️</span><input type="text" id="planInput" placeholder="Search a destination…" oninput="onPlanSearch(this.value)" autocomplete="off"></div>
+            <div class="nsb"><span>🗺️</span><input type="text" id="planInput" placeholder="Plan a route — search destination…" oninput="onPlanSearch(this.value)" autocomplete="off"></div>
             <div class="nsug" id="planSug"></div>
-            <div class="ncard" id="navCard"><div class="ndir" id="navDir">🧭 Follow the route</div><div class="nsub" id="navSub">Stay on the path</div><div class="npb"><div class="npf" id="navProg" style="width:0%"></div></div><div class="nbtns"><button class="nb nbm" id="muteBtn" onclick="toggleMute()">🔊 Voice</button><button class="nb nbs" onclick="stopNav()">⏹ Stop</button></div></div>
+            <!-- Nav card shown during walkies -->
+            <div class="ncard" id="navCard">
+              <div class="ndir" id="navDir">🧭 Follow the route</div>
+              <div class="nsub" id="navSub">Stay on the path</div>
+              <div class="npb"><div class="npf" id="navProg" style="width:0%"></div></div>
+              <div class="nbtns">
+                <button class="nb nbm" id="muteBtn" onclick="toggleMute()">🔊 Voice</button>
+                <button class="nb nbs" onclick="stopNav()">⏹ Stop</button>
+              </div>
+            </div>
           </div>
+          <!-- Mode banner -->
           <div class="mbar" id="modeBar"><span id="modeIco">📍</span><span id="modeTxt">Tap map</span><button onclick="cancelMode()" style="background:rgba(255,255,255,.2);border:none;border-radius:6px;color:#fff;padding:2px 8px;cursor:pointer;font-size:11px;margin-left:4px">✕</button></div>
+          <!-- Right controls: locate + satellite only -->
           <div class="mcs">
             <button class="mc" onclick="locateMe()" title="Find me">📍</button>
             <button class="mc" id="satBtn" onclick="toggleSat()" title="Satellite">🛰️</button>
-            <button class="mc" onclick="toggleRec()" id="recMc" title="Record">⏺️</button>
           </div>
-          <button class="recb" id="recBtn" onclick="toggleRec()"><span id="recIco">⏺️</span><span id="recTxt">Record Route</span></button>
+          <!-- Bottom bar: Just Walkies + Plan -->
+          <div class="nav-bottom-bar">
+            <button class="nav-walkies-btn" id="walkiesBtn" onclick="justWalkies()">
+              <span style="font-size:22px">🚶🐕</span>
+              <div>
+                <div style="font-size:15px;font-weight:800">Just Walkies!</div>
+                <div style="font-size:10px;opacity:.8;font-weight:500">Zoom in and go</div>
+              </div>
+            </button>
+            <button class="nav-plan-btn" onclick="focusPlanSearch()">
+              <span style="font-size:20px">🗺️</span>
+              <div>
+                <div style="font-size:13px;font-weight:700">Plan Route</div>
+                <div style="font-size:10px;opacity:.75">Search destination</div>
+              </div>
+            </button>
+          </div>
+          <!-- Just Walkies active state -->
+          <div class="walkies-active" id="walkiesActive">
+            <div class="wa-info">
+              <div class="wa-dist" id="waDist">0.0 km</div>
+              <div class="wa-time" id="waTime">0:00</div>
+            </div>
+            <button class="wa-stop" onclick="stopWalkies()">⏹ Finish Walk</button>
+          </div>
         </div>
       </div>
     </div>
@@ -509,6 +559,14 @@ function filterRoutes(){
 }
 function onSearch(v){searchQ=v;renderList();}
 function setFilter(el,f){document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');activeFilter=f;renderList();}
+function routeBadge(r){
+  var isVerified=r.created_by==='PawTrails Team'||(r.completion_count&&r.completion_count>=3);
+  var isCommunity=r.created_by!=='PawTrails Team';
+  if(isVerified&&!isCommunity)return '<span class="badge-verified">✅ Verified</span>';
+  if(isCommunity&&isVerified)return '<span class="badge-verified">✅ Community Verified</span>';
+  if(isCommunity)return '<span class="badge-community">🌱 Community</span>';
+  return '';
+}
 function renderList(){
   var el=document.getElementById('routeList');if(!el)return;
   var routes=filterRoutes();
@@ -519,7 +577,7 @@ function renderList(){
     var dc={easy:'de',moderate:'dm',hard:'dh'},w=Math.floor(Math.random()*8)+1;
     var card=document.createElement('div');card.className='rc';
     card.innerHTML='<div class="rc-p"><img src="'+getPhoto(r)+'" loading="lazy" alt=""><div class="rc-ov"></div><div class="rc-bot"><span class="diff '+(dc[r.difficulty]||'de')+'">'+r.difficulty+'</span><span class="rc-w">👣 '+w+' today</span></div></div>'
-      +'<div class="rc-bd"><div class="rc-n">'+r.name+'</div><div class="rc-m"><span>📏 '+r.distance_km+'km</span><span>⏱ '+r.duration_mins+'min</span><span>'+(r.off_lead?'🟢 Off-lead':'🔴 On-lead')+'</span>'+(r.has_water?'<span>💧</span>':'')+'</div>'+fsHtml(r)+(r.dog_notes?'<div class="dn">🐕 '+r.dog_notes+'</div>':'')+'</div>'
+      +'<div class="rc-bd"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><div class="rc-n" style="margin-bottom:0">'+r.name+'</div>'+routeBadge(r)+'</div><div class="rc-m"><span>📏 '+r.distance_km+'km</span><span>⏱ '+r.duration_mins+'min</span><span>'+(r.off_lead?'🟢 Off-lead':'🔴 On-lead')+'</span>'+(r.has_water?'<span>💧</span>':'')+'</div>'+fsHtml(r)+(r.dog_notes?'<div class="dn">🐕 '+r.dog_notes+'</div>':'')+'</div>'
       +'<div class="rc-act"><button class="bw" onclick="event.stopPropagation();startFollow(\''+r.id+'\')">🚶🐕 Walkies!</button><button class="brx'+(rx.heart?' on':'')+'" id="h-'+r.id+'" onclick="event.stopPropagation();heartRoute(\''+r.id+'\',this)">❤️</button><button class="bdn'+(done?' on':'')+'" id="d-'+r.id+'" onclick="event.stopPropagation();markDone(\''+r.id+'\',this)">✅</button></div>';
     card.onclick=function(){openDetail(r);};el.appendChild(card);
   });
@@ -758,11 +816,89 @@ function speak(txt){if(navMuted||!window.speechSynthesis)return;speechSynthesis.
 function toggleMute(){navMuted=!navMuted;document.getElementById('muteBtn').textContent=navMuted?'🔇 Muted':'🔊 Voice';}
 function stopNav(){navOn=false;if(map)map.stopLocate();document.getElementById('navCard').classList.remove('on');document.getElementById('pitchInd').classList.remove('on');if(followL){map.removeLayer(followL);followL=null;}mLayers.forEach(function(l){map&&map.removeLayer(l);});mLayers=[];if(window.speechSynthesis)speechSynthesis.cancel();if(map)map.setView([51.364,-2.620],13);toast('Walk complete! 🐾','🏁');}
 function locateMe(){if(!map)return;map.locate({setView:true,maxZoom:15});map.once('locationfound',function(){toast('Found you!','📍');});map.once('locationerror',function(){toast('Location not available','⚠️');});}
-function toggleSat(){sat=!sat;sat?(OSMt.remove(),SATt.addTo(map)):(SATt.remove(),OSMt.addTo(map));toast(sat?'Satellite':'Map view','🛰️');}
+function toggleSat(){sat=!sat;sat?(OSMt.remove(),SATt.addTo(map)):(SATt.remove(),OSMt.addTo(map));var btn=document.getElementById('satBtn');if(btn)btn.style.background=sat?'var(--g)':'';}
+function focusPlanSearch(){document.getElementById('planInput').focus();document.getElementById('planInput').scrollIntoView({behavior:'smooth'});}
+
 function showMode(i,t){document.getElementById('modeBar').classList.add('on');document.getElementById('modeIco').textContent=i;document.getElementById('modeTxt').textContent=t;}
-function cancelMode(){document.getElementById('modeBar').classList.remove('on');isRec=false;}
-function onMapClick(e){if(isRec){recPath.push([e.latlng.lat,e.latlng.lng]);if(recL)map.removeLayer(recL);recL=L.polyline(recPath,{color:'#EF4444',weight:4,dashArray:'8,4',lineCap:'round'}).addTo(map);L.circleMarker(e.latlng,{radius:5,color:'#EF4444',fillColor:'#fff',fillOpacity:1,weight:2}).addTo(map);toast('Waypoint '+recPath.length,'📍');}}
-function toggleRec(){isRec=!isRec;var btn=document.getElementById('recBtn');if(isRec){btn.classList.add('rec');document.getElementById('recIco').textContent='⏹';document.getElementById('recTxt').textContent='Stop Recording';recPath=[];if(recL){map&&map.removeLayer(recL);recL=null;}showMode('🔴','Tap map to add waypoints');toast('Recording — tap the map!','🔴');}else{btn.classList.remove('rec');document.getElementById('recIco').textContent='⏺️';document.getElementById('recTxt').textContent='Record Route';document.getElementById('modeBar').classList.remove('on');if(recPath.length>1){document.getElementById('saveSheet').classList.add('on');}else{if(recL){map&&map.removeLayer(recL);recL=null;}toast('Need 2+ waypoints','⚠️');}}}
+function cancelMode(){document.getElementById('modeBar').classList.remove('on');}
+function onMapClick(e){/* map clicks handled by long-press wheel */}
+var walkiesOn=false,walkiesPath=[],walkiesLine=null,walkiesStart=null,walkiesTimer=null,walkiesDist=0;
+function justWalkies(){
+  showPage('navigate');initMap();
+  var attempts=0;
+  function tryStart(){
+    attempts++;
+    if(!map&&attempts<20){setTimeout(tryStart,200);return;}
+    if(!map)return;
+    // Get current location first
+    map.locate({setView:true,maxZoom:17});
+    map.once('locationfound',function(e){
+      walkiesOn=true;walkiesPath=[];walkiesDist=0;walkiesStart=Date.now();
+      walkiesPath.push([e.latlng.lat,e.latlng.lng]);
+      if(walkiesLine)map.removeLayer(walkiesLine);
+      walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
+      // Show active tracker, hide bottom bar
+      document.getElementById('walkiesActive').classList.add('on');
+      document.getElementById('walkiesBtn').style.display='none';
+      document.querySelector('.nav-plan-btn').style.display='none';
+      // Start tracking
+      map.locate({watch:true,setView:false});
+      map.on('locationfound',onWalkiesLocation);
+      // Timer
+      walkiesTimer=setInterval(updateWalkiesTimer,1000);
+      speak('Walkies! Have a great walk!');
+      toast('🚶🐕 Walkies started! Walk freely.','🐾');
+    });
+    map.once('locationerror',function(){toast('Please enable location to use Just Walkies','⚠️');});
+  }
+  setTimeout(tryStart,300);
+}
+function onWalkiesLocation(e){
+  if(!walkiesOn)return;
+  var ll=[e.latlng.lat,e.latlng.lng];
+  if(walkiesPath.length>0){
+    var last=walkiesPath[walkiesPath.length-1];
+    var d=e.latlng.distanceTo(L.latLng(last[0],last[1]));
+    if(d>5){// Only add point if moved more than 5m
+      walkiesDist+=d/1000;
+      walkiesPath.push(ll);
+      if(walkiesLine)map.removeLayer(walkiesLine);
+      walkiesLine=L.polyline(walkiesPath,{color:'#F59E0B',weight:6,opacity:.9,lineCap:'round'}).addTo(map);
+      document.getElementById('waDist').textContent=walkiesDist.toFixed(2)+' km';
+      // Pan smoothly
+      map.panTo(e.latlng,{animate:true,duration:.5});
+    }
+  }
+}
+function updateWalkiesTimer(){
+  if(!walkiesOn)return;
+  var elapsed=Math.floor((Date.now()-walkiesStart)/1000);
+  var m=Math.floor(elapsed/60),s=elapsed%60;
+  document.getElementById('waTime').textContent=m+':'+(s<10?'0':'')+s;
+}
+function stopWalkies(){
+  walkiesOn=false;
+  clearInterval(walkiesTimer);
+  map.stopLocate();
+  map.off('locationfound',onWalkiesLocation);
+  // Show bottom bar again
+  document.getElementById('walkiesActive').classList.remove('on');
+  document.getElementById('walkiesBtn').style.display='';
+  document.querySelector('.nav-plan-btn').style.display='';
+  if(walkiesPath.length>1){
+    // Offer to save
+    var dist=walkiesDist.toFixed(2);
+    document.getElementById('rName').value='My walk '+new Date().toLocaleDateString('en-GB');
+    document.getElementById('rDist').value=dist;
+    document.getElementById('saveSheet').classList.add('on');
+    // Pre-fill path
+    recPath=walkiesPath;
+    toast('Great walk! '+dist+' km — save it?','🏁');
+  }else{
+    if(walkiesLine){map.removeLayer(walkiesLine);walkiesLine=null;}
+    toast('Walk cancelled','⏹');
+  }
+}
 function onPlanSearch(v){clearTimeout(geoTO);var sug=document.getElementById('planSug');if(v.length<3){sug.style.display='none';return;}geoTO=setTimeout(function(){fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(v+', UK')+'&format=json&limit=4').then(function(r){return r.json();}).then(function(data){if(!data.length){sug.style.display='none';return;}sug.style.display='block';sug.innerHTML=data.map(function(d){return'<div class="nsi" onclick="planTo('+d.lat+','+d.lon+',\''+d.display_name.replace(/'/g,"\\'")+'\')">\🗺️ <span>'+d.display_name.split(',').slice(0,2).join(',')+'</span></div>';}).join('');}).catch(function(){});},500);}
 function planTo(lat,lon,name){
   document.getElementById('planSug').style.display='none';document.getElementById('planInput').value=name.split(',')[0];toast('Planning route…','🗺️');
